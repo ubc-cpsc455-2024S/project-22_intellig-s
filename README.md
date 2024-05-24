@@ -98,7 +98,7 @@ stretch goals:
 
 ## Team Members
 
-- Nand Patel: one sentence about you!
+- Nand Patel: Hello, I am a fourth year computer science and mathematics student and I love taking photos with my film camera :-D
 - Jiayin Kralik: one sentence about you!
 - Matthew Smith: one sentence about you!
 - Chris Tjondro: one sentence about you!
@@ -113,8 +113,8 @@ stretch goals:
   - User-specific itineraries + browse itineraries
 - Chris:
   - Calendar view
-- Nand:
-  - Map-view
+- Nand: Map-view
+  - ![Calendar view](./images/map-view.jpeg)
 
 <img src ="images/test.png" width="100px">
 
