@@ -101,7 +101,7 @@ stretch goals:
 - Nand Patel: one sentence about you!
 - Jiayin Kralik: one sentence about you!
 - Matthew Smith: one sentence about you!
-- Chris Tjondro: one sentence about you!
+- Chris Tjondro: I like tennis. I like food. Lesson learned: Food after tennis -> Good, Food before tennis -> Bad. 
 
 ## Images
 
@@ -111,8 +111,8 @@ stretch goals:
   - Home/explore page with search-bar for destinations
 - Jiayin:
   - User-specific itineraries + browse itineraries
-- Chris:
-  - Calendar view
+- Chris: Calendar View
+  - ![Calendar view](./images/AItinerary-CalendarView.jpg)
 - Nand:
   - Map-view
 
