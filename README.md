@@ -2,7 +2,7 @@
 
 ## Project Description
 
-Our project is for travelers. From the absolute beginnners to the travel connoisseurs, our app is for anyone with wanderlust! the travel enthusiast. Of course, you can never be too young or old to travel, so our app is perfectly suited for students, adults, parents, and even whole families.
+Our project is for travelers. From the absolute beginnners to the travel connoisseurs, our app is for anyone with wanderlust! Of course, you can never be too young or old to travel, so our app is perfectly suited for students, adults, parents, and even whole families.
 
 Our app will allow users to browse different travel destinations. By collecting user data through in-app activity as well as periodic surveys, our app will make travel itinerary and destination suggestions based on a user's preferences via the power of AI.
 
