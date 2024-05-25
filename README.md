@@ -64,8 +64,9 @@ If time permits, some additional functionality that we can add is the ability to
 
 - Matthew: Home page
   - ![Home page](./images/home-page.jpeg)
-- Jiayin:
-  - User-specific itineraries + browse itineraries
+- Jiayin: User-specific itineraries + browse itineraries
+  - ![User-specific itineraries](./images/1.png)
+  - ![browse itineraries](./images/2.png)
 - Chris: Calendar View
   - ![Calendar view](./images/AItinerary-CalendarView.jpg)
 - Nand: Map-view
