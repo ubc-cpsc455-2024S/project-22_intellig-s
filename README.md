@@ -56,7 +56,7 @@ If time permits, some additional functionality that we can add is the ability to
 ## Team Members
 
 - Nand Patel: Hello, I am a fourth year computer science and mathematics student and I love taking photos with my film camera :-D
-- Jiayin Kralik: one sentence about you!
+- Jiayin Kralik: I am a fourth year computer science student who is interested in systems! I'm building my own operating system this summer :)
 - Matthew Smith: I'm a BCS student, I have a background in Physics, and I'm passionate about SWE!
 - Chris Tjondro: I like tennis. I like food. Lesson learned: Food after tennis -> Good, Food before tennis -> Bad. 
 
@@ -75,5 +75,3 @@ If time permits, some additional functionality that we can add is the ability to
 <img src ="images/test.png" width="100px">
 
 ## References
-
-{Add your stuff here}
