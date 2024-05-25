@@ -109,8 +109,9 @@ stretch goals:
 
 - Matthew:
   - Home/explore page with search-bar for destinations
-- Jiayin:
-  - User-specific itineraries + browse itineraries
+- Jiayin: User-specific itineraries + browse itineraries
+  - ![User-specific itineraries](./images/1.png)
+  - ![browse itineraries](./images/2.png)
 - Chris: Calendar View
   - ![Calendar view](./images/AItinerary-CalendarView.jpg)
 - Nand: Map-view
