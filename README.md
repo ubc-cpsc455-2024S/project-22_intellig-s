@@ -72,6 +72,4 @@ If time permits, some additional functionality that we can add is the ability to
 - Nand: Map-view
   - ![Calendar view](./images/map-view.jpeg)
 
-<img src ="images/test.png" width="100px">
-
 ## References
