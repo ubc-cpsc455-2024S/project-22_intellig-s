@@ -13,7 +13,7 @@ const ItineraryDetails = () => {
 
   return (
     <Container>
-      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>Itinerary Details for ID: {id}</Typography>
+      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>Itinerary Details for: {id}</Typography>
       {days.map((day, index) => (
         <DayCard key={index} day={day} />
       ))}

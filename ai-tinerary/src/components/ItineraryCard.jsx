@@ -14,7 +14,7 @@ class ItineraryCard extends Component {
           image={itinerary.imageUrl}
           alt={`Image of ${itinerary.name}`}
         />
-        <CardContent onClick={() => onOpen(itinerary.id)} style={{ cursor: 'pointer' }}>
+        <CardContent onClick={() => onOpen(itinerary.name)} style={{ cursor: 'pointer' }}>
           <Typography gutterBottom variant="h5" component="div">
             {itinerary.name}
           </Typography>
