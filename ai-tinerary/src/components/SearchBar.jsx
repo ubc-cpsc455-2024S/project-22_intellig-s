@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Autocomplete,
   IconButton,
@@ -10,6 +9,8 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import PublicIcon from "@mui/icons-material/Public";
 
+import PropType from "prop-types";
+
 const arbList = [
   { label: "Vancouver" },
   { label: "Calgary" },
@@ -19,7 +20,7 @@ const arbList = [
   { label: "Toronto" },
 ];
 
-function SearchBar({ autoCompleteList }) {
+function SearchBar() {
   return (
     <Autocomplete
       disablePortal
@@ -59,6 +60,7 @@ function SearchBar({ autoCompleteList }) {
 }
 
 function CustomPaper({ children }) {
+  console.log(children);
   return (
     <Paper
       sx={{
@@ -74,12 +76,6 @@ function CustomPaper({ children }) {
         "&-ms-overflow-style:": {
           display: "none", // Hide the scrollbar for IE
         },
-        "& .MuiAutocomplete-listbox": {
-          borderRadius: 5,
-        },
-        "& .MuiAutocomplete-listbox .MuiAutocomplete-option.Mui-focused": {
-          borderRadius: 5,
-        },
         "& .MuiAutocomplete-option": {
           mt: 0.5,
         },
@@ -89,5 +85,9 @@ function CustomPaper({ children }) {
     </Paper>
   );
 }
+
+CustomPaper.propTypes = {
+  children: PropType.object,
+};
 
 export default SearchBar;

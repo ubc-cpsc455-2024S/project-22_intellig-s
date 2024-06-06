@@ -1,7 +1,6 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography } from '@mui/material';
-import DayCard from '../components/DayCard'; 
+import { useParams } from "react-router-dom";
+import { Container, Typography } from "@mui/material";
+import DayCard from "../components/DayCard";
 
 const ItineraryDetails = () => {
   let { id } = useParams();
@@ -13,7 +12,9 @@ const ItineraryDetails = () => {
 
   return (
     <Container>
-      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>Itinerary Details for: {id}</Typography>
+      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>
+        Itinerary Details for: {id}
+      </Typography>
       {days.map((day, index) => (
         <DayCard key={index} day={day} />
       ))}

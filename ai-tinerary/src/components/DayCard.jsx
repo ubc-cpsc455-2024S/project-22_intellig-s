@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { Typography, Card, CardContent } from '@mui/material';
+import { Typography, Card, CardContent } from "@mui/material";
+import PropType from "prop-types";
 
-class DayCard extends Component {
-  render() {
-    const { day } = this.props;
-
-    return (
-      <Card variant="outlined" style={{ marginBottom: 8 }}>
-        <CardContent>
-          <Typography variant="h6">{day.title}</Typography>
-          <Typography>{day.description}</Typography>
-        </CardContent>
-      </Card>
-    );
-  }
+function DayCard({ day }) {
+  return (
+    <Card variant="outlined" style={{ marginBottom: 8 }}>
+      <CardContent>
+        <Typography variant="h6">{day.title}</Typography>
+        <Typography>{day.description}</Typography>
+      </CardContent>
+    </Card>
+  );
 }
+
+DayCard.propTypes = {
+  day: PropType.object,
+};
 
 export default DayCard;
