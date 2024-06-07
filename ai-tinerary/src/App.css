@@ -37,6 +37,17 @@
   padding: 2em;
 }
 
+.day-card {
+  text-align: left;
+}
+
+.day-card img {
+  height: auto;
+  max-width: 20%; /* Ensure the image doesn't exceed the width of its container */
+  max-height: 60%; /* Set a maximum height for the image */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
+
 .read-the-docs {
   color: #888;
 }
