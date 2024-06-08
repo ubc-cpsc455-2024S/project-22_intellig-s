@@ -12,7 +12,10 @@ export default function DayCard({ day, id }) {
 
   return (
     <Card variant="outlined" style={{ marginBottom: 8 }}>
-      <CardContent className= "day-card" style={{ display: "flex", alignItems: "left" }}>
+      <CardContent
+        className="day-card"
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <img
           src={day.imageUrl}
           alt={day.imageUrl}
@@ -24,10 +27,11 @@ export default function DayCard({ day, id }) {
           </Typography>
           <Typography>{day.overview}</Typography>
           <div>
+            <Typography variant="h6">Activities</Typography>
             <IconButton onClick={toggleActivities}>
               {showActivities ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
-            <Typography variant="h6">Activities:</Typography>
+
             {showActivities && (
               <ul>
                 {day.activities.map((activity, index) => (
