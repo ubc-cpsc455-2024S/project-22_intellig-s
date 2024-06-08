@@ -8,7 +8,7 @@ const initialItineraries = [
   {
     id: 1,
     name: "Trip to Paris",
-    dates: "July 20 - July 30, 2024",
+    dates: "June 12 - June 13, 2024",
     imageUrl:
       "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=3273&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },

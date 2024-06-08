@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import MyItineraries from "./pages/MyItineraries";
 import ItineraryDetails from "./pages/ItineraryDetails";
 import theme from "./theme";
+import './App.css';
 
 const App = () => {
   return (

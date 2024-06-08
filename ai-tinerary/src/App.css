@@ -1,7 +1,7 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem; */
   text-align: center;
 }
 
@@ -35,6 +35,26 @@
 
 .card {
   padding: 2em;
+}
+
+.day-card {
+  text-align: center;
+}
+
+.day-card img {
+  height: auto;
+  max-width: 20%; /* Ensure the image doesn't exceed the width of its container */
+  max-height: 60%; /* Set a maximum height for the image */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+  transition: transform 0.3s ease; /* Add transition for the zoom-in effect */
+}
+
+.day-card:hover img {
+  transform: scale(1.1); /* Apply zoom-in effect on hover */
+}
+
+.day-card li {
+  text-align: center;
 }
 
 .read-the-docs {
