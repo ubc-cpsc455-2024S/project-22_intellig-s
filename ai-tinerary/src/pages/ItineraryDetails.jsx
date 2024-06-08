@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import DayCard from "../components/DayCard";
@@ -22,10 +22,11 @@ const ItineraryDetails = () => {
           }));
           setDays(parsedData);
         })
-        .catch((error) => console.error("Error fetching itinerary data:", error));
+        .catch((error) =>
+          console.error("Error fetching itinerary data:", error)
+        );
     }
   }, [id]);
-  
 
   return (
     <Container>
