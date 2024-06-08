@@ -1,21 +1,39 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography } from '@mui/material';
-import DayCard from '../components/DayCard'; 
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Container, Typography } from "@mui/material";
+import DayCard from "../components/DayCard";
 
 const ItineraryDetails = () => {
   let { id } = useParams();
+  const [days, setDays] = useState([]);
 
-  const days = [
-    { title: "Day 1", description: "Arrival and settling in." },
-    { title: "Day 2", description: "City tour." },
-  ];
+  useEffect(() => {
+    if (id) {
+      console.log(`/assets/${id}.json`);
+      const encodedId = encodeURIComponent(id); // Encode the id in case of spaces --> %20
+      console.log(`/assets/${encodedId}.json`);
+      fetch(`/assets/${encodedId}.json`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Response data:", data); // Log response data
+          const parsedData = data.map((day) => ({
+            ...day,
+            date: new Date(day.date), // Parse date strings into Date objects
+          }));
+          setDays(parsedData);
+        })
+        .catch((error) => console.error("Error fetching itinerary data:", error));
+    }
+  }, [id]);
+  
 
   return (
     <Container>
-      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>Itinerary Details for: {id}</Typography>
+      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>
+        Itinerary Details for: {id}
+      </Typography>
       {days.map((day, index) => (
-        <DayCard key={index} day={day} />
+        <DayCard key={index} id={index} day={day} />
       ))}
     </Container>
   );
