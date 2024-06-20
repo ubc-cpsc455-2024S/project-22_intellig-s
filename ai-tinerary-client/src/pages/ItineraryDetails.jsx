@@ -7,6 +7,7 @@ const ItineraryDetails = () => {
   let { id } = useParams();
   const [days, setDays] = useState([]);
 
+  // This section parses the initial itineraries from public/assets
   useEffect(() => {
     if (id) {
       console.log(`/assets/${id}.json`);
@@ -20,6 +21,7 @@ const ItineraryDetails = () => {
             ...day,
             date: new Date(day.date), // Parse date strings into Date objects
           }));
+          console.log(parsedData);
           setDays(parsedData);
         })
         .catch((error) =>
