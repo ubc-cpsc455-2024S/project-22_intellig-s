@@ -12,7 +12,17 @@ export const daySlice = createSlice({
       state.days = action.payload;
     },
     addDays: (state, action) => {
-      state.days = [...state.days, ...action.payload];
+      action.payload.forEach(newDay => {
+        const existingIndex = state.days.findIndex(day => day.id === newDay.id);
+        if (existingIndex !== -1) {
+          // Day with the same id already exists, choose to update or ignore
+          // For example, update the existing day
+          state.days[existingIndex] = { ...state.days[existingIndex], ...newDay };
+        } else {
+          // Day does not exist, add it to the state
+          state.days.push(newDay);
+        }
+      });
     },
     updateDay: (state, action) => {
       const { id, changes } = action.payload;
