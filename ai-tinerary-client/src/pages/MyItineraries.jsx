@@ -8,23 +8,23 @@ const initialItineraries = [
   {
     id: 1,
     name: "Trip to Paris",
-    dates: "June 12 - June 13, 2024",
+    dates: "June 11 - June 13, 2024",
     imageUrl:
-      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=3273&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://www.travelandleisure.com/thmb/QBWOr5wx42xqoO3KYhfAKZN0lQk=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/3-paris-social-niche1115-470f7989143d49f7a3def0ac3940988d.jpg",
   },
   {
     id: 2,
     name: "Explore Tokyo",
-    dates: "August 15 - August 25, 2024",
+    dates: "August 14 - August 20, 2024",
     imageUrl:
-      "https://images.unsplash.com/photo-1544885935-98dd03b09034?q=80&w=3059&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://www.travelandleisure.com/thmb/vY0D56r18tUFYQOttVCF0ouKsXA=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/tokyo-japan-TOKYOTG0621-52012ff551dc46c4a87ac8e3151307a4.jpg",
   },
   {
     id: 3,
     name: "New York Adventure",
     dates: "September 5 - September 15, 2024",
     imageUrl:
-      "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://www.travelandleisure.com/thmb/3oPWFmA6fi9sjAyWzigwaUKD8P8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/new-york-city-evening-NYCTG0221-52492d6ccab44f328a1c89f41ac02aea.jpg",
   },
 ];
 
