@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  days: [],
+  dayLists: {},
 };
 
 export const daySlice = createSlice({
@@ -9,26 +9,27 @@ export const daySlice = createSlice({
   initialState,
   reducers: {
     setDays: (state, action) => {
-      state.days = action.payload;
+      console.log("In daySlice, payload: ",action.payload);
+      console.log("In daySlice, state.days: ",state.dayLists);
+      const { id, days } = action.payload;
+      if (!state.dayLists[id]) {
+        state.dayLists[id] = days;
+      }
     },
-    addDays: (state, action) => {
-      action.payload.forEach(newDay => {
-        const existingIndex = state.days.findIndex(day => day.id === newDay.id);
-        if (existingIndex !== -1) {
-          // Day with the same id already exists, choose to update or ignore
-          // For example, update the existing day
-          state.days[existingIndex] = { ...state.days[existingIndex], ...newDay };
-        } else {
-          // Day does not exist, add it to the state
-          state.days.push(newDay);
-        }
-      });
+    addDay: (state, action) => {
+      const { id, day } = action.payload;
+      if (state.dayLists[id]) {
+        state.dayLists[id].push(day);
+      } else {
+        state.dayLists[id] = [day];
+      }
     },
     updateDay: (state, action) => {
-      const { id, changes } = action.payload;
-      const index = state.days.findIndex((day) => day.id === id);
+      const { itineraryId, dayId, changes } = action.payload;
+      const days = state.dayLists[itineraryId];
+      const index = days.findIndex((day) => day.id === dayId);
       if (index !== -1) {
-        state.days[index] = { ...state.days[index], ...changes };
+        days[index] = { ...days[index], ...changes };
       }
     },
   },

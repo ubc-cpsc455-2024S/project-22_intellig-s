@@ -27,11 +27,12 @@ export default function DayCard({ day, id }) {
           </Typography>
           <Typography>{day.overview}</Typography>
           <div>
-            <Typography variant="h6">Activities</Typography>
-            <IconButton onClick={toggleActivities}>
-              {showActivities ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
-
+            <div style={{display: "flex"}}>
+              <Typography variant="h6">Activities</Typography>
+              <IconButton onClick={toggleActivities}>
+                {showActivities ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </div>
             {showActivities && (
               <ul>
                 {day.activities.map((activity, index) => (

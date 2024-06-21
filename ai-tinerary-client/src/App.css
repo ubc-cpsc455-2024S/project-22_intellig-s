@@ -38,7 +38,7 @@
 }
 
 .day-card {
-  text-align: center;
+  text-align: left;
 }
 
 .day-card img {
@@ -51,10 +51,6 @@
 
 .day-card:hover img {
   transform: scale(1.1); /* Apply zoom-in effect on hover */
-}
-
-.day-card li {
-  text-align: center;
 }
 
 .read-the-docs {
