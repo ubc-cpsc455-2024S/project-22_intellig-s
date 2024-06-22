@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { addDay, updateDay } from "../redux/daySlice";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
 import { Button, TextField, Container, Typography } from "@mui/material";
 
 const DayForm = ({ itineraryId, day }) => {
   const dispatch = useDispatch();
+  const dayLists = useSelector((state) => state.days.dayLists);
   const [dayNumber, setDayNumber] = useState(day ? day.dayNumber : "");
   const [date, setDate] = useState(
     day ? day.date.toISOString().substring(0, 10) : ""
@@ -31,8 +32,20 @@ const DayForm = ({ itineraryId, day }) => {
     }
 
     const dateObject = new Date(date);
+
+    let existingDayIndex;
+    let existingDay;
+    const days = dayLists[itineraryId] || [];
+    if (days) {
+      existingDayIndex = days.findIndex(
+        (day) => day.dayNumber === parseInt(dayNumber)
+      );
+      existingDay = days[existingDayIndex];
+      console.log("in updater mode; ", days, existingDayIndex, existingDay);
+    }
+
     const newDay = {
-      id: day ? day.id : uuid(),
+      id: existingDay ? existingDay.id : uuid(),
       parentItineraryId: itineraryId,
       dayNumber: parseInt(dayNumber),
       date: dateObject.toLocaleDateString(),
@@ -41,7 +54,7 @@ const DayForm = ({ itineraryId, day }) => {
       activities: parsedActivities,
     };
 
-    if (day) {
+    if (existingDay) {
       dispatch(
         updateDay({ itineraryId, dayNumber: newDay.dayNumber, changes: newDay })
       );
