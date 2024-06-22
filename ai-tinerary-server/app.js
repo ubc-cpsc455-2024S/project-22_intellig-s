@@ -1,3 +1,4 @@
+
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
@@ -8,19 +9,36 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+
+require("dotenv").config();
+
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/users");
+var itinerariesRouter = require("./routes/itineraries");
 
 const corsOptions = {
   origin: "http://localhost:5173", // Specify your client domain
   credentials: true, // This is important for setting cookies
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 const PORT = process.env.PORT || 5000;
 
 // User data - In real applications, this should come from a database
 const users = [
   { id: 1, username: "user", password: bcrypt.hashSync("password", 10) },
 ];
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+app.use("/itineraries", itinerariesRouter);
 
 // Middleware setup
 app.use(bodyParser.urlencoded({ extended: false }));
