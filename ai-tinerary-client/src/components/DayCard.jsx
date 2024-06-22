@@ -2,9 +2,12 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Card, CardContent, IconButton } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
+import { removeDay } from "../daySlice";
+import { useDispatch } from "react-redux";
 
 export default function DayCard({ day, id }) {
   const [showActivities, setShowActivities] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleActivities = () => {
     setShowActivities(!showActivities);
@@ -22,12 +25,14 @@ export default function DayCard({ day, id }) {
           style={{ marginRight: 16 }}
         />
         <div>
-          <Typography variant="h6">
-            Day {day.dayNumber}: {day.date.toLocaleDateString()}
-          </Typography>
+          <div style={{ display: "flex" }}>
+            <Typography variant="h6">
+              Day {day.dayNumber}: {day.date.toLocaleDateString()}
+            </Typography>
+          </div>
           <Typography>{day.overview}</Typography>
           <div>
-            <div style={{display: "flex"}}>
+            <div style={{ display: "flex" }}>
               <Typography variant="h6">Activities</Typography>
               <IconButton onClick={toggleActivities}>
                 {showActivities ? <ExpandLess /> : <ExpandMore />}
@@ -43,6 +48,15 @@ export default function DayCard({ day, id }) {
               </ul>
             )}
           </div>
+          <button
+            onClick={() =>
+              dispatch(
+                removeDay({ itineraryId: day.parentItineraryId, id: day.id })
+              )
+            }
+          >
+            ❌
+          </button>
         </div>
       </CardContent>
     </Card>
@@ -51,6 +65,8 @@ export default function DayCard({ day, id }) {
 
 DayCard.propTypes = {
   day: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    parentItineraryId: PropTypes.string.isRequired,
     dayNumber: PropTypes.number.isRequired,
     date: PropTypes.instanceOf(Date),
     overview: PropTypes.string.isRequired,

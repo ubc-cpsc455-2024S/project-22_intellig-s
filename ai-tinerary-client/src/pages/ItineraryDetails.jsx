@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import DayCard from "../components/DayCard";
 import { useDispatch, useSelector } from "react-redux";
-import { addDays, setDays } from "../daySlice";
-import { v4 as uuid } from 'uuid'; // Corrected import
+import { setDays } from "../daySlice";
+import { v4 as uuid } from "uuid"; // Corrected import
 
 const ItineraryDetails = () => {
   let { id } = useParams();
@@ -41,7 +41,11 @@ const ItineraryDetails = () => {
         Itinerary Details for: {id}
       </Typography>
       {days.map((day, index) => (
-        <DayCard key={index} id={index} day={{...day, date: new Date(day.date)}} /> 
+        <DayCard
+          key={index}
+          id={index}
+          day={{ ...day, date: new Date(day.date) }}
+        />
       ))}
     </Container>
   );

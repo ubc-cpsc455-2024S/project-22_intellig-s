@@ -9,8 +9,8 @@ export const daySlice = createSlice({
   initialState,
   reducers: {
     setDays: (state, action) => {
-      console.log("In daySlice, payload: ",action.payload);
-      console.log("In daySlice, state.days: ",state.dayLists);
+      console.log("In daySlice, payload: ", action.payload);
+      console.log("In daySlice, state.days: ", state.dayLists);
       const { id, days } = action.payload;
       if (!state.dayLists[id]) {
         state.dayLists[id] = days;
@@ -32,9 +32,16 @@ export const daySlice = createSlice({
         days[index] = { ...days[index], ...changes };
       }
     },
+    removeDay: (state, action) => {
+      const { itineraryId, id } = action.payload;
+      const days = state.dayLists[itineraryId];
+      state.dayLists[itineraryId] = state.dayLists[itineraryId].filter(
+        (day) => day.id !== id
+      );
+    },
   },
 });
 
-export const { setDays, addDays, updateDay } = daySlice.actions;
+export const { setDays, addDays, updateDay, removeDay } = daySlice.actions;
 
 export default daySlice.reducer;
