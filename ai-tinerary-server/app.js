@@ -1,4 +1,3 @@
-
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
@@ -9,7 +8,6 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
