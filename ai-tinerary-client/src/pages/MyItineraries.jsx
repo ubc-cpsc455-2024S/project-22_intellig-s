@@ -3,50 +3,26 @@ import { useState } from "react";
 import { Container, Typography, Grid, Button } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import { useNavigate } from "react-router-dom";
-
-const initialItineraries = [
-  {
-    id: 1,
-    name: "Trip to Paris",
-    dates: "June 12 - June 13, 2024",
-    imageUrl:
-      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=3273&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 2,
-    name: "Explore Tokyo",
-    dates: "August 15 - August 25, 2024",
-    imageUrl:
-      "https://images.unsplash.com/photo-1544885935-98dd03b09034?q=80&w=3059&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 3,
-    name: "New York Adventure",
-    dates: "September 5 - September 15, 2024",
-    imageUrl:
-      "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+import SurveyForm from "../components/SurveyForm";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteItinerary } from "../redux/itinerarySlice";
 
 const MyItineraries = () => {
-  const [itineraries, setItineraries] = useState(initialItineraries);
+  const itineraries = useSelector((state) => state.itineraries);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [formOpen, setFormOpen] = useState(false);
 
-  const addItinerary = () => {
-    const newId = itineraries.length
-      ? itineraries[itineraries.length - 1].id + 1
-      : 1;
-    const newItinerary = {
-      id: newId,
-      name: "New Destination",
-      dates: "New Dates",
-      imageUrl: "https://example.com/new.jpg",
-    };
-    setItineraries([...itineraries, newItinerary]);
+  const handleFormOpen = () => {
+    setFormOpen(true);
   };
 
-  const deleteItinerary = (id) => {
-    setItineraries(itineraries.filter((itinerary) => itinerary.id !== id));
+  const handleFormClose = () => {
+    setFormOpen(false);
+  };
+
+  const handleDeleteItinerary = (id) => {
+    dispatch(deleteItinerary(id));
   };
 
   const openDetails = (id) => {
@@ -64,7 +40,7 @@ const MyItineraries = () => {
       <Typography variant="h4" color="primary" gutterBottom>
         My Itineraries
       </Typography>
-      <Button variant="contained" color="primary" onClick={addItinerary}>
+      <Button variant="contained" color="primary" onClick={handleFormOpen}>
         Add Itinerary
       </Button>
       <Grid container spacing={4}>
@@ -72,12 +48,13 @@ const MyItineraries = () => {
           <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
             <ItineraryCard
               itinerary={itinerary}
-              onDelete={deleteItinerary}
+              onDelete={handleDeleteItinerary}
               onOpen={openDetails}
             />
           </Grid>
         ))}
       </Grid>
+      <SurveyForm open={formOpen} handleClose={handleFormClose} />
     </Container>
   );
 };
