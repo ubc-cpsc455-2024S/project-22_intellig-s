@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addDay, updateDay } from "../redux/daySlice";
 import { v4 as uuid } from "uuid";
-import { Button, TextField, Container } from "@mui/material";
+import { Button, TextField, Container, Typography } from "@mui/material";
 
 const DayForm = ({ itineraryId, day }) => {
   const dispatch = useDispatch();
@@ -13,11 +13,23 @@ const DayForm = ({ itineraryId, day }) => {
   const [overview, setOverview] = useState(day ? day.overview : "");
   const [imageUrl, setImageUrl] = useState(day ? day.imageUrl : "");
   const [activities, setActivities] = useState(
-    day ? day.activities.join(", ") : ""
-  );
+    day ? JSON.stringify(day.activities, null, 2) : ""
+  ); // default to JSON string
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    let parsedActivities;
+    try {
+      parsedActivities = JSON.parse(activities);
+      if (!Array.isArray(parsedActivities)) {
+        throw new Error("Activities should be an array");
+      }
+    } catch (err) {
+      alert(`Invalid JSON format: ${err.message}`);
+      return;
+    }
+
     const dateObject = new Date(date);
     const newDay = {
       id: day ? day.id : uuid(),
@@ -26,9 +38,7 @@ const DayForm = ({ itineraryId, day }) => {
       date: dateObject.toLocaleDateString(),
       overview,
       imageUrl,
-      activities: activities
-        .split(",")
-        .map((activity) => ({ time: "N/A", activity })),
+      activities: parsedActivities,
     };
 
     if (day) {
