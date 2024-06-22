@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import DayCard from "../components/DayCard";
