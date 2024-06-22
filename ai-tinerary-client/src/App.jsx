@@ -6,22 +6,27 @@ import Home from "./pages/Home";
 import MyItineraries from "./pages/MyItineraries";
 import ItineraryDetails from "./pages/ItineraryDetails";
 import theme from "./theme";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 import './App.css';
 
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/my-itineraries" element={<MyItineraries />} />
-          <Route path="/itineraries/:id" element={<ItineraryDetails />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/my-itineraries" element={<MyItineraries />} />
+            <Route path="/itineraries/:id" element={<ItineraryDetails />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </Provider>
   );
 };
+
 
 export default App;
