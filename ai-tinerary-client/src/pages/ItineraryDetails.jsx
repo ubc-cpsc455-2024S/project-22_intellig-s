@@ -1,32 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import DayCard from "../components/DayCard";
+import { useDispatch, useSelector } from "react-redux";
+import { setDays } from "../redux/daySlice";
+import { v4 as uuid } from "uuid"; // Corrected import
+import DayForm from "../components/DayForm";
 
 const ItineraryDetails = () => {
   let { id } = useParams();
-  const [days, setDays] = useState([]);
+  const dispatch = useDispatch();
+  const dayLists = useSelector((state) => state.days.dayLists);
+  const days = dayLists[id] || [];
 
+  // This section parses the initial itineraries from public/assets
   useEffect(() => {
     if (id) {
-      console.log(`/assets/${id}.json`);
       const encodedId = encodeURIComponent(id); // Encode the id in case of spaces --> %20
       console.log(`/assets/${encodedId}.json`);
       fetch(`/assets/${encodedId}.json`)
         .then((response) => response.json())
         .then((data) => {
-          console.log("Response data:", data); // Log response data
-          const parsedData = data.map((day) => ({
+          const parsedDays = data.map((day) => ({
+            id: uuid(),
+            parentItineraryId: id,
             ...day,
-            date: new Date(day.date), // Parse date strings into Date objects
+            date: day.date, // Parse date strings into Date objects
           }));
-          setDays(parsedData);
+          dispatch(setDays({ id, days: parsedDays }));
+          console.log("Redux store days:", dayLists);
         })
         .catch((error) =>
           console.error("Error fetching itinerary data:", error)
         );
     }
-  }, [id]);
+  }, []);
 
   return (
     <Container>
@@ -34,8 +42,13 @@ const ItineraryDetails = () => {
         Itinerary Details for: {id}
       </Typography>
       {days.map((day, index) => (
-        <DayCard key={index} id={index} day={day} />
+        <DayCard
+          key={index}
+          id={index}
+          day={{ ...day, date: new Date(day.date) }}
+        />
       ))}
+      <DayForm itineraryId={id} />
     </Container>
   );
 };
