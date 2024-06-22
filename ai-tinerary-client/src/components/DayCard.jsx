@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography, Card, CardContent, IconButton } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
-import { removeDay } from "../daySlice";
+import { removeDay } from "../redux/daySlice";
 import { useDispatch } from "react-redux";
 
 export default function DayCard({ day, id }) {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addDay, updateDay } from "../daySlice";
+import { addDay, updateDay } from "../redux/daySlice";
 import { v4 as uuid } from "uuid";
 import { Button, TextField, Container } from "@mui/material";
 
@@ -81,7 +81,7 @@ const DayForm = ({ itineraryId, day }) => {
           fullWidth
         />
         <TextField
-          label="Activities (comma separated)"
+          label="Activities (input JSON)"
           value={activities}
           onChange={(e) => setActivities(e.target.value)}
           required

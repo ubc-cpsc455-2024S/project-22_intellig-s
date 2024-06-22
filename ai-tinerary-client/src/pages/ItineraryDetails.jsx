@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import DayCard from "../components/DayCard";
 import { useDispatch, useSelector } from "react-redux";
-import { setDays } from "../daySlice";
+import { setDays } from "../redux/daySlice";
 import { v4 as uuid } from "uuid"; // Corrected import
 import DayForm from "../components/DayForm";
 

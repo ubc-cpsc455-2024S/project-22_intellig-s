@@ -7,8 +7,6 @@ import Login from "./components/Login";
 import MyItineraries from "./pages/MyItineraries";
 import ItineraryDetails from "./pages/ItineraryDetails";
 import theme from "./theme";
-import { Provider } from "react-redux";
-import store from "./redux/store";
 import "./App.css";
 
 const App = () => {
@@ -27,6 +25,5 @@ const App = () => {
     </ThemeProvider>
   );
 };
-
 
 export default App;
