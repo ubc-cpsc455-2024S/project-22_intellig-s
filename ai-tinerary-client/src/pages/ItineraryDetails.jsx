@@ -5,6 +5,7 @@ import DayCard from "../components/DayCard";
 import { useDispatch, useSelector } from "react-redux";
 import { setDays } from "../daySlice";
 import { v4 as uuid } from "uuid"; // Corrected import
+import DayForm from "../components/DayForm";
 
 const ItineraryDetails = () => {
   let { id } = useParams();
@@ -47,6 +48,7 @@ const ItineraryDetails = () => {
           day={{ ...day, date: new Date(day.date) }}
         />
       ))}
+      <DayForm itineraryId={id} />
     </Container>
   );
 };

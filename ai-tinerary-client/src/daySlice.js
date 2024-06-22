@@ -17,17 +17,18 @@ export const daySlice = createSlice({
       }
     },
     addDay: (state, action) => {
-      const { id, day } = action.payload;
-      if (state.dayLists[id]) {
-        state.dayLists[id].push(day);
+      const { itineraryId, day } = action.payload;
+      if (state.dayLists[itineraryId]) {
+        state.dayLists[itineraryId].push(day);
       } else {
-        state.dayLists[id] = [day];
+        state.dayLists[itineraryId] = [day];
       }
     },
     updateDay: (state, action) => {
-      const { itineraryId, dayId, changes } = action.payload;
+      const { itineraryId, dayNumber, changes } = action.payload;
       const days = state.dayLists[itineraryId];
-      const index = days.findIndex((day) => day.id === dayId);
+      const index = days.findIndex((day) => day.dayNumber === dayNumber);
+      console.log(index, days);
       if (index !== -1) {
         days[index] = { ...days[index], ...changes };
       }
@@ -42,6 +43,6 @@ export const daySlice = createSlice({
   },
 });
 
-export const { setDays, addDays, updateDay, removeDay } = daySlice.actions;
+export const { setDays, addDay, updateDay, removeDay } = daySlice.actions;
 
 export default daySlice.reducer;
