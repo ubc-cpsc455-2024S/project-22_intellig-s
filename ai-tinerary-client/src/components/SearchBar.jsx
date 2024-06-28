@@ -107,7 +107,6 @@ function SearchBar() {
       disablePortal
       autoComplete
       PaperComponent={CustomPaper}
-      id="google-map-demo"
       getOptionLabel={(option) =>
         typeof option === "string" ? option : option.description
       }
