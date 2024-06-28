@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const path = require("path");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 var cookieParser = require("cookie-parser");
@@ -95,6 +96,14 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../ai-tinerary-client", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@ai-tinerary.zeh2asn.mongodb.net/?appName=ai-tinerary`
+  )
+  .then(() => {
+    console.log("connected to database cluster");
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  });
