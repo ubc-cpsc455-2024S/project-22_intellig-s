@@ -98,7 +98,7 @@ app.get("*", (req, res) => {
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@ai-tinerary.zeh2asn.mongodb.net/?appName=ai-tinerary`
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@ai-tinerary.zeh2asn.mongodb.net/cpsc455project?appName=ai-tinerary`
   )
   .then(() => {
     console.log("connected to database cluster");
