@@ -1,118 +1,64 @@
-var express = require("express");
-var passport = require("passport");
-var LocalStrategy = require("passport-local");
-var crypto = require("crypto");
-var db = require("../db");
-var router = express.Router();
+const express = require("express");
+const bcrypt = require("bcrypt");
+const User = require("../models/userModel");
 
-passport.use(
-  new LocalStrategy(function verify(username, password, cb) {
-    db.get(
-      "SELECT * FROM users WHERE username = ?",
-      [username],
-      function (err, row) {
-        if (err) {
-          return cb(err);
-        }
-        if (!row) {
-          return cb(null, false, {
-            message: "Incorrect username or password.",
-          });
-        }
+const router = express.Router();
 
-        crypto.pbkdf2(
-          password,
-          row.salt,
-          310000,
-          32,
-          "sha256",
-          function (err, hashedPassword) {
-            if (err) {
-              return cb(err);
-            }
-            if (!crypto.timingSafeEqual(row.hashed_password, hashedPassword)) {
-              return cb(null, false, {
-                message: "Incorrect username or password.",
-              });
-            }
-            return cb(null, row);
-          }
-        );
-      }
-    );
-  })
-);
+router.post("/signup", async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res
+      .status(400)
+      .json({ message: "Username and password both cannot be null!" });
 
-passport.serializeUser(function (user, cb) {
-  process.nextTick(function () {
-    cb(null, { id: user.id, username: user.username });
-  });
+  try {
+    const oldUser = await User.findOne({ username });
+    if (oldUser)
+      return res
+        .status(400)
+        .json({ message: "A user with this username already exists!" });
+  } catch (err) {
+    return res.status(500).json({
+      message: `An internal error occurred with database connection. ${err.message}`,
+    });
+  }
+
+  // Use a salting value of 10; higher values take a longer time to hash.
+  const encryptedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new User({ username: username, password: encryptedPassword });
+  await newUser.save();
+  res
+    .status(201)
+    .json({ message: "New user created successfully!", user: newUser });
 });
 
-passport.deserializeUser(function (user, cb) {
-  process.nextTick(function () {
-    return cb(null, user);
-  });
-});
+router.post("/signin", async (req, res, next) => {
+  const { username, password } = req.body;
 
-router.get("/login", function (req, res, next) {
-  res.render("login");
-});
-
-router.post(
-  "/login/password",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-  })
-);
-
-router.post("/logout", function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "No user with this username exists." });
     }
-    res.redirect("/");
-  });
-});
 
-router.get("/signup", function (req, res, next) {
-  res.render("signup");
-});
-
-router.post("/signup", function (req, res, next) {
-  var salt = crypto.randomBytes(16);
-  crypto.pbkdf2(
-    req.body.password,
-    salt,
-    310000,
-    32,
-    "sha256",
-    function (err, hashedPassword) {
-      if (err) {
-        return next(err);
-      }
-      db.run(
-        "INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)",
-        [req.body.username, hashedPassword, salt],
-        function (err) {
-          if (err) {
-            return next(err);
-          }
-          var user = {
-            id: this.lastID,
-            username: req.body.username,
-          };
-          req.login(user, function (err) {
-            if (err) {
-              return next(err);
-            }
-            res.redirect("/");
-          });
-        }
-      );
+    const passwordCorrect = await bcrypt.compare(password, user.password);
+    if (passwordCorrect) {
+      return res
+        .status(200)
+        .json({ message: "Authenticated successfully.", user: user });
+    } else {
+      return res
+        .status(403)
+        .json({ message: "Username or password is incorrect!" });
     }
-  );
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal server error occurred with database connection.",
+    });
+  }
 });
 
 module.exports = router;
