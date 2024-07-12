@@ -17,6 +17,7 @@ require("dotenv").config();
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var itinerariesRouter = require("./routes/itineraries");
+var daysRouter = require("./routes/days");
 
 const corsOptions = {
   origin: "http://localhost:5173", // Specify your client domain
@@ -38,6 +39,7 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/itineraries", itinerariesRouter);
+app.use("/days", daysRouter);
 
 // Middleware setup
 app.use(bodyParser.urlencoded({ extended: false }));
