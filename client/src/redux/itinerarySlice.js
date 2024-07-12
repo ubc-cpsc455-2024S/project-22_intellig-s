@@ -1,42 +1,55 @@
 // src/redux/itinerarySlice.js
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import itinerariesAPI from "./itinerariesAPI";
 
-const initialItineraries = [
-  {
-    id: 1,
-    name: "Trip to Paris",
-    dates: "June 12 - June 13, 2024",
-    imageUrl:
-      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=3273&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 2,
-    name: "Explore Tokyo",
-    dates: "August 15 - August 25, 2024",
-    imageUrl:
-      "https://images.unsplash.com/photo-1544885935-98dd03b09034?q=80&w=3059&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 3,
-    name: "New York Adventure",
-    dates: "September 5 - September 15, 2024",
-    imageUrl:
-      "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+const actionTypes = {
+  GET_ITINERARIES: "itineraries/getItineraries",
+  ADD_ITINERARY: "itineraries/addItinerary",
+  DELETE_ITINERARY: "itineraries/deleteItinerary",
+};
+
+export const getItinerariesAsync = createAsyncThunk(
+  actionTypes.GET_ITINERARIES,
+  async () => {
+    return await itinerariesAPI.getItineraries();
+  }
+);
+
+export const addItineraryAsync = createAsyncThunk(
+  actionTypes.ADD_ITINERARY,
+  async (itinerary) => {
+    return await itinerariesAPI.addItinerary(itinerary);
+  }
+);
+export const deleteItineraryAsync = createAsyncThunk(
+  actionTypes.DELETE_ITINERARY,
+  async (itinerary) => {
+    return await itinerariesAPI.deleteItinerary(itinerary);
+  }
+);
 
 const itinerarySlice = createSlice({
   name: "itineraries",
-  initialState: initialItineraries,
-  reducers: {
-    addItinerary: (state, action) => {
-      state.push(action.payload);
-    },
-    deleteItinerary: (state, action) => {
-      return state.filter(itinerary => itinerary.id !== action.payload);
-    }
+  initialState: {
+    value: [],
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getItinerariesAsync.fulfilled, (state, action) => {
+        state.value = action.payload;
+      })
+      .addCase(addItineraryAsync.fulfilled, (state, action) => {
+        state.value.push(action.payload);
+      })
+      .addCase(deleteItineraryAsync.fulfilled, (state, action) => {
+        const membersList = state.value;
+        const removedMembersList = membersList.filter((member) => {
+          return member.id != action.payload;
+        });
+        state.value = removedMembersList;
+      });
   },
 });
 
-export const { addItinerary, deleteItinerary } = itinerarySlice.actions;
 export default itinerarySlice.reducer;
+export const selectItineraries = (state) => state.itineraries.value;
