@@ -9,9 +9,13 @@ import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../redux/authSlice";
 
 const NavBar = () => {
+  const isSignedIn = useSelector((state) => state.auth.isSignedIn);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -44,15 +48,17 @@ const NavBar = () => {
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           AI-tinerary
         </Typography>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="my itineraries"
-          component={Link}
-          to="/my-itineraries"
-        >
-          <TravelExploreIcon />
-        </IconButton>
+        {isSignedIn && (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="my itineraries"
+            component={Link}
+            to="/my-itineraries"
+          >
+            <TravelExploreIcon />
+          </IconButton>
+        )}
         <div>
           <IconButton
             edge="end"
@@ -73,13 +79,25 @@ const NavBar = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
           >
-            <MenuItem
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Login
-            </MenuItem>
+            {!isSignedIn && (
+              <MenuItem
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Login
+              </MenuItem>
+            )}
+            {isSignedIn && (
+              <MenuItem
+                onClick={() => {
+                  dispatch(signOut());
+                  navigate("/");
+                }}
+              >
+                Logout
+              </MenuItem>
+            )}
           </Menu>
         </div>
       </Toolbar>
