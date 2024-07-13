@@ -10,7 +10,7 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:3000/auth/signup`, { username, password })
+      .post(`http://localhost:5000/auth/signup`, { username, password })
       .then((response) => {
         navigate("/login");
       })
