@@ -5,6 +5,7 @@ const { v4: uuid } = require("uuid");
 const Itinerary = require("../models/itineraryModel");
 
 const generateItinerary = require("../replicate/generateItinerary");
+const Day = require("../models/Day");
 
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
@@ -14,13 +15,36 @@ router.get("/", async function (req, res, next) {
 router.post("/", async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
 
-  console.log(req.body);
   const response = JSON.parse(
     await generateItinerary(location, startDate, endDate)
   );
 
+  let dayDate = new Date(startDate);
+
+  const itineraryId = uuid();
+
+  let index = 1;
+  for (const day of response.days) {
+    console.log(index);
+    const newDay = new Day({
+      id: uuid(),
+      parentItineraryId: itineraryId,
+      dayNumber: index,
+      date: dayDate.setDate(dayDate.getDate() + 1),
+      overview: `Day ${index} in ${location}`,
+      imageUrl: "test",
+      activities: day.activities.map((activity) => {
+        return { time: activity.time, activity: activity.location };
+      }),
+    });
+
+    await newDay.save();
+    console.log(index);
+    index++;
+  }
+
   let itinerary = new Itinerary({
-    id: uuid(),
+    id: itineraryId,
     location: location,
     startDate: startDate,
     endDate: endDate,
