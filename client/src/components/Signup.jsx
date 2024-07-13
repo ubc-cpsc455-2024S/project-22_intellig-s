@@ -1,22 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { signIn } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:3000/auth/signin`, { username, password })
+      .post(`http://localhost:3000/auth/signup`, { username, password })
       .then((response) => {
-        dispatch(signIn());
-        navigate("/");
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Error logging in", error);
@@ -25,7 +21,7 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Sign-up</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
@@ -43,13 +39,10 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Sign up</button>
       </form>
-      <button onClick={() => navigate("/signup")}>
-        Don't have an account? Sign up!
-      </button>
     </div>
   );
 };
 
-export default Login;
+export default Signup;
