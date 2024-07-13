@@ -17,14 +17,14 @@ function ItineraryCard({ itinerary, onDelete, onOpen }) {
         component="img"
         height="140"
         image={itinerary.imageUrl}
-        alt={`Image of ${itinerary.name}`}
+        alt={`Image of ${itinerary.location}`}
       />
       <CardContent
-        onClick={() => onOpen(itinerary.name)}
+        onClick={() => onOpen(itinerary.id)}
         style={{ cursor: "pointer" }}
       >
         <Typography gutterBottom variant="h5" component="div">
-          {itinerary.name}
+          {itinerary.location}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {itinerary.dates}

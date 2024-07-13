@@ -1,10 +1,10 @@
 const replicate = require("./replicate");
 
-async function createItinerary(location, date_range) {
+async function generateItinerary(location, start_date, end_date) {
   const input = {
     top_k: 0,
     top_p: 0.95,
-    prompt: `give me an itinerary for ${location} from ${date_range}`,
+    prompt: `give me an itinerary for ${location} from ${start_date} to ${end_date}`,
     max_tokens: 2000,
     temperature: 0.7,
     system_prompt: `Please only respond with JSON format text, I do not want any extra text and only want to see JSON text that I can take into a javascript application. The format should be as follows:
@@ -36,4 +36,4 @@ async function createItinerary(location, date_range) {
   return output.join("");
 }
 
-module.exports = createItinerary;
+module.exports = generateItinerary;
