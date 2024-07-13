@@ -11,6 +11,7 @@ var logger = require("morgan");
 
 require("dotenv").config();
 
+var daysRouter = require("./routes/days");
 const indexRouter = require("./routes/index");
 const itinerariesRouter = require("./routes/itineraries");
 const authRouter = require("./routes/auth");
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/itineraries", itinerariesRouter);
+app.use("/days", daysRouter);
 
 // Middleware setup
 app.use(bodyParser.urlencoded({ extended: false }));

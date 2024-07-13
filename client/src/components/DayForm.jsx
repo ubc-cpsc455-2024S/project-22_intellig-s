@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addDay, updateDay } from "../redux/daySlice";
+import { addDay, addNewDay, updateDay } from "../redux/daySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
 import { Button, TextField, Container, Typography } from "@mui/material";
@@ -59,7 +59,7 @@ const DayForm = ({ itineraryId, day }) => {
         updateDay({ itineraryId, dayNumber: newDay.dayNumber, changes: newDay })
       );
     } else {
-      dispatch(addDay({ itineraryId, day: newDay }));
+      dispatch(addNewDay({ itineraryId, day: newDay }));
     }
 
     // Clear form after submit

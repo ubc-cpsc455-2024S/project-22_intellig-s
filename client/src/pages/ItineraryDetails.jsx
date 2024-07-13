@@ -2,52 +2,52 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import DayCard from "../components/DayCard";
-import { useDispatch, useSelector } from "react-redux";
-import { setDays } from "../redux/daySlice";
-import { v4 as uuid } from "uuid"; // Corrected import
 import DayForm from "../components/DayForm";
+import { useDispatch, useSelector } from "react-redux";
+import { setDays, fetchDays } from "../redux/daySlice";
 
 const ItineraryDetails = () => {
-  let { id } = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const dayLists = useSelector((state) => state.days.dayLists);
   const days = dayLists[id] || [];
 
-  // This section parses the initial itineraries from public/assets
   useEffect(() => {
-    if (id) {
-      const encodedId = encodeURIComponent(id); // Encode the id in case of spaces --> %20
-      console.log(`/assets/${encodedId}.json`);
-      fetch(`/assets/${encodedId}.json`)
-        .then((response) => response.json())
-        .then((data) => {
-          const parsedDays = data.map((day) => ({
-            id: uuid(),
-            parentItineraryId: id,
-            ...day,
-            date: day.date, // Parse date strings into Date objects
-          }));
-          dispatch(setDays({ id, days: parsedDays }));
-          console.log("Redux store days:", dayLists);
-        })
-        .catch((error) =>
-          console.error("Error fetching itinerary data:", error)
-        );
-    }
-  }, []);
+    const fetchDaysFromDB = async () => {
+      try {
+        const result = await dispatch(fetchDays(id));
+        if (fetchDays.fulfilled.match(result)) {
+          console.log("Fetched days from DB:", result.payload.days);
+          dispatch(setDays({ itineraryId: id, days: result.payload.days }));
+        } else {
+          console.error("Error fetching days from DB:", result.error.message);
+        }
+      } catch (error) {
+        console.error("Error in dispatching fetchDays:", error);
+      }
+    };
+
+    fetchDaysFromDB();
+  }, [dispatch, id]);
 
   return (
     <Container>
       <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>
         Itinerary Details for: {id}
       </Typography>
-      {days.map((day, index) => (
-        <DayCard
-          key={index}
-          id={index}
-          day={{ ...day, date: new Date(day.date) }}
-        />
-      ))}
+      {days.length > 0 ? (
+        days.map((day, index) => (
+          <DayCard
+            key={index}
+            id={index}
+            day={{ ...day, date: new Date(day.date) }}
+          />
+        ))
+      ) : (
+        <Typography variant="h6">
+          No days available for this itinerary.
+        </Typography>
+      )}
       <DayForm itineraryId={id} />
     </Container>
   );
