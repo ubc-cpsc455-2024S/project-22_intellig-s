@@ -37,7 +37,6 @@ const getItineraries = async () => {
   const response = await fetch("http://localhost:5000/itineraries", {
     method: "GET",
   });
-  console.log(response);
   return await response.json();
 };
 

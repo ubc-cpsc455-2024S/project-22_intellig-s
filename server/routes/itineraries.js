@@ -4,6 +4,7 @@ const { v4: uuid } = require("uuid");
 
 const Itinerary = require("../models/itineraryModel");
 
+const getImageFromSearch = require("../google/getImageFromSearch");
 const generateItinerary = require("../replicate/generateItinerary");
 const Day = require("../models/Day");
 
@@ -19,36 +20,39 @@ router.post("/", async function (req, res, next) {
     await generateItinerary(location, startDate, endDate)
   );
 
-  let dayDate = new Date(startDate);
-
   const itineraryId = uuid();
 
+  let dayDate = new Date(startDate);
   let index = 1;
+
   for (const day of response.days) {
-    console.log(index);
+    dayId = uuid();
+    const dayImageUrl = await getImageFromSearch(day.activities[0].location);
+
     const newDay = new Day({
       id: uuid(),
       parentItineraryId: itineraryId,
       dayNumber: index,
       date: dayDate.setDate(dayDate.getDate() + 1),
       overview: `Day ${index} in ${location}`,
-      imageUrl: "test",
+      imageUrl: dayImageUrl,
       activities: day.activities.map((activity) => {
         return { time: activity.time, activity: activity.location };
       }),
     });
 
     await newDay.save();
-    console.log(index);
     index++;
   }
+
+  const itineraryImageUrl = await getImageFromSearch(location);
 
   let itinerary = new Itinerary({
     id: itineraryId,
     location: location,
     startDate: startDate,
     endDate: endDate,
-    days: response.days,
+    imageUrl: itineraryImageUrl,
   });
 
   itinerary.save();
@@ -59,6 +63,7 @@ router.post("/", async function (req, res, next) {
 router.delete("/:itineraryId", async function (req, res, next) {
   const itineraryId = req.params.itineraryId;
 
+  await Day.deleteMany({ parentItineraryId: itineraryId });
   await Itinerary.deleteOne({ id: itineraryId });
   return res.status(200).send({ message: "Member deleted successfully" });
 });
