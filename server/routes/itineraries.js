@@ -26,7 +26,6 @@ router.post("/", async function (req, res, next) {
   let index = 1;
 
   for (const day of response.days) {
-    dayId = uuid();
     const dayImageUrl = await getImageFromSearch(day.activities[0].location);
 
     const newDay = new Day({
