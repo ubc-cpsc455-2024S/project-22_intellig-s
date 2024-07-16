@@ -58,6 +58,39 @@ export const removeDay = createAsyncThunk(
 const daySlice = createSlice({
   name: "days",
   initialState,
+  reducers: {
+    // Non-async action to set days directly
+    setDays: (state, action) => {
+      const { itineraryId, days } = action.payload;
+      state.dayLists[itineraryId] = [...days];
+      console.log("In daySlice setDays, ", days);
+    },
+    // Non-async action to add a day directly
+    addDay: (state, action) => {
+      const { itineraryId, day } = action.payload;
+      if (state.dayLists[itineraryId]) {
+        state.dayLists[itineraryId].push(day);
+      } else {
+        state.dayLists[itineraryId] = [day];
+      }
+    },
+    // Non-async action to update a day directly
+    updateDay: (state, action) => {
+      const { itineraryId, dayNumber, changes } = action.payload;
+      const days = state.dayLists[itineraryId];
+      const index = days.findIndex((day) => day.dayNumber === dayNumber);
+      if (index !== -1) {
+        days[index] = { ...days[index], ...changes };
+      }
+    },
+    // Non-async action to remove a day directly
+    removeDay: (state, action) => {
+      const { itineraryId, id } = action.payload;
+      state.dayLists[itineraryId] = state.dayLists[itineraryId].filter(
+        (day) => day.id !== id
+      );
+    },
+  },
   // Extra reducers for handling async actions
   extraReducers(builder) {
     builder

@@ -3,10 +3,9 @@ import { useState } from "react";
 
 import PropType from "prop-types";
 
-export default function ControlledMap({ center, zoom, markers }) {
+export default function ControlledMap({ bounds, markers }) {
   const [cameraProps, setCameraProps] = useState({
-    defaultCenter: { lat: center.lat, lng: center.lng },
-    defaultZoom: zoom,
+    defaultBounds: bounds,
   });
   const handleCameraChange = (ev) => setCameraProps(ev.detail);
 
@@ -15,7 +14,7 @@ export default function ControlledMap({ center, zoom, markers }) {
       {markers.map((marker) => {
         return (
           <Marker
-            key={{ lat: marker.latitude, lng: marker.longitude }}
+            key={marker.latitude}
             position={{ lat: marker.latitude, lng: marker.longitude }}
           ></Marker>
         );
@@ -25,7 +24,6 @@ export default function ControlledMap({ center, zoom, markers }) {
 }
 
 ControlledMap.propTypes = {
-  center: PropType.object,
-  zoom: PropType.number,
+  bounds: PropType.object,
   markers: PropType.array,
 };

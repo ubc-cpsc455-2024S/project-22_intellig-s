@@ -18,9 +18,14 @@ const itinerarySchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  days: {
-    type: [Object],
-    default: [],
+  imageUrl: {
+    type: String,
+  },
+  bounds: {
+    north: { type: Number, required: true },
+    east: { type: Number, required: true },
+    south: { type: Number, required: true },
+    west: { type: Number, required: true },
   },
 });
 

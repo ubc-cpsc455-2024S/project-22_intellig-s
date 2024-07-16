@@ -4,8 +4,11 @@ const { v4: uuid } = require("uuid");
 
 const Itinerary = require("../models/itineraryModel");
 
+const getImageFromSearch = require("../google/getImageFromSearch");
 const generateItinerary = require("../replicate/generateItinerary");
-const Day = require("../models/Day");
+const Day = require("../models/dayModel");
+const getBoundsFromLocation = require("../google/getBoundsFromLocation");
+const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
@@ -19,46 +22,61 @@ router.post("/", async function (req, res, next) {
     await generateItinerary(location, startDate, endDate)
   );
 
-  let dayDate = new Date(startDate);
-
   const itineraryId = uuid();
+  const bounds = await getBoundsFromLocation(location);
 
+  let dayDate = new Date(startDate);
   let index = 1;
+
   for (const day of response.days) {
-    console.log(index);
+    const dayImageUrl = await getImageFromSearch(day.activities[0].location);
+
+    const activities = [];
+    for (const activity of day.activities) {
+      const coords = await getCoordsFromLocation(
+        `${activity.location}, ${location}`
+      );
+
+      activities.push({
+        time: activity.time,
+        activity: activity.location,
+        coordinates: coords,
+      });
+    }
+
     const newDay = new Day({
       id: uuid(),
       parentItineraryId: itineraryId,
       dayNumber: index,
       date: dayDate.setDate(dayDate.getDate() + 1),
       overview: `Day ${index} in ${location}`,
-      imageUrl: "test",
-      activities: day.activities.map((activity) => {
-        return { time: activity.time, activity: activity.location };
-      }),
+      imageUrl: dayImageUrl,
+      activities: activities,
     });
 
     await newDay.save();
-    console.log(index);
     index++;
   }
+
+  const itineraryImageUrl = await getImageFromSearch(location);
 
   let itinerary = new Itinerary({
     id: itineraryId,
     location: location,
     startDate: startDate,
     endDate: endDate,
-    days: response.days,
+    imageUrl: itineraryImageUrl,
+    bounds: bounds,
   });
 
   itinerary.save();
-
   res.send(itinerary);
 });
 
 router.delete("/:itineraryId", async function (req, res, next) {
   const itineraryId = req.params.itineraryId;
 
+  await Day.deleteMany({ parentItineraryId: itineraryId });
   await Itinerary.deleteOne({ id: itineraryId });
   return res.status(200).send({ message: "Member deleted successfully" });
 });
