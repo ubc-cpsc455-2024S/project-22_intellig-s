@@ -1,11 +1,17 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Typography, Card, CardContent, IconButton } from "@mui/material";
+import {
+  Typography,
+  Card,
+  CardContent,
+  IconButton,
+  Button,
+} from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { removeDay } from "../redux/daySlice";
 import { useDispatch } from "react-redux";
 
-export default function DayCard({ day, id }) {
+export default function DayCard({ day }) {
   const [showActivities, setShowActivities] = useState(false);
   const dispatch = useDispatch();
 
@@ -48,15 +54,16 @@ export default function DayCard({ day, id }) {
               </ul>
             )}
           </div>
-          <button
+          <Button
+            variant="contained"
             onClick={() =>
               dispatch(
                 removeDay({ itineraryId: day.parentItineraryId, id: day.id })
               )
             }
           >
-            ❌
-          </button>
+            Delete
+          </Button>
         </div>
       </CardContent>
     </Card>

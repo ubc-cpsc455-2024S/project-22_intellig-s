@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { addDay, addNewDay, updateDay } from "../redux/daySlice";
+import { useState } from "react";
+import { addNewDay, updateDay } from "../redux/daySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
-import { Button, TextField, Container, Typography } from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
+
+import PropType from "prop-types";
 
 const DayForm = ({ itineraryId, day }) => {
   const dispatch = useDispatch();
@@ -116,6 +118,11 @@ const DayForm = ({ itineraryId, day }) => {
       </form>
     </Container>
   );
+};
+
+DayForm.propTypes = {
+  itineraryId: PropType.string,
+  day: PropType.object,
 };
 
 export default DayForm;

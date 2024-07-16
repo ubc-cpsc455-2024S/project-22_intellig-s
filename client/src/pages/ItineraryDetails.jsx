@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import ControlledMap from "../components/ControlledMap";
 import DayCard from "../components/DayCard";
 import DayForm from "../components/DayForm";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,26 +32,48 @@ const ItineraryDetails = () => {
     fetchDaysFromDB();
   }, [dispatch, id]);
 
+  const markers = days
+    .map((day) => {
+      return day.activities.map((activity) => {
+        return { latitude: activity.latitude, longitude: activity.longitude };
+      });
+    })
+    .flat();
   return (
-    <Container>
-      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>
-        Itinerary Details for: {id}
-      </Typography>
-      {days.length > 0 ? (
-        days.map((day, index) => (
-          <DayCard
-            key={index}
-            id={index}
-            day={{ ...day, date: new Date(day.date) }}
-          />
-        ))
-      ) : (
-        <Typography variant="h6">
-          No days available for this itinerary.
+    <Grid container spacing={2} style={{ height: "100vh" }}>
+      <Grid item xs={12}>
+        <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>
+          Itinerary Details for: {id}
         </Typography>
-      )}
-      <DayForm itineraryId={id} />
-    </Container>
+      </Grid>
+      <Grid item xs={7}>
+        <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+          <ControlledMap
+            zoom={8}
+            center={{ lat: 48.8575475, lng: 2.3513765 }}
+            markers={markers}
+          ></ControlledMap>
+        </APIProvider>
+      </Grid>
+      <Grid item xs={3}>
+        {days.length > 0 ? (
+          days.map((day, index) => (
+            <DayCard
+              key={index}
+              id={index}
+              day={{ ...day, date: new Date(day.date) }}
+            />
+          ))
+        ) : (
+          <Typography variant="h6">
+            No days available for this itinerary.
+          </Typography>
+        )}
+      </Grid>
+      <Grid item xs={2}>
+        <DayForm itineraryId={id} />
+      </Grid>
+    </Grid>
   );
 };
 
