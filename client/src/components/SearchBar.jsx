@@ -35,7 +35,7 @@ function loadScript(src, position, id) {
 
 const autocompleteService = { current: null };
 
-function SearchBar() {
+function SearchBar({ handleChange }) {
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
@@ -117,6 +117,7 @@ function SearchBar() {
       value={value}
       noOptionsText="No locations"
       onChange={(event, newValue) => {
+        handleChange(newValue);
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
       }}
@@ -197,7 +198,6 @@ function SearchBar() {
 }
 
 function CustomPaper({ children }) {
-  console.log(children);
   return (
     <Paper
       sx={{
