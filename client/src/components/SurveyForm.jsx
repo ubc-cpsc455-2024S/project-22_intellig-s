@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  TextField,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import PropType from "prop-types";
+
+import SearchBar from "./SearchBar";
 import { addItineraryAsync } from "../redux/itinerarySlice";
 import "../App.css"; // Importing the CSS file
 
@@ -20,14 +17,6 @@ const SurveyForm = ({ open, handleClose }) => {
     startDate: "",
     endDate: "",
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
 
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1);
@@ -58,13 +47,13 @@ const SurveyForm = ({ open, handleClose }) => {
         {step === 1 && (
           <div className="survey-step">
             <h2>Where would you like to visit?</h2>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="location"
-              label="City, Country"
-              type="text"
-              onChange={handleChange}
+            <SearchBar
+              handleChange={(newLocation) =>
+                setFormValues({
+                  ...formValues,
+                  location: newLocation.description,
+                })
+              }
             />
             <div className="button-group">
               <Button onClick={handleNext} color="primary" variant="contained">
@@ -117,6 +106,11 @@ const SurveyForm = ({ open, handleClose }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+SurveyForm.propTypes = {
+  open: PropType.bool,
+  handleClose: PropType.func,
 };
 
 export default SurveyForm;
