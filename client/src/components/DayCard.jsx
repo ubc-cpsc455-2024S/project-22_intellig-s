@@ -6,10 +6,14 @@ import {
   CardContent,
   IconButton,
   Button,
+  CardMedia,
+  Collapse,
+  Box,
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { removeDay } from "../redux/daySlice";
 import { useDispatch } from "react-redux";
+import ActivityCard from "./ActivityCard";
 
 export default function DayCard({ day }) {
   const [showActivities, setShowActivities] = useState(false);
@@ -20,52 +24,49 @@ export default function DayCard({ day }) {
   };
 
   return (
-    <Card variant="outlined" style={{ marginBottom: 8 }}>
+    <Card sx={{ mb: 1 }}>
+      <CardMedia
+        component="img"
+        sx={{ height: 200 }}
+        image={day.imageUrl}
+        alt="Day Image"
+      />
       <CardContent
         className="day-card"
-        style={{ display: "flex", alignItems: "center" }}
+        style={{ alignItems: "top", objectFit: "fill" }}
       >
-        <img
-          src={day.imageUrl}
-          alt={day.imageUrl}
-          style={{ marginRight: 16 }}
-        />
-        <div>
-          <div style={{ display: "flex" }}>
-            <Typography variant="h6">
-              Day {day.dayNumber}: {day.date.toLocaleDateString()}
-            </Typography>
-          </div>
-          <Typography>{day.overview}</Typography>
-          <div>
-            <div style={{ display: "flex" }}>
-              <Typography variant="h6">Activities</Typography>
-              <IconButton onClick={toggleActivities}>
-                {showActivities ? <ExpandLess /> : <ExpandMore />}
-              </IconButton>
-            </div>
-            {showActivities && (
-              <ul>
-                {day.activities.map((activity, index) => (
-                  <li key={index}>
-                    {activity.time} - {activity.activity}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <Button
-            variant="contained"
-            onClick={() =>
-              dispatch(
-                removeDay({ itineraryId: day.parentItineraryId, id: day.id })
-              )
-            }
-          >
-            Delete
-          </Button>
-        </div>
+        <Typography variant="h6">
+          Day {day.dayNumber}:{" "}
+          {day.date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography variant="h6">Activities</Typography>
+          <IconButton onClick={toggleActivities}>
+            {showActivities ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </Box>
       </CardContent>
+      <Collapse in={showActivities} timeout="auto" unmountOnExit>
+        {day.activities.map((activity, index) => (
+          <ActivityCard key={index} activity={activity} />
+        ))}
+        <Button
+          variant="contained"
+          color="error"
+          sx={{ position: "relative", right: 0, top: 0, mb: 1 }}
+          onClick={() =>
+            dispatch(
+              removeDay({ itineraryId: day.parentItineraryId, id: day.id })
+            )
+          }
+        >
+          Delete
+        </Button>
+      </Collapse>
     </Card>
   );
 }

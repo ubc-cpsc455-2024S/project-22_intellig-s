@@ -44,8 +44,8 @@ const ItineraryDetails = () => {
 
   return (
     <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
-      <Grid container spacing={2} sx={{ pt: "80px", height: "100vh" }}>
-        <Grid item sx={{ width: "50vw", height: "100%" }}>
+      <Grid container sx={{ mt: "64px", height: "100vh" }}>
+        <Grid item sx={{ width: "74vw", height: "100%" }}>
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             {itinerary ? (
               <ControlledMap
@@ -57,8 +57,13 @@ const ItineraryDetails = () => {
             )}
           </APIProvider>
         </Grid>
-        <Grid item xs={6} container sx={{ height: "100%", overflow: "auto" }}>
-          <Grid item xs={12}>
+        <Grid
+          item
+          xs={3}
+          container
+          sx={{ height: "100%", overflow: "auto", px: 2 }}
+        >
+          <Grid item xs={12} sx={{ outline: "10px 10px 10px" }}>
             <Typography variant="h4" sx={{ mb: "0.25em" }}>
               Itinerary Details for: {itinerary ? itinerary.location : id}
             </Typography>

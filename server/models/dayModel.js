@@ -11,6 +11,7 @@ const daySchema = new mongoose.Schema({
     {
       time: { type: String, required: true },
       activity: { type: String, required: true },
+      address: { type: String, required: true },
       coordinates: {
         latitude: { type: Number, required: true },
         longitude: { type: Number, required: true },

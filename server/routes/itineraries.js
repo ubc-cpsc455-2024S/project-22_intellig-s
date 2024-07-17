@@ -9,6 +9,7 @@ const generateItinerary = require("../replicate/generateItinerary");
 const Day = require("../models/dayModel");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
+const getAddressFromLocation = require("../google/getAddressFromLocation");
 
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
@@ -36,10 +37,14 @@ router.post("/", async function (req, res, next) {
       const coords = await getCoordsFromLocation(
         `${activity.location}, ${location}`
       );
+      const address = await getAddressFromLocation(
+        `${activity.location}, ${location}`
+      );
 
       activities.push({
         time: activity.time,
         activity: activity.location,
+        address: address,
         coordinates: coords,
       });
     }

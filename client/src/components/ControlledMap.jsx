@@ -1,4 +1,4 @@
-import { Map, Marker } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 import { useState } from "react";
 
 import PropType from "prop-types";
@@ -10,13 +10,17 @@ export default function ControlledMap({ bounds, markers }) {
   const handleCameraChange = (ev) => setCameraProps(ev.detail);
 
   return (
-    <Map {...cameraProps} onCameraChanged={handleCameraChange}>
+    <Map
+      {...cameraProps}
+      mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+      onCameraChanged={handleCameraChange}
+    >
       {markers.map((marker) => {
         return (
-          <Marker
+          <AdvancedMarker
             key={marker.latitude}
             position={{ lat: marker.latitude, lng: marker.longitude }}
-          ></Marker>
+          ></AdvancedMarker>
         );
       })}
     </Map>
