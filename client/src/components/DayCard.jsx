@@ -15,7 +15,7 @@ import { removeDay } from "../redux/daySlice";
 import { useDispatch } from "react-redux";
 import ActivityCard from "./ActivityCard";
 
-export default function DayCard({ day }) {
+export default function DayCard({ day, setActiveDay }) {
   const [showActivities, setShowActivities] = useState(false);
   const dispatch = useDispatch();
 
@@ -57,7 +57,7 @@ export default function DayCard({ day }) {
         <Button
           variant="contained"
           color="error"
-          sx={{ position: "relative", right: 0, top: 0, mb: 1 }}
+          sx={{ mb: 1, mr: 1 }}
           onClick={() =>
             dispatch(
               removeDay({ itineraryId: day.parentItineraryId, id: day.id })
@@ -65,6 +65,13 @@ export default function DayCard({ day }) {
           }
         >
           Delete
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ mb: 1 }}
+          onClick={() => setActiveDay(day.dayNumber)}
+        >
+          Show on Map
         </Button>
       </Collapse>
     </Card>
@@ -86,4 +93,5 @@ DayCard.propTypes = {
       })
     ).isRequired,
   }).isRequired,
+  setActiveDay: PropTypes.func,
 };

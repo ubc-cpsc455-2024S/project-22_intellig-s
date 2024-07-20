@@ -31,7 +31,7 @@ const NavBar = () => {
 
   return (
     <AppBar
-      position="static"
+      position="absolute"
       color="primary"
       sx={{ boxShadow: "none" }} // Remove the box shadow
     >

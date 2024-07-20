@@ -1,12 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ControlledMap from "../components/ControlledMap";
 import DayCard from "../components/DayCard";
 import DayForm from "../components/DayForm";
 import { useDispatch, useSelector } from "react-redux";
-import { setDays, fetchDays } from "../redux/daySlice";
+import { fetchDays } from "../redux/daySlice";
 import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
@@ -17,11 +17,13 @@ const ItineraryDetails = () => {
   const itineraries = useSelector((state) => state.itineraries.value);
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
+  const [activeDay, setActiveDay] = useState(null);
+  const [addDayFormOpen, setAddDayFormOpen] = useState(false);
+
   useEffect(() => {
     const fetchDaysFromDB = async () => {
       try {
-        const result = await dispatch(fetchDays(id));
-        dispatch(setDays({ itineraryId: id, days: result.payload.days }));
+        dispatch(fetchDays(id));
       } catch (error) {
         console.error("Error in dispatching fetchDays:", error);
       }
@@ -35,6 +37,7 @@ const ItineraryDetails = () => {
     .map((day) => {
       return day.activities.map((activity) => {
         return {
+          day: day.dayNumber,
           latitude: activity.coordinates.latitude,
           longitude: activity.coordinates.longitude,
         };
@@ -44,13 +47,14 @@ const ItineraryDetails = () => {
 
   return (
     <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
-      <Grid container sx={{ mt: "64px", height: "100vh" }}>
-        <Grid item sx={{ width: "74vw", height: "100%" }}>
+      <Grid container sx={{ height: "100vh" }}>
+        <Grid item xs={9} sx={{ pt: "64px", width: "74vw", height: "100%" }}>
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             {itinerary ? (
               <ControlledMap
                 bounds={itinerary.bounds}
                 markers={markers}
+                activeDay={activeDay}
               ></ControlledMap>
             ) : (
               <Typography>No map data available</Typography>
@@ -61,20 +65,41 @@ const ItineraryDetails = () => {
           item
           xs={3}
           container
-          sx={{ height: "100%", overflow: "auto", px: 2 }}
+          sx={{
+            pt: "64px",
+            height: "100%",
+            overflow: "auto",
+            px: 2,
+          }}
         >
-          <Grid item xs={12} sx={{ outline: "10px 10px 10px" }}>
-            <Typography variant="h4" sx={{ mb: "0.25em" }}>
-              Itinerary Details for: {itinerary ? itinerary.location : id}
+          <Grid item xs={12} sx={{ outline: "10px 10px 10px", mb: 1 }}>
+            <Typography variant="h4" sx={{ fontWeight: "500", mb: "0.25em" }}>
+              {itinerary ? itinerary.location : id}
             </Typography>
+
+            <Button
+              variant="contained"
+              sx={{ mr: 1 }}
+              onClick={() => setAddDayFormOpen(true)}
+            >
+              Add Day
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setActiveDay(null)}
+              disabled={!activeDay}
+            >
+              Reset Map
+            </Button>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             {days.length > 0 ? (
               days.map((day, index) => (
                 <DayCard
                   key={index}
                   id={index}
                   day={{ ...day, date: new Date(day.date) }}
+                  setActiveDay={setActiveDay}
                 />
               ))
             ) : (
@@ -84,7 +109,11 @@ const ItineraryDetails = () => {
             )}
           </Grid>
           <Grid item xs={4}>
-            <DayForm itineraryId={id} />
+            <DayForm
+              itineraryId={id}
+              open={addDayFormOpen}
+              handleClose={() => setAddDayFormOpen(false)}
+            />
           </Grid>
         </Grid>
       </Grid>
