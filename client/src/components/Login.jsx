@@ -13,7 +13,10 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:5000/auth/signin`, { username, password })
+      .post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, {
+        username,
+        password,
+      })
       .then((response) => {
         dispatch(signIn());
         navigate("/");
