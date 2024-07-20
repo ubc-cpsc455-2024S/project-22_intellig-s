@@ -26,6 +26,7 @@ jobs:
   #       run: cd team-finder-server && npm run test
 
   deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to Render
         uses: johnbeynon/render-deploy-action@v0.0.8
