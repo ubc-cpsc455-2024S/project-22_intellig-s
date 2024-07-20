@@ -73,9 +73,22 @@ const ItineraryDetails = () => {
           }}
         >
           <Grid item xs={12} sx={{ outline: "10px 10px 10px", mb: 1 }}>
-            <Typography variant="h4" sx={{ fontWeight: "500", mb: "0.25em" }}>
-              {itinerary ? itinerary.location : id}
-            </Typography>
+            {itinerary ? (
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="h4" sx={{ fontWeight: "500" }}>
+                  {itinerary.location}
+                </Typography>
+                <Typography>
+                  {new Date(itinerary.startDate).toLocaleDateString()}
+                  {" - "}
+                  {new Date(itinerary.endDate).toLocaleDateString()}
+                </Typography>
+              </Box>
+            ) : (
+              <Typography variant="h4" sx={{ fontWeight: "500", mb: "0.25em" }}>
+                {id}
+              </Typography>
+            )}
 
             <Button
               variant="contained"
