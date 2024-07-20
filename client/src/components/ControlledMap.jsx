@@ -1,8 +1,8 @@
-import { AdvancedMarker, Map, Pin } from "@vis.gl/react-google-maps";
+import { Map } from "@vis.gl/react-google-maps";
 import { useState } from "react";
 
 import PropType from "prop-types";
-import { Typography } from "@mui/material";
+import { MarkerWithInfoWindow } from "./MarkerWithInfoWindow";
 
 export default function ControlledMap({ bounds, markers, activeDay }) {
   const [cameraProps, setCameraProps] = useState({
@@ -22,21 +22,20 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
       {markers.map((marker) => {
         if (activeDay === null)
           return (
-            <AdvancedMarker
+            <MarkerWithInfoWindow
               key={marker.latitude}
               position={{ lat: marker.latitude, lng: marker.longitude }}
-            ></AdvancedMarker>
+              infoWindowContent={`Day ${marker.day}: ${marker.title}`}
+            ></MarkerWithInfoWindow>
           );
 
         return activeDay === marker.day ? (
-          <AdvancedMarker
+          <MarkerWithInfoWindow
             key={marker.latitude}
             position={{ lat: marker.latitude, lng: marker.longitude }}
-          >
-            <Pin>
-              <Typography sx={{ color: "white" }}> {markerCount++}</Typography>
-            </Pin>
-          </AdvancedMarker>
+            infoWindowContent={`Day ${marker.day}: ${marker.title}`}
+            pinContent={`${markerCount++}`}
+          ></MarkerWithInfoWindow>
         ) : null;
       })}
     </Map>
