@@ -31,7 +31,11 @@ async function deploy() {
   let res = await (await fetch(url, options)).json();
   console.log(res);
 
-  while (res.status === "build_in_progress") {
+  while (
+    res.status === "created" ||
+    res.status === "build_in_progress" ||
+    res.status === "update_in_progress"
+  ) {
     await new Promise((resolve) => setTimeout(resolve, 5000));
     console.log("build in progress");
     res = await (await fetch(url, options)).json();
