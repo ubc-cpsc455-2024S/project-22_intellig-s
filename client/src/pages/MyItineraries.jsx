@@ -41,7 +41,6 @@ const MyItineraries = () => {
   return (
     <Container
       style={{
-        backgroundColor: "#EDE8F5",
         paddingTop: "20px",
         minHeight: "100vh",
       }}

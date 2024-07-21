@@ -21,6 +21,12 @@ const itinerarySchema = new mongoose.Schema({
   imageUrl: {
     type: String,
   },
+  bounds: {
+    north: { type: Number, required: true },
+    east: { type: Number, required: true },
+    south: { type: Number, required: true },
+    west: { type: Number, required: true },
+  },
 });
 
 const Itinerary = mongoose.model("Itinerary", itinerarySchema);
