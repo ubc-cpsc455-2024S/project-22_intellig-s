@@ -41,7 +41,8 @@ async function deploy() {
     console.log("site deployed successfully!");
     return;
   }
-  throw new Error(`build not completed. build status: ${res.status}`);
+  const err_message = `build not completed. build status: ${res.status}`;
+  throw new Error(err_message);
 }
 
 try {
