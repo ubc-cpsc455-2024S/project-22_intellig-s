@@ -34,8 +34,11 @@ async function deploy() {
     res = await (await fetch(url, options)).json();
   }
 
-  if (res.status === "live") return null;
-  throw 1;
+  if (res.status === "live") {
+    console.log("site deployed successfully!");
+    return;
+  }
+  throw `build not completed. build status: ${res.status}`;
 }
 
 deploy();
