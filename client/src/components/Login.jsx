@@ -24,7 +24,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "64px" }}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>

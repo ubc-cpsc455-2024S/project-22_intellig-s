@@ -67,7 +67,7 @@ const ItineraryDetails = () => {
           xs={3}
           container
           sx={{
-            pt: "64px",
+            pt: "80px",
             height: "100%",
             overflow: "auto",
             px: 2,

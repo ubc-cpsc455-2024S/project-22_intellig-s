@@ -4,7 +4,7 @@ import SearchBar from "../components/SearchBar";
 const Home = () => {
   return (
     <Container
-      sx={{ mt: 4 }}
+      sx={{ mt: "100px" }}
       style={{ backgroundColor: "#EDE8F5", height: "100vh" }}
     >
       <Typography variant="h4" color="primary">
