@@ -1,13 +1,24 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { APIProvider } from "@vis.gl/react-google-maps";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+
 import ControlledMap from "../components/ControlledMap";
 import DayCard from "../components/DayCard";
 import DayForm from "../components/DayForm";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDays } from "../redux/daySlice";
 import { getItinerariesAsync } from "../redux/itinerarySlice";
+
+function reorder(list, startIndex, endIndex) {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+}
 
 const ItineraryDetails = () => {
   const { id } = useParams();
@@ -19,6 +30,57 @@ const ItineraryDetails = () => {
 
   const [activeDay, setActiveDay] = useState(null);
   const [addDayFormOpen, setAddDayFormOpen] = useState(false);
+
+  const [state, setState] = useState({ days: [] });
+
+  const DayList = React.memo(function DayList({ days }) {
+    return days.map((day, index) => (
+      <Draggable
+        key={day.dayNumber}
+        draggableId={`${day.dayNumber}`}
+        index={index}
+      >
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <DayCard
+              day={{
+                ...day,
+                date: new Date(day.date),
+              }}
+              setActiveDay={setActiveDay}
+              key={day.dayNumber}
+            />
+          </div>
+        )}
+      </Draggable>
+    ));
+  });
+
+  function onBeforeCapture(result) {
+    if (state.days.length === 0) setState({ days: days });
+  }
+
+  function onDragEnd(result) {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const days2 = reorder(
+      state.days,
+      result.source.index,
+      result.destination.index
+    );
+
+    setState({ days: days2 });
+  }
 
   useEffect(() => {
     const fetchDaysFromDB = async () => {
@@ -107,20 +169,23 @@ const ItineraryDetails = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            {days.length > 0 ? (
-              days.map((day, index) => (
-                <DayCard
-                  key={index}
-                  id={index}
-                  day={{ ...day, date: new Date(day.date) }}
-                  setActiveDay={setActiveDay}
-                />
-              ))
-            ) : (
-              <Typography variant="h6">
-                No days available for this itinerary.
-              </Typography>
-            )}
+            <DragDropContext
+              onDragEnd={onDragEnd}
+              onBeforeCapture={onBeforeCapture}
+            >
+              <Droppable droppableId="list">
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {state.days.length > 0 ? (
+                      <DayList days={state.days} />
+                    ) : (
+                      <DayList days={days} />
+                    )}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </Grid>
           <Grid item xs={4}>
             <DayForm
