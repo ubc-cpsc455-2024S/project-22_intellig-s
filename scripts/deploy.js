@@ -1,6 +1,9 @@
 require("dotenv").config();
 
 async function deploy() {
+  if (!process.env.MY_RENDER_SERVICE_ID || !process.env.MY_RENDER_API_KEY)
+    throw new Error("script missing required environment variables");
+
   let url = `https://api.render.com/v1/services/${process.env.MY_RENDER_SERVICE_ID}/deploys`;
   let options = {
     method: "POST",
@@ -38,7 +41,11 @@ async function deploy() {
     console.log("site deployed successfully!");
     return;
   }
-  throw `build not completed. build status: ${res.status}`;
+  throw new Error(`build not completed. build status: ${res.status}`);
 }
 
-deploy();
+try {
+  deploy();
+} catch (error) {
+  console.error(error);
+}
