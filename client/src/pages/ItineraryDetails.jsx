@@ -22,8 +22,6 @@ const ItineraryDetails = () => {
   const [activeDay, setActiveDay] = useState(null);
   const [addDayFormOpen, setAddDayFormOpen] = useState(false);
 
-  const [state, setState] = useState({ days: [] });
-
   useEffect(() => {
     const fetchDaysFromDB = async () => {
       try {
@@ -105,11 +103,9 @@ const ItineraryDetails = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <DayList
-              days={state.days.length > 0 ? state.days : days}
-              setState={setState}
-              setActiveDay={setActiveDay}
-            />
+            {days.length > 0 && (
+              <DayList initialDays={days} setActiveDay={setActiveDay} />
+            )}
           </Grid>
           <Grid item xs={4}>
             <DayForm

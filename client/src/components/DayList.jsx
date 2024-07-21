@@ -1,5 +1,5 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import React from "react";
+import { useState } from "react";
 import DayCard from "./DayCard";
 
 import PropTypes from "prop-types";
@@ -12,33 +12,8 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
-export default function DayList({ days, setActiveDay, setState }) {
-  const DayList = React.memo(function DayList({ days }) {
-    return days.map((day, index) => (
-      <Draggable
-        key={day.dayNumber}
-        draggableId={`${day.dayNumber}`}
-        index={index}
-      >
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <DayCard
-              day={{
-                ...day,
-                date: new Date(day.date),
-              }}
-              setActiveDay={setActiveDay}
-              key={day.dayNumber}
-            />
-          </div>
-        )}
-      </Draggable>
-    ));
-  });
+export default function DayList({ initialDays, setActiveDay }) {
+  const [order, setOrder] = useState({ days: initialDays });
 
   function onDragEnd(result) {
     if (!result.destination) {
@@ -50,12 +25,12 @@ export default function DayList({ days, setActiveDay, setState }) {
     }
 
     const reordered_days = reorder(
-      days,
+      order.days,
       result.source.index,
       result.destination.index
     );
 
-    setState({ days: reordered_days });
+    setOrder({ days: reordered_days });
   }
 
   return (
@@ -63,7 +38,30 @@ export default function DayList({ days, setActiveDay, setState }) {
       <Droppable droppableId="list">
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            <DayList days={days} />
+            {order.days.map((day, index) => (
+              <Draggable
+                key={day.dayNumber}
+                draggableId={`${day.dayNumber}`}
+                index={index}
+              >
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <DayCard
+                      day={{
+                        ...day,
+                        date: new Date(day.date),
+                      }}
+                      setActiveDay={setActiveDay}
+                      key={day.dayNumber}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
             {provided.placeholder}
           </div>
         )}
@@ -73,7 +71,6 @@ export default function DayList({ days, setActiveDay, setState }) {
 }
 
 DayList.propTypes = {
-  days: PropTypes.array,
+  initialDays: PropTypes.array,
   setActiveDay: PropTypes.func,
-  setState: PropTypes.state,
 };
