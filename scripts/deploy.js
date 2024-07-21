@@ -11,7 +11,7 @@ async function deploy() {
     },
   };
 
-  let result = await fetch(url, options).json();
+  let result = await (await fetch(url, options)).json();
 
   const deployId = result.id;
 
