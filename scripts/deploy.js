@@ -1,16 +1,16 @@
 require("dotenv").config();
 
 async function deploy() {
-  if (!process.env.MY_RENDER_SERVICE_ID || !process.env.MY_RENDER_API_KEY)
+  if (!process.env.RENDER_SERVICE_ID || !process.env.RENDER_API_KEY)
     throw new Error("script missing required environment variables");
 
-  let url = `https://api.render.com/v1/services/${process.env.MY_RENDER_SERVICE_ID}/deploys`;
+  let url = `https://api.render.com/v1/services/${process.env.RENDER_SERVICE_ID}/deploys`;
   let options = {
     method: "POST",
     headers: {
       accept: "application/json",
       "content-type": "application/json",
-      authorization: `Bearer ${process.env.MY_RENDER_API_KEY}`,
+      authorization: `Bearer ${process.env.RENDER_API_KEY}`,
     },
   };
 
@@ -18,13 +18,13 @@ async function deploy() {
 
   const deployId = result.id;
 
-  url = `https://api.render.com/v1/services/${process.env.MY_RENDER_SERVICE_ID}/deploys/${deployId}`;
+  url = `https://api.render.com/v1/services/${process.env.RENDER_SERVICE_ID}/deploys/${deployId}`;
   options = {
     method: "GET",
     headers: {
       accept: "application/json",
       "content-type": "application/json",
-      authorization: `Bearer ${process.env.MY_RENDER_API_KEY}`,
+      authorization: `Bearer ${process.env.RENDER_API_KEY}`,
     },
   };
 
