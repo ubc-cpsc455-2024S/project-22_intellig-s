@@ -6,7 +6,10 @@ const Itinerary = require("../models/itineraryModel");
 
 const getImageFromSearch = require("../google/getImageFromSearch");
 const generateItinerary = require("../replicate/generateItinerary");
-const Day = require("../models/Day");
+const Day = require("../models/dayModel");
+const getBoundsFromLocation = require("../google/getBoundsFromLocation");
+const getCoordsFromLocation = require("../google/getCoordsFromLocation");
+const getAddressFromLocation = require("../google/getAddressFromLocation");
 
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
@@ -21,12 +24,30 @@ router.post("/", async function (req, res, next) {
   );
 
   const itineraryId = uuid();
+  const bounds = await getBoundsFromLocation(location);
 
   let dayDate = new Date(startDate);
   let index = 1;
 
   for (const day of response.days) {
     const dayImageUrl = await getImageFromSearch(day.activities[0].location);
+
+    const activities = [];
+    for (const activity of day.activities) {
+      const coords = await getCoordsFromLocation(
+        `${activity.location}, ${location}`
+      );
+      const address = await getAddressFromLocation(
+        `${activity.location}, ${location}`
+      );
+
+      activities.push({
+        time: activity.time,
+        activity: activity.location,
+        address: address,
+        coordinates: coords,
+      });
+    }
 
     const newDay = new Day({
       id: uuid(),
@@ -35,9 +56,7 @@ router.post("/", async function (req, res, next) {
       date: dayDate.setDate(dayDate.getDate() + 1),
       overview: `Day ${index} in ${location}`,
       imageUrl: dayImageUrl,
-      activities: day.activities.map((activity) => {
-        return { time: activity.time, activity: activity.location };
-      }),
+      activities: activities,
     });
 
     await newDay.save();
@@ -52,10 +71,10 @@ router.post("/", async function (req, res, next) {
     startDate: startDate,
     endDate: endDate,
     imageUrl: itineraryImageUrl,
+    bounds: bounds,
   });
 
   itinerary.save();
-
   res.send(itinerary);
 });
 

@@ -1,55 +1,137 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import ControlledMap from "../components/ControlledMap";
 import DayCard from "../components/DayCard";
 import DayForm from "../components/DayForm";
 import { useDispatch, useSelector } from "react-redux";
-import { setDays, fetchDays } from "../redux/daySlice";
+import { fetchDays } from "../redux/daySlice";
+import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const dayLists = useSelector((state) => state.days.dayLists);
   const days = dayLists[id] || [];
+  const itineraries = useSelector((state) => state.itineraries.value);
+  const itinerary = itineraries.find((itinerary) => itinerary.id === id);
+
+  const [activeDay, setActiveDay] = useState(null);
+  const [addDayFormOpen, setAddDayFormOpen] = useState(false);
 
   useEffect(() => {
     const fetchDaysFromDB = async () => {
       try {
-        const result = await dispatch(fetchDays(id));
-        if (fetchDays.fulfilled.match(result)) {
-          console.log("Fetched days from DB:", result.payload.days);
-          dispatch(setDays({ itineraryId: id, days: result.payload.days }));
-        } else {
-          console.error("Error fetching days from DB:", result.error.message);
-        }
+        dispatch(fetchDays(id));
       } catch (error) {
         console.error("Error in dispatching fetchDays:", error);
       }
     };
 
     fetchDaysFromDB();
+    dispatch(getItinerariesAsync());
   }, [dispatch, id]);
 
+  const markers = days
+    .map((day) => {
+      return day.activities.map((activity) => {
+        return {
+          day: day.dayNumber,
+          title: activity.activity,
+          latitude: activity.coordinates.latitude,
+          longitude: activity.coordinates.longitude,
+        };
+      });
+    })
+    .flat();
+
   return (
-    <Container>
-      <Typography variant="h4" style={{ marginTop: 20, marginBottom: 20 }}>
-        Itinerary Details for: {id}
-      </Typography>
-      {days.length > 0 ? (
-        days.map((day, index) => (
-          <DayCard
-            key={index}
-            id={index}
-            day={{ ...day, date: new Date(day.date) }}
-          />
-        ))
-      ) : (
-        <Typography variant="h6">
-          No days available for this itinerary.
-        </Typography>
-      )}
-      <DayForm itineraryId={id} />
-    </Container>
+    <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
+      <Grid container sx={{ height: "100vh" }}>
+        <Grid item xs={9} sx={{ pt: "64px", width: "74vw", height: "100%" }}>
+          <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+            {itinerary ? (
+              <ControlledMap
+                bounds={itinerary.bounds}
+                markers={markers}
+                activeDay={activeDay}
+              ></ControlledMap>
+            ) : (
+              <Typography>No map data available</Typography>
+            )}
+          </APIProvider>
+        </Grid>
+        <Grid
+          item
+          xs={3}
+          container
+          sx={{
+            pt: "64px",
+            height: "100%",
+            overflow: "auto",
+            px: 2,
+          }}
+        >
+          <Grid item xs={12} sx={{ outline: "10px 10px 10px", mb: 1 }}>
+            {itinerary ? (
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="h4" sx={{ fontWeight: "500" }}>
+                  {itinerary.location}
+                </Typography>
+                <Typography>
+                  {new Date(itinerary.startDate).toLocaleDateString()}
+                  {" - "}
+                  {new Date(itinerary.endDate).toLocaleDateString()}
+                </Typography>
+              </Box>
+            ) : (
+              <Typography variant="h4" sx={{ fontWeight: "500", mb: "0.25em" }}>
+                {id}
+              </Typography>
+            )}
+
+            <Button
+              variant="contained"
+              sx={{ mr: 1 }}
+              onClick={() => setAddDayFormOpen(true)}
+            >
+              Add Day
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setActiveDay(null)}
+              disabled={!activeDay}
+            >
+              Reset Map
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            {days.length > 0 ? (
+              days.map((day, index) => (
+                <DayCard
+                  key={index}
+                  id={index}
+                  day={{ ...day, date: new Date(day.date) }}
+                  setActiveDay={setActiveDay}
+                />
+              ))
+            ) : (
+              <Typography variant="h6">
+                No days available for this itinerary.
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={4}>
+            <DayForm
+              itineraryId={id}
+              open={addDayFormOpen}
+              handleClose={() => setAddDayFormOpen(false)}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

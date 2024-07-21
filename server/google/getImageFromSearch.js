@@ -8,7 +8,7 @@ async function getImageFromSearch(query) {
       },
     }
   );
-  url = (await response.json()).items[0].link;
+  const url = (await response.json()).items[0].link;
 
   return url;
 }

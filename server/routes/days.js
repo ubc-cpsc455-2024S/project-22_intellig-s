@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Day = require("../models/Day"); // Import the Day model
+const Day = require("../models/dayModel"); // Import the Day model
 
 // Get all days for an itinerary
 router.get("/:itineraryId", async (req, res) => {

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { addDay, addNewDay, updateDay } from "../redux/daySlice";
+import { useState } from "react";
+import { addNewDay, updateDay } from "../redux/daySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuid } from "uuid";
-import { Button, TextField, Container, Typography } from "@mui/material";
+import { Button, Container, Dialog, TextField } from "@mui/material";
 
-const DayForm = ({ itineraryId, day }) => {
+import PropType from "prop-types";
+
+const DayForm = ({ itineraryId, day, open, handleClose }) => {
   const dispatch = useDispatch();
   const dayLists = useSelector((state) => state.days.dayLists);
   const [dayNumber, setDayNumber] = useState(day ? day.dayNumber : "");
@@ -15,7 +17,7 @@ const DayForm = ({ itineraryId, day }) => {
   const [imageUrl, setImageUrl] = useState(day ? day.imageUrl : "");
   const [activities, setActivities] = useState(
     day ? JSON.stringify(day.activities, null, 2) : ""
-  ); // default to JSON string
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,7 +43,6 @@ const DayForm = ({ itineraryId, day }) => {
         (day) => day.dayNumber === parseInt(dayNumber)
       );
       existingDay = days[existingDayIndex];
-      console.log("in updater mode; ", days, existingDayIndex, existingDay);
     }
 
     const newDay = {
@@ -71,51 +72,70 @@ const DayForm = ({ itineraryId, day }) => {
   };
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Day Number"
-          value={dayNumber}
-          onChange={(e) => setDayNumber(e.target.value)}
-          required
-          fullWidth
-        />
-        <TextField
-          label="Date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label="Overview"
-          value={overview}
-          onChange={(e) => setOverview(e.target.value)}
-          required
-          fullWidth
-        />
-        <TextField
-          label="Image URL"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          required
-          fullWidth
-        />
-        <TextField
-          label="Activities (input JSON)"
-          value={activities}
-          onChange={(e) => setActivities(e.target.value)}
-          required
-          fullWidth
-        />
-        <Button type="submit" variant="contained" color="primary">
-          {day ? "Update Day" : "Add Day"}
-        </Button>
-      </form>
-    </Container>
+    <Dialog open={open} onClose={handleClose}>
+      <Container>
+        <form onSubmit={handleSubmit} style={{ justifyItems: "center" }}>
+          <TextField
+            label="Day Number"
+            value={dayNumber}
+            onChange={(e) => setDayNumber(e.target.value)}
+            required
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <TextField
+            label="Date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            sx={{ mb: 1 }}
+          />
+          <TextField
+            label="Overview"
+            value={overview}
+            onChange={(e) => setOverview(e.target.value)}
+            required
+            fullWidth
+            sx={{ mb: 1 }}
+          />
+          <TextField
+            label="Image URL"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            required
+            fullWidth
+            sx={{ mb: 1 }}
+          />
+          <TextField
+            label="Activities (input JSON)"
+            value={activities}
+            onChange={(e) => setActivities(e.target.value)}
+            required
+            fullWidth
+            sx={{ mb: 1 }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mb: 1 }}
+          >
+            {day ? "Update Day" : "Add Day"}
+          </Button>
+        </form>
+      </Container>
+    </Dialog>
   );
+};
+
+DayForm.propTypes = {
+  itineraryId: PropType.string,
+  day: PropType.object,
+  open: PropType.bool,
+  handleClose: PropType.func,
 };
 
 export default DayForm;
