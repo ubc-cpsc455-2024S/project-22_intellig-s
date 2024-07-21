@@ -1,6 +1,6 @@
 # Group 22 - AI-tinerary
 
-### Deploy Status: ![deploy workflow](https://github.com/ubc-cpsc455-2024S/project-22_intellig-s/actions/workflows/deploy-client.yaml/badge.svg)
+### Deploy Status: ![deploy workflow](https://github.com/ubc-cpsc455-2024S/project-22_intellig-s/actions/workflows/deploy.yaml/badge.svg)
 
 ## Project Description
 
