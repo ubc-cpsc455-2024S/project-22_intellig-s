@@ -1,0 +1,14 @@
+{
+  "name": "ai-tinerary",
+  "version": "1.0.0",
+  "description": "## Project Description",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "node ./scripts/deploy.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
