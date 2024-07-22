@@ -14,8 +14,7 @@ import { getItinerariesAsync } from "../redux/itinerarySlice";
 const ItineraryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const dayLists = useSelector((state) => state.days.dayLists);
-  const days = dayLists[id] || [];
+  const days = useSelector((state) => state.days.dayLists[id]);
   const itineraries = useSelector((state) => state.itineraries.value);
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
@@ -36,17 +35,20 @@ const ItineraryDetails = () => {
   }, [dispatch, id]);
 
   const markers = days
-    .map((day) => {
-      return day.activities.map((activity) => {
-        return {
-          day: day.dayNumber,
-          title: activity.activity,
-          latitude: activity.coordinates.latitude,
-          longitude: activity.coordinates.longitude,
-        };
-      });
-    })
-    .flat();
+    ? days
+        .map((day) => {
+          return day.activities.map((activity) => {
+            return {
+              day: day.dayNumber,
+              title: activity.activity,
+              activityNumber: activity.activityNumber,
+              latitude: activity.coordinates.latitude,
+              longitude: activity.coordinates.longitude,
+            };
+          });
+        })
+        .flat()
+    : [];
 
   return (
     <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
@@ -103,9 +105,7 @@ const ItineraryDetails = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            {days.length > 0 && (
-              <DayList initialDays={days} setActiveDay={setActiveDay} />
-            )}
+            {days && <DayList initialDays={days} setActiveDay={setActiveDay} />}
           </Grid>
           <Grid item xs={4}>
             <DayForm

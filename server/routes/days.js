@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Swap the order of two days
+// Reorder all days by itinerary id
 router.put("/reorder", async (req, res) => {
   const itineraryId = req.body.itineraryId;
   const days = req.body.days;
@@ -49,7 +49,27 @@ router.put("/reorder", async (req, res) => {
     res.status(200).json({
       itineraryId: itineraryId,
       days,
-      message: "Days swapped successfully",
+      message: "Days reordered successfully",
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Reorder all activities by day id
+router.put("/activities/reorder", async (req, res) => {
+  const dayId = req.body.dayId;
+  const activities = req.body.activities;
+  try {
+    const day = await Day.updateOne(
+      { id: dayId },
+      { $set: { activities: activities } }
+    );
+
+    res.status(200).json({
+      dayId: dayId,
+      activities,
+      message: "activities reordered successfully",
     });
   } catch (error) {
     res.status(400).json({ message: error.message });

@@ -54,7 +54,7 @@ export const removeDay = createAsyncThunk(
   }
 );
 
-// Reorder two days from a specific itinerary
+// Reorder all days by itinerary id
 export const reorderDays = createAsyncThunk(
   "days/reorderDays",
   async ({ itineraryId, days }) => {
@@ -63,6 +63,18 @@ export const reorderDays = createAsyncThunk(
       days: days,
     });
     return { itineraryId, days: days };
+  }
+);
+
+// Reorder all activities by day id
+export const reorderActivities = createAsyncThunk(
+  "days/reorderActivities",
+  async ({ itineraryId, dayId, activities }) => {
+    await axios.put("http://localhost:5000/days/activities/reorder", {
+      dayId: dayId,
+      activities: activities,
+    });
+    return { itineraryId, dayId, activities };
   }
 );
 
@@ -110,6 +122,11 @@ const daySlice = createSlice({
       .addCase(reorderDays.fulfilled, (state, action) => {
         const { itineraryId, days } = action.payload;
         state.dayLists[itineraryId] = days;
+      })
+      .addCase(reorderActivities.fulfilled, (state, action) => {
+        const { itineraryId, dayId, activities } = action.payload;
+        state.dayLists[itineraryId].find((day) => day.id === dayId).activities =
+          activities;
       });
   },
 });

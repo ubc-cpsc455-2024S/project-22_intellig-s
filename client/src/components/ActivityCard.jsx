@@ -1,24 +1,41 @@
 import PropTypes from "prop-types";
-import { Typography, Card, CardContent, Box } from "@mui/material";
+import { Typography, Card, CardContent, Box, IconButton } from "@mui/material";
+import { DragHandle } from "@mui/icons-material";
 
-export default function ActivityCard({ activity }) {
+export default function ActivityCard({ activity, dragHandleProps }) {
   return (
     <Card
       variant="outlined"
       sx={{ m: 1 }}
       style={{ display: "flex", marginBottom: 8 }}
     >
-      <CardContent
-        className="day-card"
-        style={{ display: "flex", alignItems: "top", objectFit: "fill" }}
-      >
+      <CardContent className="day-card" sx={{ pt: 1 }}>
         <Box sx={{ width: "100%" }}>
+          <IconButton
+            variant="outlined"
+            sx={{
+              top: 1,
+              left: "50%",
+              transform: "translateX(-50%)",
+              p: 0,
+            }}
+            {...dragHandleProps}
+          >
+            <DragHandle color="primary"></DragHandle>
+          </IconButton>
+
           <Typography variant="h6">{activity.activity}</Typography>
           <Typography>
-            <strong>Time:</strong> {activity.time}
+            <Box component="span" fontWeight="1000">
+              Time:
+            </Box>{" "}
+            {activity.time}
           </Typography>
           <Typography>
-            <strong>Address:</strong> {activity.address}
+            <Box component="span" fontWeight="1000">
+              Address:
+            </Box>{" "}
+            {activity.address}
           </Typography>
         </Box>
       </CardContent>
@@ -28,4 +45,5 @@ export default function ActivityCard({ activity }) {
 
 ActivityCard.propTypes = {
   activity: PropTypes.object,
+  dragHandleProps: PropTypes.object,
 };

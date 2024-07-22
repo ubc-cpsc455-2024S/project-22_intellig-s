@@ -1,34 +1,40 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useState } from "react";
-import DayCard from "./DayCard";
 
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { reorderDays } from "../redux/daySlice";
+import { reorderActivities } from "../redux/daySlice";
+import ActivityCard from "./ActivityCard";
 import { Box } from "@mui/material";
 
-function reorder(days, startIndex, endIndex) {
-  const dates = days.map((day) => day.date);
+function reorder(activities, startIndex, endIndex) {
+  const times = activities.map((day) => day.time);
 
-  const result = Array.from(days);
+  const result = Array.from(activities);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
 
-  return result.map((day, index) => {
-    const adjustedDay = {
-      ...day,
-      dayNumber: index + 1,
-      date: dates[index],
+  return result.map((activity, index) => {
+    const adjustedActivity = {
+      ...activity,
+      activityNumber: index + 1,
+      time: times[index],
     };
-    return adjustedDay;
+    return adjustedActivity;
   });
 }
 
-export default function DayList({ initialDays, setActiveDay }) {
+export default function ActivityList({
+  itineraryId,
+  initialActivities,
+  dayId,
+}) {
   const dispatch = useDispatch();
 
   const [order, setOrder] = useState({
-    days: Array.from(initialDays).sort((a, b) => a.dayNumber - b.dayNumber),
+    activities: Array.from(initialActivities).sort(
+      (a, b) => a.activityNumber - b.activityNumber
+    ),
   });
 
   function onDragEnd(result) {
@@ -40,21 +46,20 @@ export default function DayList({ initialDays, setActiveDay }) {
       return;
     }
 
-    const reorderedDays = reorder(
-      order.days,
+    const reorderedActivities = reorder(
+      order.activities,
       result.source.index,
       result.destination.index
     );
 
-    const itineraryId = initialDays[0].parentItineraryId;
-
     dispatch(
-      reorderDays({
+      reorderActivities({
         itineraryId: itineraryId,
-        days: reorderedDays,
+        dayId: dayId,
+        activities: reorderedActivities,
       })
     );
-    setOrder({ days: reorderedDays });
+    setOrder({ activities: reorderedActivities });
   }
 
   return (
@@ -62,22 +67,17 @@ export default function DayList({ initialDays, setActiveDay }) {
       <Droppable droppableId="day-list">
         {(provided) => (
           <Box ref={provided.innerRef} {...provided.droppableProps}>
-            {order.days.map((day, index) => (
+            {order.activities.map((activity, index) => (
               <Draggable
-                key={day.dayNumber}
-                draggableId={`${day.dayNumber}`}
+                key={activity.activityNumber}
+                draggableId={`${activity.activityNumber}`}
                 index={index}
               >
                 {(provided) => (
                   <Box ref={provided.innerRef} {...provided.draggableProps}>
-                    <DayCard
-                      day={{
-                        ...day,
-                        date: new Date(day.date),
-                      }}
-                      setActiveDay={setActiveDay}
+                    <ActivityCard
+                      activity={activity}
                       dragHandleProps={provided.dragHandleProps}
-                      key={day.dayNumber}
                     />
                   </Box>
                 )}
@@ -91,7 +91,8 @@ export default function DayList({ initialDays, setActiveDay }) {
   );
 }
 
-DayList.propTypes = {
-  initialDays: PropTypes.array,
-  setActiveDay: PropTypes.func,
+ActivityList.propTypes = {
+  itineraryId: PropTypes.string,
+  dayId: PropTypes.string,
+  initialActivities: PropTypes.array,
 };

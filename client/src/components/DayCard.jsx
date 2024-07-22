@@ -13,9 +13,9 @@ import {
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { removeDay } from "../redux/daySlice";
 import { useDispatch } from "react-redux";
-import ActivityCard from "./ActivityCard";
+import ActivityList from "./ActivityList";
 
-export default function DayCard({ day, setActiveDay }) {
+export default function DayCard({ day, setActiveDay, dragHandleProps }) {
   const [showActivities, setShowActivities] = useState(false);
   const dispatch = useDispatch();
 
@@ -24,16 +24,17 @@ export default function DayCard({ day, setActiveDay }) {
   };
 
   return (
-    <Card sx={{ mb: 1 }}>
+    <Card sx={{ position: "relative", mb: 1 }}>
       <CardMedia
         component="img"
         sx={{ height: 200 }}
         image={day.imageUrl}
         alt="Day Image"
+        {...dragHandleProps}
       />
       <CardContent
         className="day-card"
-        style={{ alignItems: "top", objectFit: "fill" }}
+        style={{ position: "relative", alignItems: "top", objectFit: "fill" }}
       >
         <Typography variant="h6">
           Day {day.dayNumber}:{" "}
@@ -50,10 +51,13 @@ export default function DayCard({ day, setActiveDay }) {
           </IconButton>
         </Box>
       </CardContent>
+
       <Collapse in={showActivities} timeout="auto" unmountOnExit>
-        {day.activities.map((activity, index) => (
-          <ActivityCard key={index} activity={activity} />
-        ))}
+        <ActivityList
+          itineraryId={day.parentItineraryId}
+          dayId={day.id}
+          initialActivities={day.activities}
+        />
         <Button
           variant="contained"
           color="error"
@@ -94,4 +98,5 @@ DayCard.propTypes = {
     ).isRequired,
   }).isRequired,
   setActiveDay: PropTypes.func,
+  dragHandleProps: PropTypes.object,
 };
