@@ -3,17 +3,32 @@ import { useState } from "react";
 import DayCard from "./DayCard";
 
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { reorderDays } from "../redux/daySlice";
 
-function reorder(list, startIndex, endIndex) {
-  const result = Array.from(list);
+function reorder(days, startIndex, endIndex) {
+  const dates = days.map((day) => day.date);
+
+  const result = Array.from(days);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
 
-  return result;
+  return result.map((day, index) => {
+    const adjustedDay = {
+      ...day,
+      dayNumber: index + 1,
+      date: dates[index],
+    };
+    return adjustedDay;
+  });
 }
 
 export default function DayList({ initialDays, setActiveDay }) {
-  const [order, setOrder] = useState({ days: initialDays });
+  const dispatch = useDispatch();
+
+  const [order, setOrder] = useState({
+    days: Array.from(initialDays).sort((a, b) => a.dayNumber - b.dayNumber),
+  });
 
   function onDragEnd(result) {
     if (!result.destination) {
@@ -24,13 +39,21 @@ export default function DayList({ initialDays, setActiveDay }) {
       return;
     }
 
-    const reordered_days = reorder(
+    const reorderedDays = reorder(
       order.days,
       result.source.index,
       result.destination.index
     );
 
-    setOrder({ days: reordered_days });
+    const itineraryId = initialDays[0].parentItineraryId;
+
+    dispatch(
+      reorderDays({
+        itineraryId: itineraryId,
+        days: reorderedDays,
+      })
+    );
+    setOrder({ days: reorderedDays });
   }
 
   return (

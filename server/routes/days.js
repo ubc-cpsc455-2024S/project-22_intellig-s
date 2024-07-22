@@ -26,6 +26,36 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Swap the order of two days
+router.put("/reorder", async (req, res) => {
+  const itineraryId = req.body.itineraryId;
+  const days = req.body.days;
+  try {
+    days.forEach(async (day) => {
+      await Day.updateOne(
+        { parentItineraryId: day.parentItineraryId, id: day.id },
+        {
+          $set: {
+            dayNumber: day.dayNumber,
+            date: day.date,
+            overview: day.overview,
+            imageUrl: day.imageUrl,
+            activities: day.activities,
+          },
+        }
+      );
+    });
+
+    res.status(200).json({
+      itineraryId: itineraryId,
+      days,
+      message: "Days swapped successfully",
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 // Update an existing day
 router.put("/:itineraryId/:dayNumber", async (req, res) => {
   try {

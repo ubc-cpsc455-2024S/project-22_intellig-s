@@ -53,11 +53,13 @@ router.post("/", async function (req, res, next) {
       id: uuid(),
       parentItineraryId: itineraryId,
       dayNumber: index,
-      date: dayDate.setDate(dayDate.getDate() + 1),
+      date: dayDate,
       overview: `Day ${index} in ${location}`,
       imageUrl: dayImageUrl,
       activities: activities,
     });
+
+    dayDate.setDate(dayDate.getDate() + 1);
 
     await newDay.save();
     index++;

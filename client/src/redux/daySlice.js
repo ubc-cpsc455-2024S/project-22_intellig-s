@@ -54,6 +54,18 @@ export const removeDay = createAsyncThunk(
   }
 );
 
+// Reorder two days from a specific itinerary
+export const reorderDays = createAsyncThunk(
+  "days/reorderDays",
+  async ({ itineraryId, days }) => {
+    await axios.put("http://localhost:5000/days/reorder", {
+      itineraryId: itineraryId,
+      days: days,
+    });
+    return { itineraryId, days: days };
+  }
+);
+
 // Redux slice definition
 const daySlice = createSlice({
   name: "days",
@@ -94,6 +106,10 @@ const daySlice = createSlice({
         state.dayLists[itineraryId] = state.dayLists[itineraryId].filter(
           (day) => day.id !== id
         );
+      })
+      .addCase(reorderDays.fulfilled, (state, action) => {
+        const { itineraryId, days } = action.payload;
+        state.dayLists[itineraryId] = days;
       });
   },
 });
