@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const { v4: uuid } = require("uuid");
+
 const Day = require("../models/dayModel"); // Import the Day model
+const Itinerary = require("../models/itineraryModel");
+const generateDay = require("../replicate/generateDay");
+const getAddressFromLocation = require("../google/getAddressFromLocation");
+const getCoordsFromLocation = require("../google/getCoordsFromLocation");
+const getImageFromSearch = require("../google/getImageFromSearch");
 
 // Get all days for an itinerary
 router.get("/:itineraryId", async (req, res) => {
@@ -73,6 +80,63 @@ router.put("/activities/reorder", async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+router.post("/generate", async (req, res) => {
+  const { itineraryId } = req.body;
+
+  try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    const days = await Day.find({ parentItineraryId: itineraryId });
+
+    const lastDate = days
+      .map((day) => day.date)
+      .reduce((a, b) => (Date.parse(a) > Date.parse(b) ? a : b));
+    const currentActivities = days
+      .map((day) => day.activities.map((activity) => activity.activity))
+      .flat();
+
+    const aiResponse = JSON.parse(
+      await generateDay(itinerary.location, currentActivities.join(", "))
+    );
+
+    const imageUrl = await getImageFromSearch(
+      `${aiResponse.activities[0].location}, ${itinerary.location}`
+    );
+
+    const newActivities = [];
+    for (const [index, activity] of aiResponse.activities.entries()) {
+      const address = await getAddressFromLocation(
+        `${activity.location}, ${itinerary.location}`
+      );
+      const coordinates = await getCoordsFromLocation(
+        `${activity.location}, ${itinerary.location}`
+      );
+
+      newActivities.push({
+        time: activity.time,
+        activity: activity.location,
+        activityNumber: index + 1,
+        address: address,
+        coordinates: coordinates,
+      });
+    }
+
+    const newDay = new Day({
+      id: uuid(),
+      parentItineraryId: itineraryId,
+      dayNumber: days.length + 1,
+      date: new Date(lastDate.setDate(lastDate.getDate() + 1)),
+      overview: `Day ${days.length + 1} in ${itinerary.location}`,
+      imageUrl: imageUrl,
+      activities: newActivities,
+    });
+
+    await newDay.save();
+    res.status(201).send(newDay);
+  } catch (e) {
+    res.status(400).send(`error generating new day: ${e}`);
   }
 });
 
