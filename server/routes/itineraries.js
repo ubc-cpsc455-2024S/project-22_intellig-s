@@ -33,7 +33,7 @@ router.post("/", async function (req, res, next) {
     const dayImageUrl = await getImageFromSearch(day.activities[0].location);
 
     const activities = [];
-    for (const activity of day.activities) {
+    for (const [index, activity] of day.activities.entries()) {
       const coords = await getCoordsFromLocation(
         `${activity.location}, ${location}`
       );
@@ -44,6 +44,7 @@ router.post("/", async function (req, res, next) {
       activities.push({
         time: activity.time,
         activity: activity.location,
+        activityNumber: index + 1,
         address: address,
         coordinates: coords,
       });

@@ -9,7 +9,7 @@ export default function ActivityCard({ activity, dragHandleProps }) {
       sx={{ m: 1 }}
       style={{ display: "flex", marginBottom: 8 }}
     >
-      <CardContent className="day-card" sx={{ pt: 1 }}>
+      <CardContent className="day-card" sx={{ pt: 1, width: "100%" }}>
         <Box sx={{ width: "100%" }}>
           <IconButton
             variant="outlined"
