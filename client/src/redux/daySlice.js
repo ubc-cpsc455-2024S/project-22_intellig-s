@@ -63,7 +63,7 @@ export const removeDay = createAsyncThunk(
 export const reorderDays = createAsyncThunk(
   "days/reorderDays",
   async ({ itineraryId, days }) => {
-    await axios.put("http://localhost:5000/days/reorder", {
+    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/days/reorder`, {
       itineraryId: itineraryId,
       days: days,
     });
@@ -75,10 +75,13 @@ export const reorderDays = createAsyncThunk(
 export const reorderActivities = createAsyncThunk(
   "days/reorderActivities",
   async ({ itineraryId, dayId, activities }) => {
-    await axios.put("http://localhost:5000/days/activities/reorder", {
-      dayId: dayId,
-      activities: activities,
-    });
+    await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/days/activities/reorder`,
+      {
+        dayId: dayId,
+        activities: activities,
+      }
+    );
     return { itineraryId, dayId, activities };
   }
 );
