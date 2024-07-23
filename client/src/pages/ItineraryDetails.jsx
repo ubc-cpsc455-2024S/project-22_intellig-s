@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { APIProvider } from "@vis.gl/react-google-maps";
-import ControlledMap from "../components/ControlledMap";
-import DayCard from "../components/DayCard";
-import DayForm from "../components/DayForm";
 import { useDispatch, useSelector } from "react-redux";
+
+import ControlledMap from "../components/ControlledMap";
+import DayForm from "../components/DayForm";
+import DayList from "../components/DayList";
+
 import { fetchDays } from "../redux/daySlice";
 import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const dayLists = useSelector((state) => state.days.dayLists);
-  const days = dayLists[id] || [];
+  const days = useSelector((state) => state.days.dayLists[id]);
   const itineraries = useSelector((state) => state.itineraries.value);
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
@@ -34,31 +35,32 @@ const ItineraryDetails = () => {
   }, [dispatch, id]);
 
   const markers = days
-    .map((day) => {
-      return day.activities.map((activity) => {
-        return {
-          day: day.dayNumber,
-          title: activity.activity,
-          latitude: activity.coordinates.latitude,
-          longitude: activity.coordinates.longitude,
-        };
-      });
-    })
-    .flat();
+    ? days
+        .map((day) => {
+          return day.activities.map((activity) => {
+            return {
+              day: day.dayNumber,
+              title: activity.activity,
+              activityNumber: activity.activityNumber,
+              latitude: activity.coordinates.latitude,
+              longitude: activity.coordinates.longitude,
+            };
+          });
+        })
+        .flat()
+    : [];
 
   return (
     <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
       <Grid container sx={{ height: "100vh" }}>
         <Grid item xs={9} sx={{ pt: "64px", width: "74vw", height: "100%" }}>
           <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-            {itinerary ? (
+            {itinerary && (
               <ControlledMap
                 bounds={itinerary.bounds}
                 markers={markers}
                 activeDay={activeDay}
               ></ControlledMap>
-            ) : (
-              <Typography>No map data available</Typography>
             )}
           </APIProvider>
         </Grid>
@@ -74,7 +76,7 @@ const ItineraryDetails = () => {
           }}
         >
           <Grid item xs={12} sx={{ outline: "10px 10px 10px", mb: 1 }}>
-            {itinerary ? (
+            {itinerary && (
               <Box sx={{ mb: 1 }}>
                 <Typography variant="h4" sx={{ fontWeight: "500" }}>
                   {itinerary.location}
@@ -85,10 +87,6 @@ const ItineraryDetails = () => {
                   {new Date(itinerary.endDate).toLocaleDateString()}
                 </Typography>
               </Box>
-            ) : (
-              <Typography variant="h4" sx={{ fontWeight: "500", mb: "0.25em" }}>
-                {id}
-              </Typography>
             )}
 
             <Button
@@ -107,20 +105,7 @@ const ItineraryDetails = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            {days.length > 0 ? (
-              days.map((day, index) => (
-                <DayCard
-                  key={index}
-                  id={index}
-                  day={{ ...day, date: new Date(day.date) }}
-                  setActiveDay={setActiveDay}
-                />
-              ))
-            ) : (
-              <Typography variant="h6">
-                No days available for this itinerary.
-              </Typography>
-            )}
+            {days && <DayList initialDays={days} setActiveDay={setActiveDay} />}
           </Grid>
           <Grid item xs={4}>
             <DayForm

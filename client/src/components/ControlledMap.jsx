@@ -11,7 +11,6 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
 
   const handleCameraChange = (ev) => setCameraProps(ev.detail);
 
-  let markerCount = 1;
   return (
     <Map
       {...cameraProps}
@@ -34,7 +33,7 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
             key={marker.latitude}
             position={{ lat: marker.latitude, lng: marker.longitude }}
             infoWindowContent={`Day ${marker.day}: ${marker.title}`}
-            pinContent={`${markerCount++}`}
+            pinContent={`${marker.activityNumber}`}
           ></MarkerWithInfoWindow>
         ) : null;
       })}

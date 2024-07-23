@@ -162,7 +162,7 @@ function SearchBar({ handleChange }) {
         );
 
         return (
-          <li {...props} key={props.key}>
+          <Box {...props} key={props.key}>
             <Grid container alignItems="center">
               <Grid item sx={{ display: "flex", width: 44 }}>
                 <LocationOnIcon sx={{ color: "text.secondary" }} />
@@ -185,7 +185,7 @@ function SearchBar({ handleChange }) {
                 </Typography>
               </Grid>
             </Grid>
-          </li>
+          </Box>
         );
       }}
       renderTags={(tagValue, getTagProps) => {
