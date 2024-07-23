@@ -43,7 +43,9 @@ function SearchBar({ handleChange }) {
 
   // load the google maps script on page load
   if (typeof window !== "undefined" && !loaded.current) {
-    if (!document.querySelector("#google-maps")) {
+    if (
+      !document.querySelector('[src^="https://maps.googleapis.com/maps/api"]')
+    ) {
       loadScript(
         `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&libraries=places`,
         document.querySelector("head"),
