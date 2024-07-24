@@ -17,7 +17,7 @@ const itinerariesRouter = require("./routes/itineraries");
 const authRouter = require("./routes/auth");
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Specify your client domain
+  origin: process.env.FRONTEND_URL, // Specify your client domain
   credentials: true, // This is important for setting cookies
 };
 
