@@ -8,7 +8,7 @@ import ControlledMap from "../components/ControlledMap";
 import DayForm from "../components/DayForm";
 import DayList from "../components/DayList";
 
-import { fetchDays } from "../redux/daySlice";
+import { fetchDays, generateNewDay } from "../redux/daySlice";
 import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
@@ -91,16 +91,25 @@ const ItineraryDetails = () => {
                 </Typography>
               </Box>
             )}
-
             <Button
               variant="contained"
-              sx={{ mr: 1 }}
+              sx={{ mr: 1, mb: 1 }}
+              onClick={() => {
+                dispatch(generateNewDay({ itineraryId: id }));
+              }}
+            >
+              Generate New Day
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ mr: 1, mb: 1 }}
               onClick={() => setAddDayFormOpen(true)}
             >
               Add Day
             </Button>
             <Button
               variant="contained"
+              sx={{ mr: 1, mb: 1 }}
               onClick={() => setActiveDay(null)}
               disabled={!activeDay}
             >
@@ -108,7 +117,7 @@ const ItineraryDetails = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            {days && <DayList initialDays={days} setActiveDay={setActiveDay} />}
+            {days && <DayList itineraryId={id} setActiveDay={setActiveDay} />}
           </Grid>
           <Grid item xs={4}>
             <DayForm

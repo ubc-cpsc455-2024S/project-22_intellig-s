@@ -36,6 +36,20 @@ export const addNewDay = createAsyncThunk(
   }
 );
 
+// AI generate a new day for a specific itinerary
+export const generateNewDay = createAsyncThunk(
+  "days/generateNewDay",
+  async ({ itineraryId }) => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/days/generate`,
+      {
+        itineraryId: itineraryId,
+      }
+    );
+    return { itineraryId, day: response.data };
+  }
+);
+
 // Update an existing day in a specific itinerary
 export const updateDay = createAsyncThunk(
   "days/updateDay",
@@ -113,6 +127,10 @@ const daySlice = createSlice({
           state.dayLists[itineraryId] = [day];
         }
       })
+      .addCase(generateNewDay.fulfilled, (state, action) => {
+        const { itineraryId, day } = action.payload;
+        state.dayLists[itineraryId].push(day);
+      })
       .addCase(updateDay.fulfilled, (state, action) => {
         const { itineraryId, dayNumber, changes } = action.payload;
         const days = state.dayLists[itineraryId];
@@ -123,9 +141,21 @@ const daySlice = createSlice({
       })
       .addCase(removeDay.fulfilled, (state, action) => {
         const { itineraryId, id } = action.payload;
-        state.dayLists[itineraryId] = state.dayLists[itineraryId].filter(
-          (day) => day.id !== id
+        const startDate = new Date(
+          state.dayLists[itineraryId].find((day) => day.dayNumber === 1).date
         );
+
+        state.dayLists[itineraryId] = state.dayLists[itineraryId]
+          .filter((day) => day.id !== id)
+          .map((day, index) => {
+            const newDay = {
+              ...day,
+              dayNumber: index + 1,
+              date: new Date(startDate).toISOString(),
+            };
+            startDate.setDate(startDate.getDate() + 1);
+            return newDay;
+          });
       })
       .addCase(reorderDays.fulfilled, (state, action) => {
         const { itineraryId, days } = action.payload;

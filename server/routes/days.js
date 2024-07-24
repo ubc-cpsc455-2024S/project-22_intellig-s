@@ -166,10 +166,25 @@ router.put("/:itineraryId/:dayNumber", async (req, res) => {
 // Delete a day
 router.delete("/:itineraryId/:id", async (req, res) => {
   try {
+    const itinerary = await Itinerary.findOne({ id: req.params.itineraryId });
+    const startDate = itinerary.startDate;
+
     await Day.findOneAndDelete({
       parentItineraryId: req.params.itineraryId,
       id: req.params.id,
     });
+
+    const days = await Day.find({
+      parentItineraryId: req.params.itineraryId,
+    }).sort({ dayNumber: 1 });
+
+    for (const [index, day] of days.entries()) {
+      await Day.updateOne(
+        { id: day.id },
+        { $set: { dayNumber: index + 1, date: new Date(startDate) } }
+      );
+      startDate.setDate(startDate.getDate() + 1);
+    }
     res.status(200).json({ message: "Day deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });

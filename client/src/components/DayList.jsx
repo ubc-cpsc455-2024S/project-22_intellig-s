@@ -1,11 +1,10 @@
+import { useDispatch, useSelector } from "react-redux";
+import { Box } from "@mui/material";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { useState } from "react";
+import PropTypes from "prop-types";
 import DayCard from "./DayCard";
 
-import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { reorderDays } from "../redux/daySlice";
-import { Box } from "@mui/material";
 
 function reorder(days, startIndex, endIndex) {
   const dates = days.map((day) => day.date);
@@ -24,12 +23,13 @@ function reorder(days, startIndex, endIndex) {
   });
 }
 
-export default function DayList({ initialDays, setActiveDay }) {
+export default function DayList({ itineraryId, setActiveDay }) {
   const dispatch = useDispatch();
 
-  const [order, setOrder] = useState({
-    days: Array.from(initialDays).sort((a, b) => a.dayNumber - b.dayNumber),
-  });
+  const selectDays = useSelector((state) => state.days.dayLists[itineraryId]);
+  let dayList = Array.from(selectDays).sort(
+    (a, b) => a.dayNumber - b.dayNumber
+  );
 
   function onDragEnd(result) {
     if (!result.destination) {
@@ -41,20 +41,19 @@ export default function DayList({ initialDays, setActiveDay }) {
     }
 
     const reorderedDays = reorder(
-      order.days,
+      dayList,
       result.source.index,
       result.destination.index
     );
+    dayList = reorderedDays;
 
-    const itineraryId = initialDays[0].parentItineraryId;
-
+    setActiveDay(result.destination.index + 1);
     dispatch(
       reorderDays({
         itineraryId: itineraryId,
         days: reorderedDays,
       })
     );
-    setOrder({ days: reorderedDays });
   }
 
   return (
@@ -62,7 +61,7 @@ export default function DayList({ initialDays, setActiveDay }) {
       <Droppable droppableId="day-list">
         {(provided) => (
           <Box ref={provided.innerRef} {...provided.droppableProps}>
-            {order.days.map((day, index) => (
+            {dayList.map((day, index) => (
               <Draggable
                 key={day.dayNumber}
                 draggableId={`${day.dayNumber}`}
@@ -92,6 +91,6 @@ export default function DayList({ initialDays, setActiveDay }) {
 }
 
 DayList.propTypes = {
-  initialDays: PropTypes.array,
+  itineraryId: PropTypes.string,
   setActiveDay: PropTypes.func,
 };

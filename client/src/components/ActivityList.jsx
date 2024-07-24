@@ -1,11 +1,9 @@
+import { useDispatch, useSelector } from "react-redux";
+import { Box } from "@mui/material";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { useState } from "react";
-
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { reorderActivities } from "../redux/daySlice";
 import ActivityCard from "./ActivityCard";
-import { Box } from "@mui/material";
 
 function reorder(activities, startIndex, endIndex) {
   const times = activities.map((day) => day.time);
@@ -24,18 +22,17 @@ function reorder(activities, startIndex, endIndex) {
   });
 }
 
-export default function ActivityList({
-  itineraryId,
-  initialActivities,
-  dayId,
-}) {
+export default function ActivityList({ itineraryId, dayId }) {
   const dispatch = useDispatch();
 
-  const [order, setOrder] = useState({
-    activities: Array.from(initialActivities).sort(
-      (a, b) => a.activityNumber - b.activityNumber
-    ),
-  });
+  const selectActivities = useSelector(
+    (state) =>
+      state.days.dayLists[itineraryId].find((day) => day.id === dayId)
+        .activities
+  );
+  let activityList = Array.from(selectActivities).sort(
+    (a, b) => a.dayNumber - b.dayNumber
+  );
 
   function onDragEnd(result) {
     if (!result.destination) {
@@ -47,10 +44,11 @@ export default function ActivityList({
     }
 
     const reorderedActivities = reorder(
-      order.activities,
+      activityList,
       result.source.index,
       result.destination.index
     );
+    activityList = reorderedActivities;
 
     dispatch(
       reorderActivities({
@@ -59,7 +57,6 @@ export default function ActivityList({
         activities: reorderedActivities,
       })
     );
-    setOrder({ activities: reorderedActivities });
   }
 
   return (
@@ -67,7 +64,7 @@ export default function ActivityList({
       <Droppable droppableId="day-list">
         {(provided) => (
           <Box ref={provided.innerRef} {...provided.droppableProps}>
-            {order.activities.map((activity, index) => (
+            {activityList.map((activity, index) => (
               <Draggable
                 key={activity.activityNumber}
                 draggableId={`${activity.activityNumber}`}
