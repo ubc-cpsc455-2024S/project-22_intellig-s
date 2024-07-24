@@ -26,11 +26,24 @@ function ItineraryCard({ itinerary }) {
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
       />
       <CardContent
-        sx={{ textOverflow: "ellipsis", height: "3em" }}
+        sx={{ textOverflow: "ellipsis", height: "4em" }}
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
       >
         <Typography noWrap={true} variant="h5">
           {itinerary.location}
+        </Typography>
+        <Typography noWrap={true} fontSize={"0.9em"}>
+          {new Date(itinerary.startDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+          {" - "}
+          {new Date(itinerary.endDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </Typography>
       </CardContent>
       <CardActions>

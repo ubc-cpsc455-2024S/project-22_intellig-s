@@ -39,7 +39,7 @@ const ItineraryDetails = () => {
         .map((day) => {
           return day.activities.map((activity) => {
             return {
-              day: day.dayNumber,
+              dayNumber: day.dayNumber,
               title: activity.activity,
               activityNumber: activity.activityNumber,
               latitude: activity.coordinates.latitude,

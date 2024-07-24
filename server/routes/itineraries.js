@@ -3,25 +3,37 @@ var router = express.Router();
 const { v4: uuid } = require("uuid");
 
 const Itinerary = require("../models/itineraryModel");
-
-const getImageFromSearch = require("../google/getImageFromSearch");
-const generateItinerary = require("../replicate/generateItinerary");
 const Day = require("../models/dayModel");
+
+const generateItinerary = require("../replicate/generateItinerary");
+const getImageFromSearch = require("../google/getImageFromSearch");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
-  res.send(await Itinerary.find());
+  try {
+    res.send(await Itinerary.find());
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: `Getting itineraries from database, ${e.message}` });
+  }
 });
 
 router.post("/", async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
 
-  const response = JSON.parse(
-    await generateItinerary(location, startDate, endDate)
-  );
+  try {
+    const response = JSON.parse(
+      await generateItinerary(location, startDate, endDate)
+    );
+  } catch (e) {
+    return res.status(500).json({
+      message: `There was an error during the ai generation. Error message: ${e.message}`,
+    });
+  }
 
   const itineraryId = uuid();
   const bounds = await getBoundsFromLocation(location);

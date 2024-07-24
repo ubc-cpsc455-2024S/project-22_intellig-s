@@ -14,6 +14,7 @@ import PropType from "prop-types";
 
 import SearchBar from "./SearchBar";
 import { addItineraryAsync } from "../redux/itinerarySlice";
+import dayjs from "dayjs";
 
 const SurveyForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -49,7 +50,15 @@ const SurveyForm = ({ open, handleClose }) => {
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={() => {
+        handleClose();
+        setStep(1);
+        setFormValues({
+          location: "",
+          startDate: "",
+          endDate: "",
+        }); // Clear the form values
+      }}
       PaperProps={{ sx: { width: "50%", height: "50%" } }}
     >
       <DialogTitle>Add Itinerary</DialogTitle>
@@ -82,19 +91,33 @@ const SurveyForm = ({ open, handleClose }) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Start Date"
-                sx={{ px: 1 }}
                 name="startDate"
+                views={["year", "month", "day"]}
+                disablePast
+                sx={{ px: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
                     startDate: newDate.format("LL"),
+                    endDate: newDate.format("LL"),
                   })
                 }
               />
               <DatePicker
                 label="End Date"
-                sx={{ px: 1 }}
                 name="endDate"
+                views={["year", "month", "day"]}
+                disablePast
+                value={formValues.endDate ? dayjs(formValues.endDate) : null}
+                minDate={
+                  formValues.startDate ? dayjs(formValues.startDate) : null
+                }
+                maxDate={
+                  formValues.startDate
+                    ? dayjs(formValues.startDate).add(5, "day")
+                    : null
+                }
+                sx={{ px: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
