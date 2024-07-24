@@ -15,7 +15,7 @@ const ItineraryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const days = useSelector((state) => state.days.dayLists[id]);
-  const itineraries = useSelector((state) => state.itineraries.value);
+  const itineraries = useSelector((state) => state.itineraries.itineraryList);
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
   const [activeDay, setActiveDay] = useState(null);

@@ -31,25 +31,29 @@ export const deleteItineraryAsync = createAsyncThunk(
 const itinerarySlice = createSlice({
   name: "itineraries",
   initialState: {
-    value: [],
+    itineraryList: [],
+    status: "idle",
   },
   extraReducers: (builder) => {
     builder
       .addCase(getItinerariesAsync.fulfilled, (state, action) => {
-        state.value = action.payload;
+        state.itineraryList = action.payload;
+      })
+      .addCase(addItineraryAsync.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(addItineraryAsync.fulfilled, (state, action) => {
-        state.value.push(action.payload);
+        state.status = "idle";
+        state.itineraryList.push(action.payload);
       })
       .addCase(deleteItineraryAsync.fulfilled, (state, action) => {
-        const membersList = state.value;
+        const membersList = state.itineraryList;
         const removedMembersList = membersList.filter((member) => {
           return member.id != action.payload;
         });
-        state.value = removedMembersList;
+        state.itineraryList = removedMembersList;
       });
   },
 });
 
 export default itinerarySlice.reducer;
-export const selectItineraries = (state) => state.itineraries.value;

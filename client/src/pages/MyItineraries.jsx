@@ -1,42 +1,21 @@
-// src/pages/MyItineraries.js
 import { useEffect, useState } from "react";
 import { Container, Typography, Grid, Button } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
-import { useNavigate } from "react-router-dom";
 import SurveyForm from "../components/SurveyForm";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  selectItineraries,
-  getItinerariesAsync,
-  deleteItineraryAsync,
-} from "../redux/itinerarySlice";
+import { getItinerariesAsync } from "../redux/itinerarySlice";
+import LoadingDialog from "../components/LoadingDialog";
 
 const MyItineraries = () => {
-  const itineraries = useSelector(selectItineraries);
+  const itineraries = useSelector((state) => state.itineraries.itineraryList);
+  const itineraryStatus = useSelector((state) => state.itineraries.status);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getItinerariesAsync());
   }, [dispatch]);
-
-  const handleFormOpen = () => {
-    setFormOpen(true);
-  };
-
-  const handleFormClose = () => {
-    setFormOpen(false);
-  };
-
-  const handleDeleteItinerary = (id) => {
-    dispatch(deleteItineraryAsync(id));
-  };
-
-  const openDetails = (id) => {
-    navigate(`/itineraries/${id}`);
-  };
 
   return (
     <Container
@@ -51,7 +30,7 @@ const MyItineraries = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleFormOpen}
+        onClick={() => setFormOpen(true)}
         sx={{
           mb: 2,
         }}
@@ -61,15 +40,14 @@ const MyItineraries = () => {
       <Grid container spacing={4}>
         {itineraries.map((itinerary) => (
           <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-            <ItineraryCard
-              itinerary={itinerary}
-              onDelete={handleDeleteItinerary}
-              onOpen={openDetails}
-            />
+            <ItineraryCard itinerary={itinerary} />
           </Grid>
         ))}
       </Grid>
-      <SurveyForm open={formOpen} handleClose={handleFormClose} />
+      <SurveyForm open={formOpen} handleClose={() => setFormOpen(false)} />
+      <LoadingDialog isOpen={itineraryStatus === "loading"}>
+        Generating...
+      </LoadingDialog>
     </Container>
   );
 };
