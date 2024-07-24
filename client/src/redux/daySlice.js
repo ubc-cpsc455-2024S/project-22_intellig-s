@@ -14,7 +14,7 @@ export const fetchDays = createAsyncThunk(
   "days/fetchDays",
   async (itineraryId) => {
     const response = await axios.get(
-      `http://localhost:5000/days/${itineraryId}`
+      `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}`
     );
     console.log("In fetchDays: ", response.data);
     return { itineraryId, days: response.data };
@@ -26,9 +26,12 @@ export const addNewDay = createAsyncThunk(
   "days/addNewDay",
   async ({ itineraryId, day }) => {
     console.log("In daySlice.js", itineraryId, { day: day });
-    const response = await axios.post("http://localhost:5000/days", {
-      day: day,
-    });
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/day`,
+      {
+        day: day,
+      }
+    );
     return { itineraryId, day: response.data };
   }
 );
@@ -38,7 +41,7 @@ export const updateDay = createAsyncThunk(
   "days/updateDay",
   async ({ itineraryId, dayNumber, changes }) => {
     const response = await axios.put(
-      `http://localhost:5000/days/${itineraryId}/${dayNumber}`,
+      `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}/${dayNumber}`,
       changes
     );
     return { itineraryId, dayNumber, changes: response.data };
@@ -49,7 +52,9 @@ export const updateDay = createAsyncThunk(
 export const removeDay = createAsyncThunk(
   "days/removeDay",
   async ({ itineraryId, id }) => {
-    await axios.delete(`http://localhost:5000/days/${itineraryId}/${id}`);
+    await axios.delete(
+      `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}/${id}`
+    );
     return { itineraryId, id };
   }
 );
@@ -58,7 +63,7 @@ export const removeDay = createAsyncThunk(
 export const reorderDays = createAsyncThunk(
   "days/reorderDays",
   async ({ itineraryId, days }) => {
-    await axios.put("http://localhost:5000/days/reorder", {
+    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/days/reorder`, {
       itineraryId: itineraryId,
       days: days,
     });
@@ -70,10 +75,13 @@ export const reorderDays = createAsyncThunk(
 export const reorderActivities = createAsyncThunk(
   "days/reorderActivities",
   async ({ itineraryId, dayId, activities }) => {
-    await axios.put("http://localhost:5000/days/activities/reorder", {
-      dayId: dayId,
-      activities: activities,
-    });
+    await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/days/activities/reorder`,
+      {
+        dayId: dayId,
+        activities: activities,
+      }
+    );
     return { itineraryId, dayId, activities };
   }
 );
