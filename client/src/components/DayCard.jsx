@@ -62,11 +62,12 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
           variant="contained"
           color="error"
           sx={{ mb: 1, mr: 1 }}
-          onClick={() =>
+          onClick={() => {
+            setShowActivities(false);
             dispatch(
               removeDay({ itineraryId: day.parentItineraryId, id: day.id })
-            )
-          }
+            );
+          }}
         >
           Delete
         </Button>
