@@ -10,17 +10,18 @@ const actionTypes = {
 
 export const getItinerariesAsync = createAsyncThunk(
   actionTypes.GET_ITINERARIES,
-  async () => {
-    return await itinerariesAPI.getItineraries();
+  async (userId) => {
+    return await itinerariesAPI.getItineraries(userId);
   }
 );
 
 export const addItineraryAsync = createAsyncThunk(
   actionTypes.ADD_ITINERARY,
-  async (itinerary) => {
-    return await itinerariesAPI.addItinerary(itinerary);
+  async ({ userId, itinerary }) => {
+    return await itinerariesAPI.addItinerary(userId, itinerary);
   }
 );
+
 export const deleteItineraryAsync = createAsyncThunk(
   actionTypes.DELETE_ITINERARY,
   async (itinerary) => {

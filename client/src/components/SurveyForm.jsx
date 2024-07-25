@@ -9,7 +9,7 @@ import SearchBar from "./SearchBar";
 import { addItineraryAsync } from "../redux/itinerarySlice";
 import "../App.css"; // Importing the CSS file
 
-const SurveyForm = ({ open, handleClose }) => {
+const SurveyForm = ({ open, handleClose, userId }) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [formValues, setFormValues] = useState({
@@ -28,7 +28,8 @@ const SurveyForm = ({ open, handleClose }) => {
 
   const handleSubmit = () => {
     const newItinerary = {
-      ...formValues,
+      userId, // Include the userId obtained either from props or Redux state
+      ...formValues,  
     };
     dispatch(addItineraryAsync(newItinerary));
     handleClose();

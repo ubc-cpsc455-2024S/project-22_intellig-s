@@ -12,6 +12,7 @@ import {
 } from "../redux/itinerarySlice";
 
 const MyItineraries = () => {
+  const userId = useSelector(selectUserId);
   const itineraries = useSelector(selectItineraries);
 
   const dispatch = useDispatch();
@@ -19,8 +20,10 @@ const MyItineraries = () => {
   const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getItinerariesAsync());
-  }, [dispatch]);
+    if (userId) {
+      dispatch(getItinerariesAsync(userId));
+    }
+  }, [dispatch, userId]);
 
   const handleFormOpen = () => {
     setFormOpen(true);
@@ -69,7 +72,7 @@ const MyItineraries = () => {
           </Grid>
         ))}
       </Grid>
-      <SurveyForm open={formOpen} handleClose={handleFormClose} />
+      <SurveyForm open={formOpen} handleClose={handleFormClose} userId ={userId}/>
     </Container>
   );
 };

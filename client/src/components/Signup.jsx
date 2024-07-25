@@ -1,24 +1,23 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { signupUser } from '../redux/userSlice';
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
-        username,
-        password,
-      })
-      .then((response) => {
+    dispatch(signupUser({ username, password }))
+      .unwrap()
+      .then(() => {
         navigate("/login");
       })
       .catch((error) => {
-        console.error("Error logging in", error);
+        console.error("Error signing up", error);
       });
   };
 

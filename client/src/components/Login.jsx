@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { signIn } from "../redux/authSlice";
+import { signIn } from "../redux/userSlice"; 
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -12,17 +11,13 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, {
-        username,
-        password,
-      })
-      .then((response) => {
-        dispatch(signIn());
-        navigate("/");
+    dispatch(signIn({ username, password }))
+      .unwrap()  // Use unwrap to handle the promise
+      .then(() => {
+        navigate("/");  // Redirect on successful login
       })
       .catch((error) => {
-        console.error("Error logging in", error);
+        console.error("Error logging in", error.message);  // Improved error logging
       });
   };
 

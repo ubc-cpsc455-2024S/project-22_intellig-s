@@ -1,4 +1,4 @@
-const addItinerary = async (itinerary) => {
+const addItinerary = async (userId, itinerary) => {
   const response = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
     {
@@ -10,14 +10,19 @@ const addItinerary = async (itinerary) => {
     }
   );
 
-  const data = await response.json();
+  const newItinerary = await response.json();
   if (!response.ok) {
-    const errorMsg = data?.message;
-    throw new Error(errorMsg);
+    throw new Error(newItinerary.message || "Failed to add itinerary");
   }
 
-  return data;
+  // Add the itinerary to the user's list
+  await User.findByIdAndUpdate(userId, {
+    $push: { itineraries: newItinerary._id }
+  });
+
+  return newItinerary;
 };
+
 
 const deleteItinerary = async (id) => {
   const response = await fetch(
@@ -39,14 +44,9 @@ const deleteItinerary = async (id) => {
   return id;
 };
 
-const getItineraries = async () => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
-    {
-      method: "GET",
-    }
-  );
-  return await response.json();
+const getItineraries = async (userId) => {
+  const user = await User.findById(userId).populate('itineraries');
+  return user.itineraries;
 };
 
 export default {
