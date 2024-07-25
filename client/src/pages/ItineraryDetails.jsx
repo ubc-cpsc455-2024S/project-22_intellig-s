@@ -113,7 +113,13 @@ const ItineraryDetails = () => {
           </Grid>
 
           <Grid item xs={12} sx={{ px: 2 }}>
-            {days && <DayList itineraryId={id} setActiveDay={setActiveDay} />}
+            {days && (
+              <DayList
+                itineraryId={id}
+                activeDay={activeDay}
+                setActiveDay={setActiveDay}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>
