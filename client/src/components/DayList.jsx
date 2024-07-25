@@ -68,7 +68,11 @@ export default function DayList({ itineraryId, setActiveDay }) {
                 index={index}
               >
                 {(provided) => (
-                  <Box ref={provided.innerRef} {...provided.draggableProps}>
+                  <Box
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    sx={{ mb: 1 }}
+                  >
                     <DayCard
                       day={{
                         ...day,

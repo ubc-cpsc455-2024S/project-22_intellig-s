@@ -24,7 +24,7 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
   };
 
   return (
-    <Card sx={{ position: "relative", mb: 1 }}>
+    <Card sx={{ position: "relative" }}>
       <CardMedia
         component="img"
         sx={{ height: 200 }}
