@@ -26,13 +26,13 @@ export default function ActivityCard({ activity, dragHandleProps }) {
 
           <Typography variant="h6">{activity.activity}</Typography>
           <Typography>
-            <Box component="span" fontWeight="1000">
+            <Box component="span" fontWeight="700">
               Time:
             </Box>{" "}
             {activity.time}
           </Typography>
           <Typography>
-            <Box component="span" fontWeight="1000">
+            <Box component="span" fontWeight="700">
               Address:
             </Box>{" "}
             {activity.address}
