@@ -13,11 +13,14 @@ export default function ActivityCard({ activity, dragHandleProps }) {
         <Box sx={{ width: "100%" }}>
           <IconButton
             variant="outlined"
+            disableRipple
             sx={{
-              top: 1,
+              width: 50,
+              height: 30,
+              borderRadius: 1,
               left: "50%",
               transform: "translateX(-50%)",
-              p: 0,
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.1)" },
             }}
             {...dragHandleProps}
           >
