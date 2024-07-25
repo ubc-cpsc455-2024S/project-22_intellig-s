@@ -59,7 +59,7 @@ const SurveyForm = ({ open, handleClose }) => {
           endDate: "",
         }); // Clear the form values
       }}
-      PaperProps={{ sx: { width: "50%", height: "50%" } }}
+      PaperProps={{ sx: { width: "30%", height: "50%" } }}
     >
       <DialogTitle>Add Itinerary</DialogTitle>
       <DialogContent>
@@ -94,7 +94,7 @@ const SurveyForm = ({ open, handleClose }) => {
                 name="startDate"
                 views={["year", "month", "day"]}
                 disablePast
-                sx={{ px: 1 }}
+                sx={{ px: 1, mb: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
