@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const { v4: uuid } = require("uuid");
+const ics = require("ics");
 
 const Itinerary = require("../models/itineraryModel");
 
@@ -14,6 +15,51 @@ const getAddressFromLocation = require("../google/getAddressFromLocation");
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
   res.send(await Itinerary.find());
+});
+
+router.get("/cal/:itineraryId", async (req, res, next) => {
+  const itineraryId = req.params.itineraryId;
+
+  try {
+    const days = await Day.find({ parentItineraryId: itineraryId });
+
+    const events = days
+      .map((day) =>
+        day.activities.map((activity, index) => {
+          const date = new Date(day.date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          return {
+            title: activity.activity,
+            start: Date.parse(`${date}, ${activity.time}`),
+            end:
+              index + 1 < day.activities.length
+                ? Date.parse(`${date}, ${day.activities[index + 1].time}`)
+                : undefined,
+            duration:
+              index + 1 === day.activities.length
+                ? { hours: 1, minutes: 30 }
+                : undefined,
+            location: activity.address,
+          };
+        })
+      )
+      .flat();
+
+    const cal = ics.createEvents(events);
+
+    return res
+      .set({
+        "Content-Type": "text/calendar",
+        "Content-Disposition": `attachment; filename="itinerary.ics"`,
+      })
+      .status(200)
+      .send(cal.value);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
 });
 
 router.post("/", async function (req, res, next) {

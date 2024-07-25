@@ -108,12 +108,23 @@ const ItineraryDetails = () => {
               Add Day
             </Button>
             <Button
-              variant="contained"
+              variant="outlined"
               sx={{ mr: 1, mb: 1 }}
               onClick={() => setActiveDay(null)}
               disabled={!activeDay}
             >
               Reset Map
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{ mr: 1, mb: 1 }}
+              onClick={() => {
+                window.open(
+                  `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${id}`
+                );
+              }}
+            >
+              Add to Calendar
             </Button>
           </Grid>
           <Grid item xs={12}>
