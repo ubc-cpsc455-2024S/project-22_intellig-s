@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const { generateToken } = require("../utils/jwtUtils");
 
 const router = express.Router();
 
@@ -28,9 +29,9 @@ router.post("/signup", async (req, res, next) => {
 
   const newUser = new User({ username: username, password: encryptedPassword });
   await newUser.save();
-  res
-    .status(201)
-    .json({ message: "New user created successfully!", user: newUser });
+
+  const token = generateToken(newUser);
+  res.status(201).json({ token: token, user: newUser });
 });
 
 router.post("/signin", async (req, res, next) => {
@@ -46,9 +47,8 @@ router.post("/signin", async (req, res, next) => {
 
     const passwordCorrect = await bcrypt.compare(password, user.password);
     if (passwordCorrect) {
-      return res
-        .status(200)
-        .json({ message: "Authenticated successfully.", user: user });
+      const token = generateToken(user);
+      return res.status(200).json({ token: token, user: user });
     } else {
       return res
         .status(403)
