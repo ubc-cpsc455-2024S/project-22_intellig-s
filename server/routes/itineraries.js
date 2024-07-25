@@ -26,71 +26,70 @@ router.post("/", async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
 
   try {
-    const response = JSON.parse(
+    const aiResponse = JSON.parse(
       await generateItinerary(location, startDate, endDate)
     );
-  } catch (e) {
-    return res.status(500).json({
-      message: `There was an error during the ai generation. Error message: ${e.message}`,
-    });
-  }
 
-  const itineraryId = uuid();
-  const bounds = await getBoundsFromLocation(location);
+    const itineraryId = uuid();
+    const bounds = await getBoundsFromLocation(location);
+    let dayDate = new Date(startDate);
+    let index = 1;
 
-  let dayDate = new Date(startDate);
-  let index = 1;
+    for (const day of aiResponse.days) {
+      const dayImageUrl = await getImageFromSearch(day.activities[0].location);
 
-  for (const day of response.days) {
-    const dayImageUrl = await getImageFromSearch(day.activities[0].location);
+      const activities = [];
+      for (const [index, activity] of day.activities.entries()) {
+        const coords = await getCoordsFromLocation(
+          `${activity.location}, ${location}`
+        );
+        const address = await getAddressFromLocation(
+          `${activity.location}, ${location}`
+        );
 
-    const activities = [];
-    for (const [index, activity] of day.activities.entries()) {
-      const coords = await getCoordsFromLocation(
-        `${activity.location}, ${location}`
-      );
-      const address = await getAddressFromLocation(
-        `${activity.location}, ${location}`
-      );
+        activities.push({
+          time: activity.time,
+          activity: activity.location,
+          activityNumber: index + 1,
+          address: address,
+          coordinates: coords,
+        });
+      }
 
-      activities.push({
-        time: activity.time,
-        activity: activity.location,
-        activityNumber: index + 1,
-        address: address,
-        coordinates: coords,
+      const newDay = new Day({
+        id: uuid(),
+        parentItineraryId: itineraryId,
+        dayNumber: index,
+        date: dayDate,
+        overview: `Day ${index} in ${location}`,
+        imageUrl: dayImageUrl,
+        activities: activities,
       });
+
+      dayDate.setDate(dayDate.getDate() + 1);
+
+      await newDay.save();
+      index++;
     }
 
-    const newDay = new Day({
-      id: uuid(),
-      parentItineraryId: itineraryId,
-      dayNumber: index,
-      date: dayDate,
-      overview: `Day ${index} in ${location}`,
-      imageUrl: dayImageUrl,
-      activities: activities,
+    const itineraryImageUrl = await getImageFromSearch(location);
+
+    let itinerary = new Itinerary({
+      id: itineraryId,
+      location: location,
+      startDate: startDate,
+      endDate: endDate,
+      imageUrl: itineraryImageUrl,
+      bounds: bounds,
     });
 
-    dayDate.setDate(dayDate.getDate() + 1);
-
-    await newDay.save();
-    index++;
+    itinerary.save();
+    res.send(itinerary);
+  } catch (e) {
+    res.status(500).json({
+      message: `Error during itinerary creation. Error message: ${e.message}`,
+    });
   }
-
-  const itineraryImageUrl = await getImageFromSearch(location);
-
-  let itinerary = new Itinerary({
-    id: itineraryId,
-    location: location,
-    startDate: startDate,
-    endDate: endDate,
-    imageUrl: itineraryImageUrl,
-    bounds: bounds,
-  });
-
-  itinerary.save();
-  res.send(itinerary);
 });
 
 router.delete("/:itineraryId", async function (req, res, next) {

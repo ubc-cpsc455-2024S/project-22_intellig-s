@@ -25,6 +25,7 @@ function ItineraryCard({ itinerary }) {
         alt={`Image of ${itinerary.location}`}
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
       />
+
       <CardContent
         sx={{ textOverflow: "ellipsis", height: "4em" }}
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
@@ -33,19 +34,22 @@ function ItineraryCard({ itinerary }) {
           {itinerary.location}
         </Typography>
         <Typography noWrap={true} fontSize={"0.9em"}>
-          {new Date(itinerary.startDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-          {" - "}
-          {new Date(itinerary.endDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          {new Date(itinerary.startDate).getMonth() ===
+          new Date(itinerary.endDate).getMonth()
+            ? new Date(itinerary.startDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })
+            : `${new Date(itinerary.startDate).toLocaleDateString("en-US", {
+                month: "long",
+              })} - 
+              ${new Date(itinerary.endDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })}`}
         </Typography>
       </CardContent>
+
       <CardActions>
         <Button
           size="small"

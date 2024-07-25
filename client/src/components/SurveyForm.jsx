@@ -13,7 +13,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PropType from "prop-types";
 
 import SearchBar from "./SearchBar";
-import { addItineraryAsync } from "../redux/itinerarySlice";
+import { generateItineraryAsync } from "../redux/itinerarySlice";
 import dayjs from "dayjs";
 
 const SurveyForm = ({ open, handleClose }) => {
@@ -37,7 +37,7 @@ const SurveyForm = ({ open, handleClose }) => {
     const newItinerary = {
       ...formValues,
     };
-    dispatch(addItineraryAsync(newItinerary));
+    dispatch(generateItineraryAsync(newItinerary));
     handleClose();
     setStep(1); // Reset to the first step
     setFormValues({

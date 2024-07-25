@@ -45,7 +45,7 @@ const MyItineraries = () => {
         ))}
       </Grid>
       <SurveyForm open={formOpen} handleClose={() => setFormOpen(false)} />
-      <LoadingDialog isOpen={itineraryStatus === "loading"}>
+      <LoadingDialog isOpen={itineraryStatus === "generating"}>
         Generating...
       </LoadingDialog>
     </Container>

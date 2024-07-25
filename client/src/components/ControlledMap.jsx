@@ -15,14 +15,16 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
     <Map
       {...cameraProps}
       mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+      disableDefaultUI={true}
+      zoomControl={true}
       onCameraChanged={handleCameraChange}
       clickableIcons={false}
     >
-      {markers.map((marker) => {
+      {markers.map((marker, index) => {
         if (activeDay === null)
           return (
             <MarkerWithInfoWindow
-              key={marker.latitude}
+              key={index}
               position={{ lat: marker.latitude, lng: marker.longitude }}
               infoWindowContent={`Day ${marker.dayNumber}: ${marker.title}`}
             ></MarkerWithInfoWindow>

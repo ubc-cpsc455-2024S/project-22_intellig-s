@@ -4,19 +4,18 @@ async function generateItinerary(location, start_date, end_date) {
   const input = {
     top_k: 0,
     top_p: 0.95,
-    prompt: `give me an itinerary for ${location} from ${start_date} to ${end_date} with at least three activities per day`,
+    prompt: `give me an itinerary for ${location} from ${start_date} to ${end_date} with at least four activities per day`,
     max_tokens: 2000,
     temperature: 0.7,
     system_prompt: `Please only respond with JSON format text, I do not want any extra text and only want to see JSON text that I can take into a javascript application. The format should be as follows:
-        let test = {
+        {
           "days": [
             {
-              "day": "month date, year"
+              "day": "month date, year",
               "activities": [
                 {
-                  "time": "time",
+                  "time": "time (AM/PM)",
                   "location": "location name",
-                  "duration": time spent at location,
                 }
               ]
             }

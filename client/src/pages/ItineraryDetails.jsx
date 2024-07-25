@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ControlledMap from "../components/ControlledMap";
 import DayForm from "../components/DayForm";
 import DayList from "../components/DayList";
+import LoadingDialog from "../components/LoadingDialog";
 
 import { fetchDays, generateNewDay } from "../redux/daySlice";
 import { getItinerariesAsync } from "../redux/itinerarySlice";
@@ -14,7 +15,10 @@ import { getItinerariesAsync } from "../redux/itinerarySlice";
 const ItineraryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+
   const days = useSelector((state) => state.days.dayLists[id]);
+  const dayStatus = useSelector((state) => state.days.status);
+
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
@@ -52,8 +56,8 @@ const ItineraryDetails = () => {
 
   return (
     <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
-      <Grid container sx={{ height: "100vh" }}>
-        <Grid item xs={9} sx={{ pt: "64px", width: "74vw", height: "100%" }}>
+      <Grid container sx={{ height: "100vh", pt: "64px" }}>
+        <Grid item xs={9} sx={{ width: "74vw", height: "100%" }}>
           <APIProvider
             apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             libraries={["places"]}
@@ -67,18 +71,9 @@ const ItineraryDetails = () => {
             )}
           </APIProvider>
         </Grid>
-        <Grid
-          item
-          xs={3}
-          container
-          sx={{
-            pt: "80px",
-            height: "100%",
-            overflow: "auto",
-            px: 2,
-          }}
-        >
-          <Grid item xs={12} sx={{ outline: "10px 10px 10px", mb: 1 }}>
+
+        <Grid item xs={3} container sx={{ height: "100%", overflow: "auto" }}>
+          <Grid item xs={12} sx={{ p: 2 }}>
             {itinerary && (
               <Box sx={{ mb: 1 }}>
                 <Typography variant="h4" sx={{ fontWeight: "500" }}>
@@ -116,18 +111,21 @@ const ItineraryDetails = () => {
               Reset Map
             </Button>
           </Grid>
-          <Grid item xs={12}>
+
+          <Grid item xs={12} sx={{ px: 2 }}>
             {days && <DayList itineraryId={id} setActiveDay={setActiveDay} />}
-          </Grid>
-          <Grid item xs={4}>
-            <DayForm
-              itineraryId={id}
-              open={addDayFormOpen}
-              handleClose={() => setAddDayFormOpen(false)}
-            />
           </Grid>
         </Grid>
       </Grid>
+
+      <DayForm
+        itineraryId={id}
+        open={addDayFormOpen}
+        handleClose={() => setAddDayFormOpen(false)}
+      />
+      <LoadingDialog isOpen={dayStatus === "generating"}>
+        Generating...
+      </LoadingDialog>
     </Box>
   );
 };

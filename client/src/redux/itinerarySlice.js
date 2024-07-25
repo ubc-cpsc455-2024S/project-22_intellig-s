@@ -15,7 +15,7 @@ export const getItinerariesAsync = createAsyncThunk(
   }
 );
 
-export const addItineraryAsync = createAsyncThunk(
+export const generateItineraryAsync = createAsyncThunk(
   actionTypes.ADD_ITINERARY,
   async (itinerary) => {
     return await itinerariesAPI.addItinerary(itinerary);
@@ -39,11 +39,15 @@ const itinerarySlice = createSlice({
       .addCase(getItinerariesAsync.fulfilled, (state, action) => {
         state.itineraryList = action.payload;
       })
-      .addCase(addItineraryAsync.pending, (state) => {
-        state.status = "loading";
+      .addCase(generateItineraryAsync.pending, (state) => {
+        state.status = "generating";
       })
-      .addCase(addItineraryAsync.fulfilled, (state, action) => {
-        state.status = "idle";
+      .addCase(generateItineraryAsync.rejected, (state) => {
+        state.status = "failed";
+        alert("Generating new itinerary failed, please try again");
+      })
+      .addCase(generateItineraryAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.itineraryList.push(action.payload);
       })
       .addCase(deleteItineraryAsync.fulfilled, (state, action) => {
