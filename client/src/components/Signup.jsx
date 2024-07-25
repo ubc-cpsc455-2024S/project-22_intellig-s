@@ -1,48 +1,41 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { signup } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const { isLoading, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
-        username,
-        password,
-      })
-      .then((response) => {
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.error("Error logging in", error);
-      });
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+
+    dispatch(signup({ username: username, password: password }));
+    if (error) {
+      console.error("Error logging in", error);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
     <div>
       <h2>Sign-up</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Sign up</button>
+      <form onSubmit={onSubmit}>
+        <input type="text" name="username" placeholder="Username" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit" disabled={isLoading}>
+          signup
+        </button>
       </form>
     </div>
   );

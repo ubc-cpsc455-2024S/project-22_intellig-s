@@ -10,10 +10,11 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSelector, useDispatch } from "react-redux";
-import { signOut } from "../redux/authSlice";
+import { logout } from "../redux/authSlice";
 
 const NavBar = () => {
-  const isSignedIn = useSelector((state) => state.auth.isSignedIn);
+  const user = useSelector((state) => state.auth.user);
+  const isSignedIn = user != null;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -91,7 +92,7 @@ const NavBar = () => {
             {isSignedIn && (
               <MenuItem
                 onClick={() => {
-                  dispatch(signOut());
+                  dispatch(logout());
                   navigate("/");
                 }}
               >
