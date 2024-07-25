@@ -71,7 +71,11 @@ export default function ActivityList({ itineraryId, dayId }) {
                 index={index}
               >
                 {(provided) => (
-                  <Box ref={provided.innerRef} {...provided.draggableProps}>
+                  <Box
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    sx={{ mx: 1, mb: 1 }}
+                  >
                     <ActivityCard
                       activity={activity}
                       dragHandleProps={provided.dragHandleProps}

@@ -4,11 +4,7 @@ import { DragHandle } from "@mui/icons-material";
 
 export default function ActivityCard({ activity, dragHandleProps }) {
   return (
-    <Card
-      variant="outlined"
-      sx={{ m: 1 }}
-      style={{ display: "flex", marginBottom: 8 }}
-    >
+    <Card variant="outlined">
       <CardContent className="day-card" sx={{ pt: 1, width: "100%" }}>
         <Box sx={{ width: "100%" }}>
           <IconButton
