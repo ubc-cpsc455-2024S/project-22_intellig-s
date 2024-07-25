@@ -43,7 +43,9 @@ function SearchBar({ handleChange }) {
 
   // load the google maps script on page load
   if (typeof window !== "undefined" && !loaded.current) {
-    if (!document.querySelector("#google-maps")) {
+    if (
+      !document.querySelector('[src^="https://maps.googleapis.com/maps/api"]')
+    ) {
       loadScript(
         `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&libraries=places`,
         document.querySelector("head"),
@@ -162,7 +164,7 @@ function SearchBar({ handleChange }) {
         );
 
         return (
-          <li {...props} key={props.key}>
+          <Box {...props} key={props.key}>
             <Grid container alignItems="center">
               <Grid item sx={{ display: "flex", width: 44 }}>
                 <LocationOnIcon sx={{ color: "text.secondary" }} />
@@ -185,7 +187,7 @@ function SearchBar({ handleChange }) {
                 </Typography>
               </Grid>
             </Grid>
-          </li>
+          </Box>
         );
       }}
       renderTags={(tagValue, getTagProps) => {
