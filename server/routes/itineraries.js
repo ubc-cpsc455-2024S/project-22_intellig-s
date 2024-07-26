@@ -12,6 +12,16 @@ const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 
+async function retry(maxRetries, fn) {
+  return await fn().catch(function (err) {
+    if (maxRetries <= 0) {
+      throw err;
+    }
+    console.log(err.message);
+    return retry(maxRetries - 1, fn);
+  });
+}
+
 /* GET itineraries listing. */
 router.get("/", async function (req, res, next) {
   try {
@@ -72,8 +82,8 @@ router.post("/", async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
 
   try {
-    const aiResponse = JSON.parse(
-      await generateItinerary(location, startDate, endDate)
+    const aiResponse = await retry(3, async () =>
+      JSON.parse(await generateItinerary(location, startDate, endDate))
     );
 
     const itineraryId = uuid();

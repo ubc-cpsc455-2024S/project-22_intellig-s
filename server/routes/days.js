@@ -9,6 +9,16 @@ const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
 
+async function retry(maxRetries, fn) {
+  return await fn().catch(function (err) {
+    if (maxRetries <= 0) {
+      throw err;
+    }
+    console.log(err.message);
+    return retry(maxRetries - 1, fn);
+  });
+}
+
 // Get all days for an itinerary
 router.get("/:itineraryId", async (req, res) => {
   try {
@@ -97,8 +107,10 @@ router.post("/generate", async (req, res) => {
       .map((day) => day.activities.map((activity) => activity.activity))
       .flat();
 
-    const aiResponse = JSON.parse(
-      await generateDay(itinerary.location, currentActivities.join(", "))
+    const aiResponse = await retry(3, async () =>
+      JSON.parse(
+        await generateDay(itinerary.location, currentActivities.join(", "))
+      )
     );
 
     const imageUrl = await getImageFromSearch(
