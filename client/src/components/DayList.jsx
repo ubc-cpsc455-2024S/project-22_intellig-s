@@ -23,7 +23,7 @@ function reorder(days, startIndex, endIndex) {
   });
 }
 
-export default function DayList({ itineraryId, setActiveDay }) {
+export default function DayList({ itineraryId, activeDay, setActiveDay }) {
   const dispatch = useDispatch();
 
   const selectDays = useSelector((state) => state.days.dayLists[itineraryId]);
@@ -47,7 +47,7 @@ export default function DayList({ itineraryId, setActiveDay }) {
     );
     dayList = reorderedDays;
 
-    setActiveDay(result.destination.index + 1);
+    if (activeDay) setActiveDay(result.destination.index + 1);
     dispatch(
       reorderDays({
         itineraryId: itineraryId,
@@ -92,5 +92,6 @@ export default function DayList({ itineraryId, setActiveDay }) {
 
 DayList.propTypes = {
   itineraryId: PropTypes.string,
+  activeDay: PropTypes.number,
   setActiveDay: PropTypes.func,
 };
