@@ -45,7 +45,7 @@ export function MarkerWithInfoWindow({
 }
 
 MarkerWithInfoWindow.propTypes = {
-  position: PropType.object,
+  position: PropType.shape({ lat: PropType.number, lng: PropType.number }),
   infoWindowContent: PropType.string,
   pinContent: PropType.string,
 };

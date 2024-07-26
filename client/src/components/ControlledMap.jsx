@@ -15,24 +15,26 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
     <Map
       {...cameraProps}
       mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+      disableDefaultUI={true}
+      zoomControl={true}
       onCameraChanged={handleCameraChange}
       clickableIcons={false}
     >
-      {markers.map((marker) => {
+      {markers.map((marker, index) => {
         if (activeDay === null)
           return (
             <MarkerWithInfoWindow
-              key={marker.latitude}
+              key={index}
               position={{ lat: marker.latitude, lng: marker.longitude }}
-              infoWindowContent={`Day ${marker.day}: ${marker.title}`}
+              infoWindowContent={`Day ${marker.dayNumber}: ${marker.title}`}
             ></MarkerWithInfoWindow>
           );
 
-        return activeDay === marker.day ? (
+        return activeDay === marker.dayNumber ? (
           <MarkerWithInfoWindow
             key={marker.latitude}
             position={{ lat: marker.latitude, lng: marker.longitude }}
-            infoWindowContent={`Day ${marker.day}: ${marker.title}`}
+            infoWindowContent={`Day ${marker.dayNumber}: ${marker.title}`}
             pinContent={`${marker.activityNumber}`}
           ></MarkerWithInfoWindow>
         ) : null;
@@ -42,7 +44,20 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
 }
 
 ControlledMap.propTypes = {
-  bounds: PropType.object,
-  markers: PropType.array,
+  bounds: PropType.shape({
+    east: PropType.number,
+    north: PropType.number,
+    south: PropType.number,
+    west: PropType.number,
+  }),
+  markers: PropType.arrayOf(
+    PropType.shape({
+      latitude: PropType.number,
+      longitude: PropType.number,
+      dayNumber: PropType.number,
+      activityNumber: PropType.number,
+      title: PropType.string,
+    })
+  ),
   activeDay: PropType.number,
 };

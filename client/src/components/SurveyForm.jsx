@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PropType from "prop-types";
 
 import SearchBar from "./SearchBar";
-import { addItineraryAsync } from "../redux/itinerarySlice";
-import "../App.css"; // Importing the CSS file
+import { generateItineraryAsync } from "../redux/itinerarySlice";
+import dayjs from "dayjs";
 
 const SurveyForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -30,7 +37,7 @@ const SurveyForm = ({ open, handleClose }) => {
     const newItinerary = {
       ...formValues,
     };
-    dispatch(addItineraryAsync(newItinerary));
+    dispatch(generateItineraryAsync(newItinerary));
     handleClose();
     setStep(1); // Reset to the first step
     setFormValues({
@@ -41,12 +48,26 @@ const SurveyForm = ({ open, handleClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      open={open}
+      onClose={() => {
+        handleClose();
+        setStep(1);
+        setFormValues({
+          location: "",
+          startDate: "",
+          endDate: "",
+        }); // Clear the form values
+      }}
+      PaperProps={{ sx: { width: "30%", height: "50%" } }}
+    >
       <DialogTitle>Add Itinerary</DialogTitle>
       <DialogContent>
         {step === 1 && (
-          <div className="survey-step">
-            <h2>Where would you like to visit?</h2>
+          <Box className="survey-step">
+            <Typography variant="h4" fontWeight={500} sx={{ mb: 2 }}>
+              Where are you traveling?
+            </Typography>
             <SearchBar
               handleChange={(newLocation) =>
                 setFormValues({
@@ -55,32 +76,48 @@ const SurveyForm = ({ open, handleClose }) => {
                 })
               }
             />
-            <div className="button-group">
+            <Box className="button-group">
               <Button onClick={handleNext} color="primary" variant="contained">
                 Next
               </Button>
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
         {step === 2 && (
-          <div className="survey-step">
-            <h2>When are you planning to travel?</h2>
+          <Box className="survey-step">
+            <Typography variant="h4" fontWeight={500} sx={{ mb: 2 }}>
+              When are you planning to travel?
+            </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Start Date"
-                sx={{ px: 1 }}
                 name="startDate"
+                views={["year", "month", "day"]}
+                disablePast
+                sx={{ px: 1, mb: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
                     startDate: newDate.format("LL"),
+                    endDate: newDate.format("LL"),
                   })
                 }
               />
               <DatePicker
                 label="End Date"
-                sx={{ px: 1 }}
                 name="endDate"
+                views={["year", "month", "day"]}
+                disablePast
+                value={formValues.endDate ? dayjs(formValues.endDate) : null}
+                minDate={
+                  formValues.startDate ? dayjs(formValues.startDate) : null
+                }
+                maxDate={
+                  formValues.startDate
+                    ? dayjs(formValues.startDate).add(5, "day")
+                    : null
+                }
+                sx={{ px: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
@@ -89,7 +126,7 @@ const SurveyForm = ({ open, handleClose }) => {
                 }
               />
             </LocalizationProvider>
-            <div className="button-group">
+            <Box className="button-group">
               <Button onClick={handleBack} color="primary" variant="outlined">
                 Back
               </Button>
@@ -100,8 +137,8 @@ const SurveyForm = ({ open, handleClose }) => {
               >
                 Submit
               </Button>
-            </div>
-          </div>
+            </Box>
+          </Box>
         )}
       </DialogContent>
     </Dialog>

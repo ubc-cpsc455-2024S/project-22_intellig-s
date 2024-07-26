@@ -127,8 +127,16 @@ const daySlice = createSlice({
           state.dayLists[itineraryId] = [day];
         }
       })
+      .addCase(generateNewDay.pending, (state) => {
+        state.status = "generating";
+      })
+      .addCase(generateNewDay.rejected, (state) => {
+        state.status = "failed";
+        alert("Generating new day failed, please try again");
+      })
       .addCase(generateNewDay.fulfilled, (state, action) => {
         const { itineraryId, day } = action.payload;
+        state.status = "succeeded";
         state.dayLists[itineraryId].push(day);
       })
       .addCase(updateDay.fulfilled, (state, action) => {

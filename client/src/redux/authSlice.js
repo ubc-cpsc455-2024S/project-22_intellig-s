@@ -46,7 +46,7 @@ const authSlice = createSlice({
       localStorage.removeItem("token");
     },
     setUser(state, action) {
-      state.user = action.payload;
+      if (Date.now() / 1000 < action.payload.exp) state.user = action.payload;
     },
   },
   extraReducers: (builder) => {

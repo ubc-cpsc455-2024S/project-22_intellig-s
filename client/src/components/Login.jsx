@@ -1,45 +1,75 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error } = useSelector((state) => state.auth);
+  const { user, isLoading, error } = useSelector((state) => state.auth);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const username = e.target.username.value;
-    const password = e.target.password.value;
+  if (user) navigate("/");
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onSubmit = () => {
     dispatch(login({ username, password }));
-    if (error) {
-      console.error("Error logging in", error);
-    } else {
-      navigate("/");
-    }
   };
 
   return (
-    <div style={{ marginTop: "64px" }}>
-      <h2>Login</h2>
-      <form onSubmit={onSubmit}>
-        <input type="text" name="username" placeholder="Username" required />
-        <input
+    <Box
+      sx={{
+        position: "absolute",
+        height: "100vh",
+        width: "100vw",
+        pt: "64px",
+      }}
+    >
+      <Box
+        sx={{
+          pt: 2,
+          position: "relative",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "330px",
+        }}
+      >
+        <Typography variant={"h4"}>Login</Typography>
+        <Typography sx={{ height: "2em" }} color={"red"}>
+          {error && error.message}
+        </Typography>
+
+        <TextField
+          type="text"
+          name="username"
+          placeholder="Username"
+          onChange={(e) => setUsername(e.target.value)}
+          fullWidth
+          sx={{ mb: 1 }}
+        />
+        <TextField
           type="password"
           name="password"
           placeholder="Password"
-          required
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          sx={{ mb: 1 }}
         />
-        <button type="submit" disabled={isLoading}>
+        <Button
+          variant={"contained"}
+          onClick={onSubmit}
+          disabled={isLoading}
+          sx={{ mb: 1 }}
+        >
           Login
-        </button>
-        {error && <p>{error.message}</p>}
-      </form>
-      <button onClick={() => navigate("/signup")}>
-        Don't have an account? Sign up!
-      </button>
-    </div>
+        </Button>
+        <Button variant={"contained"} onClick={() => navigate("/signup")}>
+          Don&#39;t have an account? Sign up!
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

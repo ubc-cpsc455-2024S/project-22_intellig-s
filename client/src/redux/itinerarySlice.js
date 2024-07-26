@@ -15,7 +15,7 @@ export const getItinerariesAsync = createAsyncThunk(
   }
 );
 
-export const addItineraryAsync = createAsyncThunk(
+export const generateItineraryAsync = createAsyncThunk(
   actionTypes.ADD_ITINERARY,
   async (itinerary) => {
     return await itinerariesAPI.addItinerary(itinerary);
@@ -31,25 +31,33 @@ export const deleteItineraryAsync = createAsyncThunk(
 const itinerarySlice = createSlice({
   name: "itineraries",
   initialState: {
-    value: [],
+    itineraryList: [],
+    status: "idle",
   },
   extraReducers: (builder) => {
     builder
       .addCase(getItinerariesAsync.fulfilled, (state, action) => {
-        state.value = action.payload;
+        state.itineraryList = action.payload;
       })
-      .addCase(addItineraryAsync.fulfilled, (state, action) => {
-        state.value.push(action.payload);
+      .addCase(generateItineraryAsync.pending, (state) => {
+        state.status = "generating";
+      })
+      .addCase(generateItineraryAsync.rejected, (state) => {
+        state.status = "failed";
+        alert("Generating new itinerary failed, please try again");
+      })
+      .addCase(generateItineraryAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.itineraryList.push(action.payload);
       })
       .addCase(deleteItineraryAsync.fulfilled, (state, action) => {
-        const membersList = state.value;
+        const membersList = state.itineraryList;
         const removedMembersList = membersList.filter((member) => {
           return member.id != action.payload;
         });
-        state.value = removedMembersList;
+        state.itineraryList = removedMembersList;
       });
   },
 });
 
 export default itinerarySlice.reducer;
-export const selectItineraries = (state) => state.itineraries.value;
