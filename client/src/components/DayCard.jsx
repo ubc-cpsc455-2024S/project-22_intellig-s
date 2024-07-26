@@ -24,7 +24,7 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
   };
 
   return (
-    <Card sx={{ position: "relative", mb: 1 }}>
+    <Card sx={{ position: "relative" }}>
       <CardMedia
         component="img"
         sx={{ height: 200 }}
@@ -34,7 +34,12 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
       />
       <CardContent
         className="day-card"
-        style={{ position: "relative", alignItems: "top", objectFit: "fill" }}
+        sx={{
+          position: "relative",
+          alignItems: "top",
+          objectFit: "fill",
+          ":last-child": { pb: 2 },
+        }}
       >
         <Typography variant="h6">
           Day {day.dayNumber}:{" "}
@@ -46,8 +51,21 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6">Activities</Typography>
-          <IconButton onClick={toggleActivities}>
-            {showActivities ? <ExpandLess /> : <ExpandMore />}
+          <IconButton
+            onClick={toggleActivities}
+            sx={{
+              ml: 1,
+              width: 40,
+              height: 30,
+              borderRadius: 1,
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.1)" },
+            }}
+          >
+            {showActivities ? (
+              <ExpandLess color="primary" />
+            ) : (
+              <ExpandMore color="primary" />
+            )}
           </IconButton>
         </Box>
       </CardContent>

@@ -4,20 +4,19 @@ import { DragHandle } from "@mui/icons-material";
 
 export default function ActivityCard({ activity, dragHandleProps }) {
   return (
-    <Card
-      variant="outlined"
-      sx={{ m: 1 }}
-      style={{ display: "flex", marginBottom: 8 }}
-    >
+    <Card variant="outlined">
       <CardContent className="day-card" sx={{ pt: 1, width: "100%" }}>
         <Box sx={{ width: "100%" }}>
           <IconButton
             variant="outlined"
+            disableRipple
             sx={{
-              top: 1,
+              width: 50,
+              height: 30,
+              borderRadius: 1,
               left: "50%",
               transform: "translateX(-50%)",
-              p: 0,
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.1)" },
             }}
             {...dragHandleProps}
           >
@@ -26,13 +25,13 @@ export default function ActivityCard({ activity, dragHandleProps }) {
 
           <Typography variant="h6">{activity.activity}</Typography>
           <Typography>
-            <Box component="span" fontWeight="1000">
+            <Box component="span" fontWeight="700">
               Time:
             </Box>{" "}
             {activity.time}
           </Typography>
           <Typography>
-            <Box component="span" fontWeight="1000">
+            <Box component="span" fontWeight="700">
               Address:
             </Box>{" "}
             {activity.address}
