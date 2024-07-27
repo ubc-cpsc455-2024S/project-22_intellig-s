@@ -79,50 +79,49 @@ const Home = () => {
     <Box sx={{ position: "absolute", top: 0, left: 0 }}>
       <Box sx={{ pt: "64px", height: "100vh", width: "100vw" }}>
         <Box sx={{ height: "100%", overflow: "auto", pt: 2 }}>
-          <Grid container sx={{ px: 3 }}>
-            <Grid item xs={12} md={5} sx={{ alignContent: "center", pl: 8 }}>
-              <Typography
+          <Container sx={{ height: "100%" }} maxWidth="xl">
+            <Grid container sx={{ height: "100%" }}>
+              <Grid item xs={12} md={5} sx={{ alignContent: "center" }}>
+                <Typography
+                  sx={{
+                    typography: {
+                      fontWeight: 600,
+                      xs: { fontSize: 60, textAlign: "center" },
+                      md: { fontSize: 80, textAlign: "left" },
+                    },
+                  }}
+                  color="primary"
+                >
+                  Your Perfect Journey, Crafted by AI{" "}
+                </Typography>
+                <Typography
+                  sx={{
+                    typography: {
+                      fontWeight: "200",
+                      xs: { fontSize: 30, textAlign: "center" },
+                      md: { fontSize: 30, textAlign: "left" },
+                    },
+                    textAlign: "left",
+                  }}
+                >
+                  Create itineraries based on your interests and view them in
+                  real time.
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={7}
                 sx={{
-                  typography: {
-                    fontWeight: 600,
-                    xs: { fontSize: 60 },
-                    md: { fontSize: 80 },
-                  },
-                  textAlign: "left",
-                }}
-                color="primary"
-              >
-                Your Perfect Journey, Crafted by AI{" "}
-              </Typography>
-              <Typography
-                sx={{
-                  typography: {
-                    fontWeight: "200",
-                    xs: { fontSize: 30 },
-                    md: { fontSize: 30 },
-                  },
-                  textAlign: "left",
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: 3,
                 }}
               >
-                Create itineraries based on your interests and view them in real
-                time.
-              </Typography>
+                <Logo />
+              </Grid>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              md={7}
-              sx={{
-                display: "flex",
-                height: "90vh",
-                width: "100%",
-                justifyContent: "center",
-                mb: 3,
-              }}
-            >
-              <Logo />
-            </Grid>
-          </Grid>
+          </Container>
           <Typography variant="h4" color="secondary">
             Explore
           </Typography>
