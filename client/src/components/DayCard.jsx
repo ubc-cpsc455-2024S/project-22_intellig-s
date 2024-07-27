@@ -97,7 +97,16 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
               setShowActivities(false);
               dispatch(
                 removeDay({ itineraryId: day.parentItineraryId, id: day.id })
-              );
+              )
+                .unwrap()
+                .then(() => {
+                  if (status === "succeeded")
+                    dispatch(
+                      decrementItineraryEndDate({
+                        itineraryId: day.parentItineraryId,
+                      })
+                    );
+                });
             }}
           >
             <Delete sx={{ mr: 0.75 }} />
