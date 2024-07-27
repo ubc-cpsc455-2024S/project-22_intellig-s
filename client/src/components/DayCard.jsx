@@ -30,7 +30,7 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
     <Card sx={{ position: "relative" }}>
       <CardMedia
         component="img"
-        sx={{ height: 200 }}
+        sx={{ height: 200, "&:hover": { cursor: "grab" } }}
         image={day.imageUrl}
         alt="Day Image"
         {...dragHandleProps}

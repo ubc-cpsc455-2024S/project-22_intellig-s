@@ -16,7 +16,7 @@ export default function ActivityCard({ activity, dragHandleProps }) {
               borderRadius: 1,
               left: "50%",
               transform: "translateX(-50%)",
-              "&:hover": { backgroundColor: "rgba(0,0,0,0.1)" },
+              "&:hover": { backgroundColor: "rgba(0,0,0,0.1)", cursor: "grab" },
             }}
             {...dragHandleProps}
           >
