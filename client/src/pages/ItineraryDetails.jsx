@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, Grid, Typography } from "@mui/material";
+import { AutoAwesome, CalendarMonth, RestartAlt } from "@mui/icons-material";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -67,6 +68,17 @@ const ItineraryDetails = () => {
                 bounds={itinerary.bounds}
                 markers={markers}
                 activeDay={activeDay}
+                resetButton={
+                  <Button
+                    variant="contained"
+                    sx={{ m: 2, pl: 1 }}
+                    onClick={() => setActiveDay(null)}
+                    disabled={!activeDay}
+                  >
+                    <RestartAlt sx={{ mr: 0.75 }} />
+                    Reset Markers
+                  </Button>
+                }
               ></ControlledMap>
             )}
           </APIProvider>
@@ -88,27 +100,25 @@ const ItineraryDetails = () => {
             )}
             <Button
               variant="contained"
-              sx={{ mr: 1, mb: 1 }}
+              sx={{ mr: 1, mb: 1, pl: 1 }}
               onClick={() => {
                 dispatch(generateNewDay({ itineraryId: id }));
               }}
             >
+              <AutoAwesome sx={{ mr: 0.75 }} />
               Generate New Day
             </Button>
             <Button
-              variant="contained"
-              sx={{ mr: 1, mb: 1 }}
-              onClick={() => setAddDayFormOpen(true)}
+              variant="outlined"
+              sx={{ mr: 1, mb: 1, pl: 1 }}
+              onClick={() => {
+                window.open(
+                  `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${id}`
+                );
+              }}
             >
-              Add Day
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ mr: 1, mb: 1 }}
-              onClick={() => setActiveDay(null)}
-              disabled={!activeDay}
-            >
-              Reset Map
+              <CalendarMonth sx={{ mr: 0.75 }} />
+              Add to Calendar
             </Button>
           </Grid>
 
