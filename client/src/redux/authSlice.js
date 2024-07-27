@@ -29,6 +29,29 @@ export const login = createAsyncThunk(
   }
 );
 
+export const updatePreferences = createAsyncThunk(
+  "auth/updatePreferences",
+  async (preferences, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+    try {
+      const response = await axios.post(
+        `${API_URL}/updatePreferences`,
+        preferences,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   user: null,
   token: localStorage.getItem("token") || null,
@@ -74,6 +97,17 @@ const authSlice = createSlice({
         localStorage.setItem("token", action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(updatePreferences.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePreferences.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = { ...state.user, preferences: action.payload.preferences };
+      })
+      .addCase(updatePreferences.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });
