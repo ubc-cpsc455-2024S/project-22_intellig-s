@@ -16,8 +16,9 @@ const userSchema = new mongoose.Schema({
     default: [],
   },
   preferences: {
-    type: [String],
-    default: [],
+    type: Map,
+    of: mongoose.Schema.Types.Mixed,
+    default: {},
   },
 });
 
