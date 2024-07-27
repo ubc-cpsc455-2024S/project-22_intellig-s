@@ -56,7 +56,7 @@ const ItineraryDetails = () => {
     : [];
 
   return (
-    <Box position={"absolute"} sx={{ top: 0, left: 0, height: "100vh" }}>
+    <Box sx={{ position: "absolute", top: 0, left: 0, height: "100vh" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
         <Grid item xs={9} sx={{ width: "74vw", height: "100%" }}>
           <APIProvider
