@@ -5,8 +5,6 @@ import itinerariesAPI from "./itinerariesAPI";
 const actionTypes = {
   GET_ITINERARIES: "itineraries/getItineraries",
   ADD_ITINERARY: "itineraries/addItinerary",
-  INCREMENT_ITINERARY_END_DATE: "itineraries/incrementItineraryEndDate",
-  DECREMENT_ITINERARY_END_DATE: "itineraries/decrementItineraryEndDate",
   DELETE_ITINERARY: "itineraries/deleteItinerary",
 };
 
