@@ -5,6 +5,8 @@ import itinerariesAPI from "./itinerariesAPI";
 const actionTypes = {
   GET_ITINERARIES: "itineraries/getItineraries",
   ADD_ITINERARY: "itineraries/addItinerary",
+  INCREMENT_ITINERARY_END_DATE: "itineraries/incrementItineraryEndDate",
+  DECREMENT_ITINERARY_END_DATE: "itineraries/decrementItineraryEndDate",
   DELETE_ITINERARY: "itineraries/deleteItinerary",
 };
 
@@ -21,6 +23,7 @@ export const generateItineraryAsync = createAsyncThunk(
     return await itinerariesAPI.addItinerary(itinerary);
   }
 );
+
 export const deleteItineraryAsync = createAsyncThunk(
   actionTypes.DELETE_ITINERARY,
   async (itinerary) => {
@@ -33,6 +36,24 @@ const itinerarySlice = createSlice({
   initialState: {
     itineraryList: [],
     status: "idle",
+  },
+  reducers: {
+    incrementItineraryEndDate(state, action) {
+      const itinerary = state.itineraryList.find(
+        (itinerary) => itinerary.id === action.payload.itineraryId
+      );
+
+      const endDate = new Date(itinerary.endDate);
+      itinerary.endDate = endDate.setDate(endDate.getDate() + 1);
+    },
+    decrementItineraryEndDate(state, action) {
+      const itinerary = state.itineraryList.find(
+        (itinerary) => itinerary.id === action.payload.itineraryId
+      );
+
+      const endDate = new Date(itinerary.endDate);
+      itinerary.endDate = endDate.setDate(endDate.getDate() - 1);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -59,5 +80,8 @@ const itinerarySlice = createSlice({
       });
   },
 });
+
+export const { incrementItineraryEndDate, decrementItineraryEndDate } =
+  itinerarySlice.actions;
 
 export default itinerarySlice.reducer;

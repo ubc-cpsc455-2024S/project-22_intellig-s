@@ -100,9 +100,9 @@ router.post("/generate", async (req, res) => {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
     const days = await Day.find({ parentItineraryId: itineraryId });
 
-    const lastDate = days
-      .map((day) => day.date)
-      .reduce((a, b) => (Date.parse(a) > Date.parse(b) ? a : b));
+    const endDate = new Date(itinerary.endDate);
+    const newDate = new Date(endDate).setDate(endDate.getDate() + 1);
+
     const currentActivities = days
       .map((day) => day.activities.map((activity) => activity.activity))
       .flat();
@@ -139,13 +139,17 @@ router.post("/generate", async (req, res) => {
       id: uuid(),
       parentItineraryId: itineraryId,
       dayNumber: days.length + 1,
-      date: new Date(lastDate.setDate(lastDate.getDate() + 1)),
+      date: newDate,
       overview: `Day ${days.length + 1} in ${itinerary.location}`,
       imageUrl: imageUrl,
       activities: newActivities,
     });
 
     await newDay.save();
+    await Itinerary.updateOne(
+      { id: itineraryId },
+      { $set: { endDate: newDate } }
+    );
     res.status(201).send(newDay);
   } catch (e) {
     res.status(400).send(`error generating new day: ${e}`);
@@ -177,26 +181,33 @@ router.put("/:itineraryId/:dayNumber", async (req, res) => {
 
 // Delete a day
 router.delete("/:itineraryId/:id", async (req, res) => {
+  const { itineraryId, id } = req.params;
   try {
-    const itinerary = await Itinerary.findOne({ id: req.params.itineraryId });
-    const startDate = itinerary.startDate;
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    const startDate = new Date(itinerary.startDate);
+    const endDate = new Date(itinerary.endDate);
 
     await Day.findOneAndDelete({
-      parentItineraryId: req.params.itineraryId,
-      id: req.params.id,
+      parentItineraryId: itineraryId,
+      id: id,
     });
 
     const days = await Day.find({
-      parentItineraryId: req.params.itineraryId,
+      parentItineraryId: itineraryId,
     }).sort({ dayNumber: 1 });
 
     for (const [index, day] of days.entries()) {
       await Day.updateOne(
         { id: day.id },
-        { $set: { dayNumber: index + 1, date: new Date(startDate) } }
+        { $set: { dayNumber: index + 1, date: startDate } }
       );
       startDate.setDate(startDate.getDate() + 1);
     }
+
+    await Itinerary.updateOne(
+      { id: itineraryId },
+      { $set: { endDate: endDate.setDate(endDate.getDate() - 1) } }
+    );
     res.status(200).json({ message: "Day deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });

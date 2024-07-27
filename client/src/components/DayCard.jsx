@@ -12,12 +12,15 @@ import {
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { removeDay } from "../redux/daySlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ActivityList from "./ActivityList";
+import { decrementItineraryEndDate } from "../redux/itinerarySlice";
 
 export default function DayCard({ day, setActiveDay, dragHandleProps }) {
   const [showActivities, setShowActivities] = useState(false);
   const dispatch = useDispatch();
+
+  const status = useSelector((state) => state.days.status);
 
   const toggleActivities = () => {
     setShowActivities(!showActivities);
@@ -84,7 +87,16 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
             setShowActivities(false);
             dispatch(
               removeDay({ itineraryId: day.parentItineraryId, id: day.id })
-            );
+            )
+              .unwrap()
+              .then(() => {
+                if (status === "succeeded")
+                  dispatch(
+                    decrementItineraryEndDate({
+                      itineraryId: day.parentItineraryId,
+                    })
+                  );
+              });
           }}
         >
           Delete

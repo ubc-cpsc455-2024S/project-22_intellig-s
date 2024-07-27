@@ -10,7 +10,10 @@ import DayList from "../components/DayList";
 import LoadingDialog from "../components/LoadingDialog";
 
 import { fetchDays, generateNewDay } from "../redux/daySlice";
-import { getItinerariesAsync } from "../redux/itinerarySlice";
+import {
+  getItinerariesAsync,
+  incrementItineraryEndDate,
+} from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
   const { id } = useParams();
@@ -90,7 +93,11 @@ const ItineraryDetails = () => {
               variant="contained"
               sx={{ mr: 1, mb: 1 }}
               onClick={() => {
-                dispatch(generateNewDay({ itineraryId: id }));
+                dispatch(generateNewDay({ itineraryId: id }))
+                  .unwrap()
+                  .then(() => {
+                    dispatch(incrementItineraryEndDate({ itineraryId: id }));
+                  });
               }}
             >
               Generate New Day
