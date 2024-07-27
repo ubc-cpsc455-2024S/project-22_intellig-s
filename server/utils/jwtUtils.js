@@ -4,8 +4,28 @@ const generateToken = (user) => {
   return jwt.sign({ id: user._id }, "your_jwt_secret", { expiresIn: "1h" });
 };
 
-const verifyToken = (token) => {
-  return jwt.verify(token, "your_jwt_secret");
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+
+    if (token) {
+      jwt.verify(token, "your_jwt_secret", (err, decoded) => {
+        if (err) {
+          return res.status(403).json({ message: "Token is not valid" });
+        }
+        req.user = decoded;
+        next();
+      });
+    } else {
+      return res.status(403).json({ message: "Token is not provided" });
+    }
+  } else {
+    return res
+      .status(403)
+      .json({ message: "Authorization header is not provided" });
+  }
 };
 
 module.exports = { generateToken, verifyToken };

@@ -147,6 +147,13 @@ const daySlice = createSlice({
           days[index] = { ...days[index], ...changes };
         }
       })
+      .addCase(removeDay.pending, (state) => {
+        state.status = "deleting";
+      })
+      .addCase(removeDay.rejected, (state) => {
+        state.status = "failed";
+        alert("Day deletion failed, please try again.");
+      })
       .addCase(removeDay.fulfilled, (state, action) => {
         const { itineraryId, id } = action.payload;
         const startDate = new Date(
@@ -164,6 +171,7 @@ const daySlice = createSlice({
             startDate.setDate(startDate.getDate() + 1);
             return newDay;
           });
+        state.status = "succeeded";
       })
       .addCase(reorderDays.fulfilled, (state, action) => {
         const { itineraryId, days } = action.payload;

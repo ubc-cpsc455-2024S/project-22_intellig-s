@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signup } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import PersonalizationForm from "./PersonalizationForm";
 
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { user, isLoading, error } = useSelector((state) => state.auth);
+  const [showPersonalizationForm, setShowPersonalizationForm] = useState(false);
 
-  if (user) navigate("/");
+  useEffect(() => {
+    if (user) {
+      setShowPersonalizationForm(true);
+    }
+  }, [user]);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = () => {
     dispatch(signup({ username, password }));
+  };
+
+  const handleClosePersonalization = () => {
+    setShowPersonalizationForm(false);
+    navigate("/");
   };
 
   return (
@@ -66,6 +77,10 @@ const Signup = () => {
           Sign Up
         </Button>
       </Box>
+      <PersonalizationForm
+        open={showPersonalizationForm}
+        handleClose={handleClosePersonalization}
+      />
     </Box>
   );
 };
