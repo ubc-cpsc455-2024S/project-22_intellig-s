@@ -56,7 +56,7 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
                 : undefined,
             duration:
               index + 1 === day.activities.length
-                ? { hours: 1, minutes: 30 }
+                ? { hours: 2, minutes: 30 }
                 : undefined,
             location: activity.address,
           };
