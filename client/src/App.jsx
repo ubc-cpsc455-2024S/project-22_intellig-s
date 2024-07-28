@@ -14,6 +14,7 @@ import "./App.css";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect } from "react";
 import { setUser } from "./redux/authSlice";
+import { getItinerariesAsync } from "./redux/itinerarySlice";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const App = () => {
     if (token) {
       const decodedUser = jwtDecode(token);
       dispatch(setUser(decodedUser));
+      dispatch(getItinerariesAsync(decodedUser.id));
     }
   }, [dispatch]);
 

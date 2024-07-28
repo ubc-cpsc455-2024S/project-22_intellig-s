@@ -10,15 +10,15 @@ const actionTypes = {
 
 export const getItinerariesAsync = createAsyncThunk(
   actionTypes.GET_ITINERARIES,
-  async () => {
-    return await itinerariesAPI.getItineraries();
+  async (userId) => {
+    return await itinerariesAPI.getItineraries(userId);
   }
 );
 
 export const generateItineraryAsync = createAsyncThunk(
   actionTypes.ADD_ITINERARY,
-  async (itinerary) => {
-    return await itinerariesAPI.addItinerary(itinerary);
+  async (itineraryPayload) => {
+    return await itinerariesAPI.addItinerary(itineraryPayload);
   }
 );
 

@@ -11,6 +11,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import PersonIcon from '@mui/icons-material/Person';
 
 const NavBar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -69,7 +71,20 @@ const NavBar = () => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <Avatar alt="Profile Picture" src="/static/images/avatar/1.jpg" />
+            {
+              isSignedIn && (
+                <Avatar sx={{bgcolor: "white"}} alt={user.username}>
+                  <PersonIcon sx={{color: "#3D52A0"}} fontSize="large"/>
+                </Avatar>
+              )
+            }
+            {
+              !isSignedIn && (
+                <Avatar>
+                  <QuestionMarkIcon />
+                </Avatar>
+              )
+            }
           </IconButton>
           <Menu
             anchorEl={anchorEl}
