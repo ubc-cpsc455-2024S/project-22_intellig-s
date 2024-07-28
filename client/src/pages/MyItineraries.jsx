@@ -9,12 +9,14 @@ import LoadingDialog from "../components/LoadingDialog";
 const MyItineraries = () => {
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
   const itineraryStatus = useSelector((state) => state.itineraries.status);
+  const user = useSelector((state) => state.auth.user);
+  const userId = user == null ? "" : user.id;
 
   const dispatch = useDispatch();
   const [formOpen, setFormOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getItinerariesAsync());
+    dispatch(getItinerariesAsync(userId));
   }, [dispatch]);
 
   return (

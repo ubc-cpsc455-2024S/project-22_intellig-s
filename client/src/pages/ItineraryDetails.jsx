@@ -19,6 +19,9 @@ const ItineraryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.auth.user);
+  const userId = user == null ? "" : user.id;
+
   const days = useSelector((state) => state.days.dayLists[id]);
   const dayStatus = useSelector((state) => state.days.status);
 
@@ -38,7 +41,7 @@ const ItineraryDetails = () => {
     };
 
     fetchDaysFromDB();
-    dispatch(getItinerariesAsync());
+    dispatch(getItinerariesAsync(userId));
   }, [dispatch, id]);
 
   const markers = days

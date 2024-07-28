@@ -1,6 +1,7 @@
-const addItinerary = async (itinerary) => {
+const addItinerary = async (itineraryPayload) => {
+  const { itinerary, userId } = itineraryPayload;
   const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${userId}`,
     {
       method: "POST",
       headers: {
@@ -39,9 +40,9 @@ const deleteItinerary = async (id) => {
   return id;
 };
 
-const getItineraries = async () => {
+const getItineraries = async (userId) => {
   const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${userId}`,
     {
       method: "GET",
     }
