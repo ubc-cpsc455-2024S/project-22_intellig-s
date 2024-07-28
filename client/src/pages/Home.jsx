@@ -12,6 +12,8 @@ import {
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+  const isSignedIn = user != null;
 
   const itineraries = [
     {
@@ -79,10 +81,7 @@ const Home = () => {
     <Container
       sx={{ pt: 10, pb: 4, backgroundColor: "#EDE8F5", minHeight: "100vh" }}
     >
-      <Typography variant="h4" color="primary">
-        Home Page
-      </Typography>
-      <Typography color="secondary">Welcome to the home page.</Typography>
+      <Typography variant="h5" sx={{mt: "10px"}}>Welcome{isSignedIn ? `, ${user.username}` : " to the Home page"}</Typography>
       <Container sx={{ mt: 5 }}>
         <SearchBar autoCompleteList={["test"]} />
         <Grid container spacing={4}>
