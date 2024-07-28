@@ -13,18 +13,6 @@ const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 
-validateUserId = async (userId) => {
-  try {
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ message: "Error occurred connecting to the database" });
-  }
-  return null;
-};
-
 async function retry(maxRetries, fn) {
   return await fn().catch(function (err) {
     if (maxRetries <= 0) {
