@@ -14,6 +14,7 @@ const Home = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const isSignedIn = user != null;
+  const userId = isSignedIn ? user.id : "";
 
   const itineraries = [
     {
@@ -66,7 +67,7 @@ const Home = () => {
   // const itineraries = useSelector(selectItineraries);
 
   useEffect(() => {
-    dispatch(getItinerariesAsync());
+    dispatch(getItinerariesAsync(userId));
   }, [dispatch]);
 
   const handleDeleteItinerary = (id) => {

@@ -11,7 +11,6 @@ import LoadingDialog from "../components/LoadingDialog";
 
 import { fetchDays, generateNewDay } from "../redux/daySlice";
 import {
-  getItinerariesAsync,
   incrementItineraryEndDate,
 } from "../redux/itinerarySlice";
 
@@ -38,7 +37,6 @@ const ItineraryDetails = () => {
     };
 
     fetchDaysFromDB();
-    dispatch(getItinerariesAsync());
   }, [dispatch, id]);
 
   const markers = days
