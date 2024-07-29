@@ -4,9 +4,7 @@ import ItineraryCard from "../components/ItineraryCard";
 import SurveyForm from "../components/SurveyForm";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingDialog from "../components/LoadingDialog";
-import {
-  getItinerariesAsync,
-} from "../redux/itinerarySlice";
+import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const MyItineraries = () => {
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
@@ -19,7 +17,7 @@ const MyItineraries = () => {
 
   useEffect(() => {
     dispatch(getItinerariesAsync(userId));
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   return (
     <Box sx={{ top: 0, left: 0, height: "100vh" }}>

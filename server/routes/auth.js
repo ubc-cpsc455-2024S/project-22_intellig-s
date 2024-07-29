@@ -5,6 +5,17 @@ const { generateToken, verifyToken } = require("../utils/jwtUtils");
 
 const router = express.Router();
 
+router.get("/fetch/:userId", verifyToken, async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const user = await User.findById(userId);
+    const token = generateToken(user);
+    return res.status(200).json({ token: token });
+  } catch (error) {
+    return res.status(500);
+  }
+});
+
 router.post("/signup", async (req, res, next) => {
   const { username, password } = req.body;
   if (!username || password === undefined || password === null)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Dialog,
@@ -8,25 +8,31 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  ButtonGroup,
+  Box,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { updatePreferences } from "../redux/authSlice";
 
-const PersonalizationForm = ({ open, handleClose }) => {
+const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
   const dispatch = useDispatch();
-  const [formValues, setFormValues] = useState({
-    kids: null,
-    pets: null,
-    budget: 100,
-    peopleInParty: 1,
-    locationPreference: "",
-    activityPreference: "",
-    culinaryPreference: "",
-    explorationPreference: "",
-    nightlifeImportance: "",
-    culturalInterest: null,
-  });
+  const [formValues, setFormValues] = useState(
+    initialFormValues
+      ? initialFormValues
+      : {
+          kids: null,
+          pets: null,
+          budget: 100,
+          peopleInParty: 1,
+          locationPreference: "",
+          activityPreference: "",
+          culinaryPreference: "",
+          explorationPreference: "",
+          nightlifeImportance: "",
+          culturalInterest: null,
+        }
+  );
 
   const handleButtonClick = (field, value) => {
     setFormValues({ ...formValues, [field]: value });
@@ -47,57 +53,54 @@ const PersonalizationForm = ({ open, handleClose }) => {
   };
 
   const renderButtonGroup = (field, options) => {
-    return options.map((option) => (
-      <Button
-        key={option}
-        variant={formValues[field] === option ? "contained" : "outlined"}
-        onClick={() => handleButtonClick(field, option)}
-      >
-        {option}
-      </Button>
-    ));
+    return (
+      <ButtonGroup fullWidth variant="text">
+        {options.map((option) => (
+          <Button
+            key={option}
+            variant={formValues[field] === option ? "contained" : "text"}
+            onClick={() => handleButtonClick(field, option)}
+          >
+            {option}
+          </Button>
+        ))}
+      </ButtonGroup>
+    );
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Personalize Your Experience</DialogTitle>
       <DialogContent>
-        <div>
+        <Box sx={{ textAlign: "center" }}>
           <Typography>Are you traveling with any kids?</Typography>
           {renderButtonGroup("kids", ["Yes", "No"])}
-        </div>
 
-        <div>
           <Typography>Will you be bringing any pets along?</Typography>
           {renderButtonGroup("pets", ["Yes", "No"])}
-        </div>
 
-        <div>
           <Typography>People in party:</Typography>
-          <TextField
-            type="number"
-            name="peopleInParty"
+          <Slider
             value={formValues.peopleInParty}
+            name="peopleInParty"
+            valueLabelDisplay="auto"
+            shiftStep={30}
+            step={1}
+            min={1}
+            max={10}
             onChange={handleInputChange}
-            inputProps={{ min: 1 }}
           />
-        </div>
 
-        <div>
           <Typography>
             Would you rather explore bustling cities or tranquil countryside?
           </Typography>
           {renderButtonGroup("locationPreference", ["City", "Countryside"])}
-        </div>
 
-        <div>
           <Typography>
             What type of activities do you enjoy the most?
           </Typography>
           {renderButtonGroup("activityPreference", ["Adventure", "Relaxation"])}
-        </div>
 
-        <div>
           <Typography>
             What kind of culinary experiences are you interested in?
           </Typography>
@@ -105,9 +108,7 @@ const PersonalizationForm = ({ open, handleClose }) => {
             "Fine dining and gourmet experiences",
             "Street food and local cuisine",
           ])}
-        </div>
 
-        <div>
           <Typography>
             Do you prefer structured tours or independent exploration?
           </Typography>
@@ -115,9 +116,7 @@ const PersonalizationForm = ({ open, handleClose }) => {
             "Structured tours",
             "Independent exploration",
           ])}
-        </div>
 
-        <div>
           <Typography>
             How important is nightlife to your travel plans?
           </Typography>
@@ -126,16 +125,12 @@ const PersonalizationForm = ({ open, handleClose }) => {
             "Somewhat important",
             "Not important",
           ])}
-        </div>
 
-        <div>
           <Typography>
             Do you have a strong interest in local culture?
           </Typography>
           {renderButtonGroup("culturalInterest", ["Yes", "No"])}
-        </div>
 
-        <div>
           <Typography>Budget per day (USD):</Typography>
           <Slider
             value={formValues.budget}
@@ -155,9 +150,13 @@ const PersonalizationForm = ({ open, handleClose }) => {
               ),
             }}
           />
-        </div>
 
-        <Button onClick={handleSubmit}>Submit</Button>
+          <Box>
+            <Button variant="contained" color="success" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Box>
+        </Box>
       </DialogContent>
     </Dialog>
   );
@@ -166,6 +165,7 @@ const PersonalizationForm = ({ open, handleClose }) => {
 PersonalizationForm.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  initialFormValues: PropTypes.object,
 };
 
 export default PersonalizationForm;

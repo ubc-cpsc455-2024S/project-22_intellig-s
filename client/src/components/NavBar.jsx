@@ -11,8 +11,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import PersonIcon from '@mui/icons-material/Person';
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import PersonIcon from "@mui/icons-material/Person";
+import { Box } from "@mui/material";
 
 const NavBar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -62,60 +63,65 @@ const NavBar = () => {
             <TravelExploreIcon />
           </IconButton>
         )}
-        <div>
-          <IconButton
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="profile-menu"
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-          >
-            {
-              isSignedIn && (
-                <Avatar sx={{bgcolor: "white"}} alt={user.username}>
-                  <PersonIcon sx={{color: "#3D52A0"}} fontSize="large"/>
-                </Avatar>
-              )
-            }
-            {
-              !isSignedIn && (
-                <Avatar>
-                  <QuestionMarkIcon />
-                </Avatar>
-              )
-            }
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            id="profile-menu"
-            keepMounted
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-          >
-            {!isSignedIn && (
+        <IconButton
+          edge="end"
+          aria-label="account of current user"
+          aria-controls="profile-menu"
+          aria-haspopup="true"
+          onClick={handleProfileMenuOpen}
+          color="inherit"
+        >
+          {isSignedIn ? (
+            <Avatar sx={{ bgcolor: "white" }} alt={user.username}>
+              <PersonIcon sx={{ color: "#3D52A0" }} fontSize="large" />
+            </Avatar>
+          ) : (
+            <Avatar>
+              <QuestionMarkIcon />
+            </Avatar>
+          )}
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          id="profile-menu"
+          keepMounted
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          open={isMenuOpen}
+          onClose={handleMenuClose}
+          sx={{ mt: 5 }}
+        >
+          {isSignedIn ? (
+            <Box>
               <MenuItem
                 onClick={() => {
-                  navigate("/login");
+                  navigate(`/profile`);
+                  handleMenuClose();
                 }}
               >
-                Login
+                Profile
               </MenuItem>
-            )}
-            {isSignedIn && (
               <MenuItem
                 onClick={() => {
                   dispatch(logout());
                   navigate("/");
+                  handleMenuClose();
                 }}
               >
                 Logout
               </MenuItem>
-            )}
-          </Menu>
-        </div>
+            </Box>
+          ) : (
+            <MenuItem
+              onClick={() => {
+                navigate("/login");
+                handleMenuClose();
+              }}
+            >
+              Login
+            </MenuItem>
+          )}
+        </Menu>
       </Toolbar>
     </AppBar>
   );
