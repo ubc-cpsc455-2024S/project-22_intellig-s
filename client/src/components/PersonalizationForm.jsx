@@ -6,14 +6,24 @@ import {
   DialogTitle,
   Slider,
   Typography,
-  TextField,
-  InputAdornment,
-  ButtonGroup,
   Box,
+  Grid,
+  ToggleButtonGroup,
+  ToggleButton,
+  OutlinedInput,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { updatePreferences } from "../redux/authSlice";
+
+function FormQuestion({ question, children }) {
+  return (
+    <Box sx={{ mt: 3, pb: 3, borderBottom: "lightgrey solid 1px" }}>
+      <Typography sx={{ mb: 1 }}>{question}</Typography>
+      {children}
+    </Box>
+  );
+}
 
 const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
   const dispatch = useDispatch();
@@ -34,14 +44,6 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
         }
   );
 
-  const handleButtonClick = (field, value) => {
-    setFormValues({ ...formValues, [field]: value });
-  };
-
-  const handleSliderChange = (event, newValue) => {
-    setFormValues({ ...formValues, budget: newValue });
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -54,17 +56,36 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
 
   const renderButtonGroup = (field, options) => {
     return (
-      <ButtonGroup fullWidth variant="text">
+      <ToggleButtonGroup
+        value={formValues[field]}
+        onChange={(event, newValue) => {
+          setFormValues({ ...formValues, [field]: newValue });
+        }}
+        exclusive
+        fullWidth
+        sx={{
+          width: "70%",
+        }}
+      >
         {options.map((option) => (
-          <Button
+          <ToggleButton
             key={option}
-            variant={formValues[field] === option ? "contained" : "text"}
-            onClick={() => handleButtonClick(field, option)}
+            value={option}
+            sx={{
+              "&.Mui-selected": {
+                color: "#fff",
+                backgroundColor: "primary.main",
+                "&:hover": {
+                  color: "#fff",
+                  backgroundColor: "primary.main",
+                },
+              },
+            }}
           >
             {option}
-          </Button>
+          </ToggleButton>
         ))}
-      </ButtonGroup>
+      </ToggleButtonGroup>
     );
   };
 
@@ -73,83 +94,111 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
       <DialogTitle>Personalize Your Experience</DialogTitle>
       <DialogContent>
         <Box sx={{ textAlign: "center" }}>
-          <Typography>Are you traveling with any kids?</Typography>
-          {renderButtonGroup("kids", ["Yes", "No"])}
+          <FormQuestion question={`Are you traveling with any kids?`}>
+            {renderButtonGroup("kids", ["Yes", "No"])}
+          </FormQuestion>
 
-          <Typography>Will you be bringing any pets along?</Typography>
-          {renderButtonGroup("pets", ["Yes", "No"])}
+          <FormQuestion question={`Will you be bringing any pets along?`}>
+            {renderButtonGroup("pets", ["Yes", "No"])}
+          </FormQuestion>
 
-          <Typography>People in party:</Typography>
-          <Slider
-            value={formValues.peopleInParty}
-            name="peopleInParty"
-            valueLabelDisplay="auto"
-            shiftStep={30}
-            step={1}
-            min={1}
-            max={10}
-            onChange={handleInputChange}
-          />
+          <FormQuestion
+            question={`How many people do you usually travel with?`}
+          >
+            <Slider
+              value={formValues.peopleInParty}
+              name="peopleInParty"
+              valueLabelDisplay="auto"
+              step={1}
+              min={1}
+              max={10}
+              onChange={handleInputChange}
+              sx={{ width: "70%" }}
+            />
+          </FormQuestion>
 
-          <Typography>
-            Would you rather explore bustling cities or tranquil countryside?
-          </Typography>
-          {renderButtonGroup("locationPreference", ["City", "Countryside"])}
+          <FormQuestion
+            question={`Would you rather explore bustling cities or tranquil countryside?`}
+          >
+            {renderButtonGroup("locationPreference", ["City", "Countryside"])}
+          </FormQuestion>
 
-          <Typography>
-            What type of activities do you enjoy the most?
-          </Typography>
-          {renderButtonGroup("activityPreference", ["Adventure", "Relaxation"])}
+          <FormQuestion
+            question={`What type of activities do you enjoy the most?`}
+          >
+            {renderButtonGroup("activityPreference", [
+              "Adventure",
+              "Relaxation",
+            ])}
+          </FormQuestion>
 
-          <Typography>
-            What kind of culinary experiences are you interested in?
-          </Typography>
-          {renderButtonGroup("culinaryPreference", [
-            "Fine dining and gourmet experiences",
-            "Street food and local cuisine",
-          ])}
+          <FormQuestion
+            question={`What kind of culinary experiences are you interested in?`}
+          >
+            {renderButtonGroup("culinaryPreference", [
+              "Fine dining/gourmet experiences",
+              "Street food/local cuisine",
+            ])}
+          </FormQuestion>
 
-          <Typography>
-            Do you prefer structured tours or independent exploration?
-          </Typography>
-          {renderButtonGroup("explorationPreference", [
-            "Structured tours",
-            "Independent exploration",
-          ])}
+          <FormQuestion
+            question={`Do you prefer structured tours or independent exploration?`}
+          >
+            {renderButtonGroup("explorationPreference", [
+              "Structured tours",
+              "Independent exploration",
+            ])}
+          </FormQuestion>
 
-          <Typography>
-            How important is nightlife to your travel plans?
-          </Typography>
-          {renderButtonGroup("nightlifeImportance", [
-            "Very important",
-            "Somewhat important",
-            "Not important",
-          ])}
+          <FormQuestion
+            question={`How important is nightlife to your travel plans?`}
+          >
+            {renderButtonGroup("nightlifeImportance", [
+              "Very important",
+              "Somewhat important",
+              "Not important",
+            ])}
+          </FormQuestion>
 
-          <Typography>
-            Do you have a strong interest in local culture?
-          </Typography>
-          {renderButtonGroup("culturalInterest", ["Yes", "No"])}
+          <FormQuestion>
+            <Typography>
+              Do you have a strong interest in local culture?
+            </Typography>
+            {renderButtonGroup("culturalInterest", ["Yes", "No"])}
+          </FormQuestion>
 
-          <Typography>Budget per day (USD):</Typography>
-          <Slider
-            value={formValues.budget}
-            onChange={handleSliderChange}
-            aria-labelledby="budget-slider"
-            min={0}
-            max={5000}
-            step={10}
-          />
-          <TextField
-            value={formValues.budget}
-            name="budget"
-            onChange={handleInputChange}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-            }}
-          />
+          <FormQuestion>
+            <Typography>Budget per day (USD):</Typography>
+            <Grid container alignContent="center">
+              <Grid item xs={1} />
+              <Grid item xs={8} sx={{ alignContent: "center" }}>
+                <Slider
+                  value={formValues.budget}
+                  name="budget"
+                  onChange={handleInputChange}
+                  aria-labelledby="budget-slider"
+                  min={0}
+                  max={5000}
+                  step={10}
+                  sx={{ width: "90%" }}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <OutlinedInput
+                  value={formValues.budget}
+                  name="budget"
+                  onChange={handleInputChange}
+                  inputProps={{
+                    step: 10,
+                    min: 0,
+                    max: 5000,
+                    type: "number",
+                  }}
+                  sx={{ height: "100%" }}
+                />
+              </Grid>
+            </Grid>
+          </FormQuestion>
 
           <Box>
             <Button variant="contained" color="success" onClick={handleSubmit}>
@@ -160,6 +209,11 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+FormQuestion.propTypes = {
+  question: PropTypes.string,
+  children: PropTypes.node,
 };
 
 PersonalizationForm.propTypes = {
