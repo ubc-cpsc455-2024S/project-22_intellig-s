@@ -48,7 +48,9 @@ const Signup = () => {
           width: "330px",
         }}
       >
-        <Typography variant={"h4"}>Sign-up</Typography>
+        <Typography variant={"h3"} fontWeight={900}>
+          Sign-up
+        </Typography>
         <Typography sx={{ height: "2em" }} color={"red"}>
           {error && error.message}
         </Typography>

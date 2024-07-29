@@ -1,38 +1,61 @@
 import { Typography, Box, Button, Container, TextField } from "@mui/material";
 import { useSelector } from "react-redux";
 import PersonalizationForm from "../components/PersonalizationForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function UserProfile() {
-  const [editUserFormOpen, setEditUserFormOpen] = useState(false);
   const user = useSelector((state) => state.auth.user);
+
+  const [userInformation, setUserInformation] = useState(user);
+
+  const [editPreferenceFormOpen, setEditPreferenceFormOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    if (user) setUserInformation(user);
+  }, [user]);
 
   return (
     <Box sx={{ top: 0, left: 0, height: "100vh" }}>
       <Box sx={{ pt: "64px", height: "100%" }}>
         <Box sx={{ height: "100%", overflow: "auto" }}>
           <Container>
-            {user && (
+            {userInformation && (
               <Box sx={{ mt: 5, textAlign: "left" }}>
                 <Typography variant="h3" fontWeight={900}>
                   Profile Information
                 </Typography>
                 <TextField
                   label="Username"
-                  value={user.username}
+                  value={userInformation.username}
                   size="small"
+                  InputProps={{
+                    readOnly: !editMode,
+                  }}
+                  onChange={(event) =>
+                    setUserInformation({
+                      ...userInformation,
+                      username: event.target.value,
+                    })
+                  }
                 />
                 <Typography>{user.id}</Typography>
                 <Button
                   variant="contained"
-                  onClick={() => setEditUserFormOpen(true)}
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  {editMode ? `Done` : `Edit`}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setEditPreferenceFormOpen(true)}
                 >
                   My Travel Preferences
                 </Button>
                 <PersonalizationForm
-                  open={editUserFormOpen}
+                  open={editPreferenceFormOpen}
                   initialFormValues={user.preferences}
-                  handleClose={() => setEditUserFormOpen(false)}
+                  handleClose={() => setEditPreferenceFormOpen(false)}
                 ></PersonalizationForm>
               </Box>
             )}

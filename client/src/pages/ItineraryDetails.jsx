@@ -11,9 +11,7 @@ import DayList from "../components/DayList";
 import LoadingDialog from "../components/LoadingDialog";
 
 import { fetchDays, generateNewDay } from "../redux/daySlice";
-import {
-  incrementItineraryEndDate,
-} from "../redux/itinerarySlice";
+import { incrementItineraryEndDate } from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
   const { id } = useParams();
@@ -89,7 +87,7 @@ const ItineraryDetails = () => {
           <Grid item xs={12} sx={{ p: 2 }}>
             {itinerary && (
               <Box sx={{ mb: 1 }}>
-                <Typography variant="h4" sx={{ fontWeight: "500" }}>
+                <Typography variant="h4" sx={{ fontWeight: "900" }}>
                   {itinerary.location}
                 </Typography>
                 <Typography>
