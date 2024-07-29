@@ -10,7 +10,7 @@ import {
   Collapse,
   Box,
 } from "@mui/material";
-import { ExpandMore, ExpandLess } from "@mui/icons-material";
+import { ExpandMore, ExpandLess, Place, Delete } from "@mui/icons-material";
 import { removeDay } from "../redux/daySlice";
 import { useDispatch, useSelector } from "react-redux";
 import ActivityList from "./ActivityList";
@@ -52,6 +52,15 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
             day: "numeric",
           })}
         </Typography>
+
+        <Button
+          variant="contained"
+          sx={{ my: 1, pl: 1 }}
+          onClick={() => setActiveDay(day.dayNumber)}
+        >
+          <Place sx={{ mr: 0.75 }} />
+          Show on Map
+        </Button>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6">Activities</Typography>
           <IconButton
@@ -79,35 +88,31 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
           dayId={day.id}
           initialActivities={day.activities}
         />
-        <Button
-          variant="contained"
-          color="error"
-          sx={{ mb: 1, mr: 1 }}
-          onClick={() => {
-            setShowActivities(false);
-            dispatch(
-              removeDay({ itineraryId: day.parentItineraryId, id: day.id })
-            )
-              .unwrap()
-              .then(() => {
-                if (status === "succeeded")
-                  dispatch(
-                    decrementItineraryEndDate({
-                      itineraryId: day.parentItineraryId,
-                    })
-                  );
-              });
-          }}
-        >
-          Delete
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ mb: 1 }}
-          onClick={() => setActiveDay(day.dayNumber)}
-        >
-          Show on Map
-        </Button>
+        <Box sx={{ mb: 1 }}>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ mr: 1, pl: 1 }}
+            onClick={() => {
+              setShowActivities(false);
+              dispatch(
+                removeDay({ itineraryId: day.parentItineraryId, id: day.id })
+              )
+                .unwrap()
+                .then(() => {
+                  if (status === "succeeded")
+                    dispatch(
+                      decrementItineraryEndDate({
+                        itineraryId: day.parentItineraryId,
+                      })
+                    );
+                });
+            }}
+          >
+            <Delete sx={{ mr: 0.75 }} />
+            Delete
+          </Button>
+        </Box>
       </Collapse>
     </Card>
   );
