@@ -12,7 +12,7 @@ import { Provider, useDispatch } from "react-redux";
 import store from "./redux/store";
 import "./App.css";
 import { jwtDecode } from "jwt-decode";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { setUser } from "./redux/authSlice";
 import { getItinerariesAsync } from "./redux/itinerarySlice";
 

@@ -1,10 +1,15 @@
-import { Map } from "@vis.gl/react-google-maps";
 import { useState } from "react";
-
 import PropType from "prop-types";
+import { ControlPosition, Map, MapControl } from "@vis.gl/react-google-maps";
+
 import { MarkerWithInfoWindow } from "./MarkerWithInfoWindow";
 
-export default function ControlledMap({ bounds, markers, activeDay }) {
+export default function ControlledMap({
+  bounds,
+  markers,
+  activeDay,
+  resetButton,
+}) {
   const [cameraProps, setCameraProps] = useState({
     defaultBounds: bounds,
   });
@@ -20,6 +25,9 @@ export default function ControlledMap({ bounds, markers, activeDay }) {
       onCameraChanged={handleCameraChange}
       clickableIcons={false}
     >
+      <MapControl position={ControlPosition.TOP_RIGHT}>
+        {resetButton}
+      </MapControl>
       {markers.map((marker, index) => {
         if (activeDay === null)
           return (
@@ -60,4 +68,5 @@ ControlledMap.propTypes = {
     })
   ),
   activeDay: PropType.number,
+  resetButton: PropType.node,
 };

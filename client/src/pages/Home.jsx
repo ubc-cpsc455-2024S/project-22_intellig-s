@@ -1,19 +1,13 @@
-import { useEffect } from "react";
-import { Container, Typography, Grid } from "@mui/material";
+import { Container, Typography, Grid, Box } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
-import SearchBar from "../components/SearchBar";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  getItinerariesAsync,
-  deleteItineraryAsync,
-} from "../redux/itinerarySlice";
+import { useDispatch } from "react-redux";
+import { deleteItineraryAsync } from "../redux/itinerarySlice";
+import Logo from "../assets/home_page.svg?react";
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
-  const isSignedIn = user != null;
 
   const itineraries = [
     {
@@ -74,25 +68,71 @@ const Home = () => {
   };
 
   return (
-    <Container
-      sx={{ pt: 10, pb: 4, backgroundColor: "#EDE8F5", minHeight: "100vh" }}
-    >
-      <Typography variant="h5" sx={{mt: "10px"}}>Welcome{isSignedIn ? `, ${user.username}` : " to the Home page"}</Typography>
-      <Container sx={{ mt: 5 }}>
-        <SearchBar autoCompleteList={["test"]} />
-        <Grid container spacing={4}>
-          {itineraries.map((itinerary) => (
-            <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-              <ItineraryCard
-                itinerary={itinerary}
-                onDelete={handleDeleteItinerary}
-                onOpen={openDetails}
-              />
+    <Box sx={{ position: "absolute", top: 0, left: 0 }}>
+      <Box sx={{ pt: "64px", height: "100vh", width: "100vw" }}>
+        <Box sx={{ height: "100%", overflow: "auto", pt: 2 }}>
+          <Container sx={{ height: "100%" }} maxWidth="xl">
+            <Grid container sx={{ height: "100%" }}>
+              <Grid item xs={12} md={5} sx={{ alignContent: "center" }}>
+                <Typography
+                  sx={{
+                    typography: {
+                      fontWeight: 600,
+                      xs: { fontSize: 60, textAlign: "center" },
+                      md: { fontSize: 80, textAlign: "left" },
+                    },
+                  }}
+                  color="primary"
+                >
+                  Your Perfect Journey, Crafted by AI{" "}
+                </Typography>
+                <Typography
+                  sx={{
+                    typography: {
+                      fontWeight: "200",
+                      xs: { fontSize: 30, textAlign: "center" },
+                      md: { fontSize: 30, textAlign: "left" },
+                    },
+                    textAlign: "left",
+                  }}
+                >
+                  Create itineraries based on your interests and view them in
+                  real time.
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={7}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: 3,
+                }}
+              >
+                <Logo />
+              </Grid>
             </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </Container>
+          </Container>
+          <Typography variant="h4" color="secondary">
+            Explore
+          </Typography>
+          <Container sx={{ mt: 5 }}>
+            <Grid container spacing={4}>
+              {itineraries.map((itinerary) => (
+                <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
+                  <ItineraryCard
+                    itinerary={itinerary}
+                    onDelete={handleDeleteItinerary}
+                    onOpen={openDetails}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
