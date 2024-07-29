@@ -5,6 +5,7 @@ const ics = require("ics");
 
 const Itinerary = require("../models/itineraryModel");
 const Day = require("../models/dayModel");
+const User = require("../models/userModel");
 
 const generateItinerary = require("../replicate/generateItinerary");
 const getImageFromSearch = require("../google/getImageFromSearch");
@@ -23,9 +24,20 @@ async function retry(maxRetries, fn) {
 }
 
 /* GET itineraries listing. */
-router.get("/", async function (req, res, next) {
+router.get("/:userId", async function (req, res, next) {
+  const { userId } = req.params;
+
   try {
-    res.send(await Itinerary.find());
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Error occurred connecting to the database" });
+  }
+
+  try {
+    res.send(await Itinerary.find({ userId: userId }));
   } catch (e) {
     res
       .status(500)
@@ -78,8 +90,18 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
   }
 });
 
-router.post("/", async function (req, res, next) {
+router.post("/:userId", async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Error occurred connecting to the database" });
+  }
 
   try {
     const aiResponse = await retry(3, async () =>
@@ -137,6 +159,7 @@ router.post("/", async function (req, res, next) {
       endDate: endDate,
       imageUrl: itineraryImageUrl,
       bounds: bounds,
+      userId: userId,
     });
 
     itinerary.save();

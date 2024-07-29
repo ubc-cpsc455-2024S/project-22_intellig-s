@@ -1,12 +1,8 @@
-import { useEffect } from "react";
 import { Container, Typography, Grid, Box } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  getItinerariesAsync,
-  deleteItineraryAsync,
-} from "../redux/itinerarySlice";
+import { deleteItineraryAsync } from "../redux/itinerarySlice";
 import Logo from "../assets/home_page.svg?react";
 
 const Home = () => {
@@ -62,10 +58,6 @@ const Home = () => {
 
   // or uncomment this if just wanna use all the itineraries from database
   // const itineraries = useSelector(selectItineraries);
-
-  useEffect(() => {
-    dispatch(getItinerariesAsync());
-  }, [dispatch]);
 
   const handleDeleteItinerary = (id) => {
     dispatch(deleteItineraryAsync(id));

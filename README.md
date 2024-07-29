@@ -17,43 +17,43 @@ If time permits, some additional functionality that we can add is the ability to
 ### Minimal requirements
 
 1. Account creation / authentication
-   - Find a suitable API for authentication
-   - Create login / sign-up page and associated styling elements
-   - Ensure users stay signed-in on page refresh (JWT)
+   - [x] Find a suitable API for authentication
+   - [x] Create login / sign-up page and associated styling elements
+   - [x] Ensure users stay signed-in on page refresh (JWT)
 2. Collect data on users via surveys
-   - Draft format of surveys
-     - Hot versus cold destinations
-     - Travel distance preferences
-   - Create a popup window to prompt users to take the survey
-     - Create associated UI components
-   - Initialize a database to store associated user data
-     - Populate user data from survey for future itinerary-creation
-3. Allow users to browse different travel destinations
-4. Allow for manual itinerary creation
+   - [x] Draft format of surveys
+     - [x] Hot versus cold destinations
+     - [x] Travel distance preferences
+   - [x] Create a popup window to prompt users to take the survey
+     - [x] Create associated UI components
+   - [x] Initialize a database to store associated user data
+     - [x] Populate user data from survey for future itinerary-creation
+3. [x] Allow users to browse different travel destinations
+4. [x] Allow for manual itinerary creation
 
 ### Standard requirements
 
-1. Use AI to create itineraries
-2. Include calendar functionality to track upcoming travel
-   - Have the itinerary sync to Google Calendar / Outlook
-3. View previously-visited destinations and itineraries in a gallery
-4. Be able to favorite different locations when browsing
-5. Be able to whitelist and blacklist various locations if desired
-6. Interactive map view
-   - Be able to drop pins and see pictures of destinations
-   - Include danger warnings for different destinations
-     - Political unrest markers
-     - Weather concern markers
-   - Be able to see recently popular travel destinations
+1. [x] Use AI to create itineraries
+2. [x] Include calendar functionality to track upcoming travel
+   - [x] Have the itinerary sync to Google Calendar / Outlook
+3. [x] View previously-visited destinations and itineraries in a gallery
+4. [ ] Be able to favorite different locations when browsing
+5. [ ] Be able to whitelist and blacklist various locations if desired
+6. [x] Interactive map view
+   - [x] Be able to drop pins and see pictures of destinations
+   - [ ] Include danger warnings for different destinations
+     - [ ] Political unrest markers
+     - [ ] Weather concern markers
+   - [ ] Be able to see recently popular travel destinations
 
 ### Stretch requirements
 
-1. Create itineraries on how to get to the destination
-   - Include information on flights and hotels
-   - Incorporate a user's budget into this
-2. Create a family and friends list
-   - Allow for group-based itineraries and linking with other accounts
-3. Collect user data based on search history and website traffic
+1. [ ] Create itineraries on how to get to the destination
+   - [ ] Include information on flights and hotels
+   - [ ] Incorporate a user's budget into this
+2. [ ] Create a family and friends list
+   - [ ] Allow for group-based itineraries and linking with other accounts
+3. [ ] Collect user data based on search history and website traffic
 
 ## Team Members
 

@@ -21,6 +21,9 @@ const itinerarySchema = new mongoose.Schema({
   imageUrl: {
     type: String,
   },
+  userId: {
+    type: String,
+  },
   bounds: {
     north: { type: Number, required: true },
     east: { type: Number, required: true },

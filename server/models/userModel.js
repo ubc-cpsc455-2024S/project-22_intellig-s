@@ -11,10 +11,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  itineraries: {
-    type: [String],
-    default: [],
-  },
   preferences: {
     type: Map,
     of: mongoose.Schema.Types.Mixed,

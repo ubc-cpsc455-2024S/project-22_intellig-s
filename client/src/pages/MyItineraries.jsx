@@ -3,19 +3,21 @@ import { Typography, Grid, Button, Box, Container } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import SurveyForm from "../components/SurveyForm";
 import { useSelector, useDispatch } from "react-redux";
-import { getItinerariesAsync } from "../redux/itinerarySlice";
 import LoadingDialog from "../components/LoadingDialog";
+import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const MyItineraries = () => {
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
   const itineraryStatus = useSelector((state) => state.itineraries.status);
-
-  const dispatch = useDispatch();
   const [formOpen, setFormOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
+  const userId = user != null ? user.id : "";
 
   useEffect(() => {
-    dispatch(getItinerariesAsync());
-  }, [dispatch]);
+    dispatch(getItinerariesAsync(userId));
+  }, [dispatch, userId]);
 
   return (
     <Box sx={{ position: "absolute", top: 0, left: 0 }}>
