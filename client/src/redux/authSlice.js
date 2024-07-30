@@ -77,7 +77,8 @@ const initialState = {
   token: localStorage.getItem("token") || null,
   isLoading: false,
   error: null,
-  usernameInUse: false,
+  usernameConflict: false,
+  emailConflict: false,
 };
 
 const authSlice = createSlice({
@@ -87,6 +88,7 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.token = null;
+      state.error = null;
       localStorage.removeItem("token");
     },
   },
@@ -97,6 +99,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = null;
         state.token = action.payload.token;
         state.user = jwtDecode(action.payload.token);
         localStorage.setItem("token", action.payload.token);
@@ -108,6 +111,8 @@ const authSlice = createSlice({
       })
       .addCase(signup.pending, (state) => {
         state.isLoading = true;
+        state.usernameConflict = false;
+        state.emailConflict = false;
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -119,7 +124,8 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
-        if (action.payload.status === 409) state.usernameInUse = true;
+        state.usernameConflict = action.payload.usernameConflict;
+        state.emailConflict = action.payload.emailConflict;
       })
       .addCase(login.pending, (state) => {
         state.isLoading = true;

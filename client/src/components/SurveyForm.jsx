@@ -97,7 +97,7 @@ const SurveyForm = ({ open, handleClose }) => {
                 name="startDate"
                 views={["year", "month", "day"]}
                 disablePast
-                sx={{ px: 1, mb: 1 }}
+                sx={{ mb: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
@@ -117,10 +117,9 @@ const SurveyForm = ({ open, handleClose }) => {
                 }
                 maxDate={
                   formValues.startDate
-                    ? dayjs(formValues.startDate).add(5, "day")
+                    ? dayjs(formValues.startDate).add(4, "day")
                     : null
                 }
-                sx={{ px: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,

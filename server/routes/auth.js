@@ -27,11 +27,15 @@ router.post("/signup", async (req, res, next) => {
     });
 
   try {
-    const oldUser = await User.findOne({ username });
-    if (oldUser)
+    const usernameConflict = await User.findOne({ username });
+    const emailConflict = await User.findOne({ email });
+
+    if (usernameConflict || emailConflict)
       return res.status(409).json({
         status: 409,
-        message: "A user with this username already exists!",
+        usernameConflict: usernameConflict ? true : false,
+        emailConflict: emailConflict ? true : false,
+        message: "Information conflicts with an existing user!",
       });
   } catch (err) {
     return res.status(500).json({

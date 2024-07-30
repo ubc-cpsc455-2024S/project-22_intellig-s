@@ -18,9 +18,8 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, isLoading, usernameInUse, error } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isLoading, usernameConflict, emailConflict, error } =
+    useSelector((state) => state.auth);
   const [showPersonalizationForm, setShowPersonalizationForm] = useState(false);
   const [formValues, setFormValues] = useState({
     firstName: "",
@@ -116,11 +115,8 @@ const Signup = () => {
         }}
       >
         <Card variant="outlined" sx={{ width: "100%", px: 7, py: 5 }}>
-          <Typography variant={"h3"} fontWeight={900}>
+          <Typography variant={"h3"} fontWeight={900} sx={{ mb: 4 }}>
             Sign-up
-          </Typography>
-          <Typography sx={{ height: "2em" }} color={"red"}>
-            {error && error.message}
           </Typography>
           <Grid container spacing={1}>
             <Grid item xs={6}>
@@ -155,8 +151,10 @@ const Signup = () => {
                 size="small"
                 fullWidth
                 onChange={handleChange}
-                error={formErrors.email ? true : false}
-                helperText={formErrors.email}
+                error={emailConflict || formErrors.email ? true : false}
+                helperText={
+                  emailConflict ? "Email is already in use" : formErrors.email
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -167,9 +165,9 @@ const Signup = () => {
                 size="small"
                 fullWidth
                 onChange={handleChange}
-                error={usernameInUse || formErrors.username ? true : false}
+                error={usernameConflict || formErrors.username ? true : false}
                 helperText={
-                  usernameInUse
+                  usernameConflict
                     ? "Username is already in use"
                     : formErrors.username
                 }
@@ -188,6 +186,11 @@ const Signup = () => {
                 FormHelperTextProps={{ component: "span" }}
               />
             </Grid>
+            {error && (
+              <Grid item xs={12}>
+                <Typography color={"error"}>{error.message}</Typography>
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Button
                 variant={"contained"}
@@ -196,6 +199,15 @@ const Signup = () => {
                 disabled={isLoading}
               >
                 Sign Up
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant={"outlined"}
+                fullWidth
+                onClick={() => navigate("/login")}
+              >
+                Already have an account? Log in!
               </Button>
             </Grid>
           </Grid>
