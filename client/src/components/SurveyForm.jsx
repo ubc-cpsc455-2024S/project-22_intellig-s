@@ -38,7 +38,9 @@ const SurveyForm = ({ open, handleClose }) => {
     const newItinerary = {
       ...formValues,
     };
-    dispatch(generateItineraryAsync({itinerary: newItinerary, userId: user.id}));
+    dispatch(
+      generateItineraryAsync({ itinerary: newItinerary, userId: user.id })
+    );
     handleClose();
     setStep(1); // Reset to the first step
     setFormValues({

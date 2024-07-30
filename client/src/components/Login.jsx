@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 const Login = () => {
@@ -47,33 +47,42 @@ const Login = () => {
           {error && error.message}
         </Typography>
 
-        <TextField
-          type="text"
-          name="username"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-          fullWidth
-          sx={{ mb: 1 }}
-        />
-        <TextField
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          sx={{ mb: 1 }}
-        />
-        <Button
-          variant={"contained"}
-          onClick={onSubmit}
-          disabled={isLoading}
-          sx={{ mb: 1 }}
-        >
-          Login
-        </Button>
-        <Button variant={"contained"} onClick={() => navigate("/signup")}>
-          Don&#39;t have an account? Sign up!
-        </Button>
+        <Grid container spacing={1}>
+          <TextField
+            type="text"
+            name="username"
+            label="Username"
+            size="small"
+            onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+            sx={{ mb: 1 }}
+          />
+          <TextField
+            type="password"
+            name="password"
+            label="Password"
+            size="small"
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            sx={{ mb: 1 }}
+          />
+          <Button
+            variant={"contained"}
+            fullWidth
+            onClick={onSubmit}
+            disabled={isLoading}
+            sx={{ mb: 1 }}
+          >
+            Login
+          </Button>
+          <Button
+            variant={"contained"}
+            fullWidth
+            onClick={() => navigate("/signup")}
+          >
+            Don&#39;t have an account? Sign up!
+          </Button>
+        </Grid>
       </Box>
     </Box>
   );

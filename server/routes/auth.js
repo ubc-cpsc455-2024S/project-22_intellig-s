@@ -9,28 +9,33 @@ router.get("/fetch/:userId", verifyToken, async (req, res) => {
   const userId = req.params.userId;
   try {
     const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
     const token = generateToken(user);
     return res.status(200).json({ token: token });
   } catch (error) {
-    return res.status(500);
+    return res.status(500).json({ message: error.message });
   }
 });
 
 router.post("/signup", async (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || password === undefined || password === null)
-    return res
-      .status(400)
-      .json({ message: "Username and password both cannot be null!" });
+  const { firstName, lastName, email, username, password } = req.body;
+  if (!firstName || !lastName || !email || !username || !password)
+    return res.status(400).json({
+      status: 400,
+      message: "request field missing",
+    });
 
   try {
     const oldUser = await User.findOne({ username });
     if (oldUser)
-      return res
-        .status(400)
-        .json({ message: "A user with this username already exists!" });
+      return res.status(409).json({
+        status: 409,
+        message: "A user with this username already exists!",
+      });
   } catch (err) {
     return res.status(500).json({
+      status: 500,
       message: `An internal error occurred with database connection. ${err.message}`,
     });
   }
@@ -38,8 +43,21 @@ router.post("/signup", async (req, res, next) => {
   // Use a salting value of 10; higher values take a longer time to hash.
   const encryptedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = new User({ username: username, password: encryptedPassword });
-  await newUser.save();
+  const newUser = new User({
+    firstName,
+    lastName,
+    email,
+    username,
+    password: encryptedPassword,
+  });
+  try {
+    await newUser.save();
+  } catch (err) {
+    return res.status(500).json({
+      status: 500,
+      message: `An internal error occurred with database connection. ${err.message}`,
+    });
+  }
 
   const token = generateToken(newUser);
   res.status(201).json({ token: token });

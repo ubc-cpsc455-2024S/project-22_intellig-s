@@ -77,6 +77,7 @@ const initialState = {
   token: localStorage.getItem("token") || null,
   isLoading: false,
   error: null,
+  usernameInUse: false,
 };
 
 const authSlice = createSlice({
@@ -118,6 +119,7 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+        if (action.payload.status === 409) state.usernameInUse = true;
       })
       .addCase(login.pending, (state) => {
         state.isLoading = true;
