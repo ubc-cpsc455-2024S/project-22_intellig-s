@@ -8,19 +8,19 @@ async function generateItinerary(location, start_date, end_date) {
     max_tokens: 2000,
     temperature: 0.7,
     system_prompt: `Please only respond with JSON format text, I do not want any extra text and only want to see JSON text that I can take into a javascript application. The format should be as follows:
+{
+  days: [
+    {
+      day: "month date, year",
+      activities: [
         {
-          "days": [
-            {
-              "day": "month date, year",
-              "activities": [
-                {
-                  "time": "time (AM/PM)",
-                  "location": "location name",
-                }
-              ]
-            }
-          ]
-        }`,
+          time: "12 hour time",
+          location: "location name",
+        }
+      ],
+    },
+  ],
+}`,
     length_penalty: 1,
     stop_sequences: "<|end_of_text|>,<|eot_id|>",
     prompt_template:
