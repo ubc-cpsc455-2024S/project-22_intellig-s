@@ -72,6 +72,34 @@ export const updatePreferences = createAsyncThunk(
   }
 );
 
+export const updateProfilePicture = createAsyncThunk(
+  "auth/updateProfilePicture",
+  async (file, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+
+    try {
+      let data = new FormData();
+      data.append("file", file);
+
+      const response = await axios.post(
+        `${API_URL}/updateProfilePicture`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   user: null,
   token: localStorage.getItem("token") || null,
@@ -138,6 +166,17 @@ const authSlice = createSlice({
         localStorage.setItem("token", action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateProfilePicture.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user.imageId = action.payload.imageId;
+      })
+      .addCase(updateProfilePicture.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })

@@ -1,7 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const Image = require("../models/imageModel");
 const { generateToken, verifyToken } = require("../utils/jwtUtils");
+const multer = require("multer");
+const { v4: uuid } = require("uuid");
+const Photo = require("../models/imageModel");
 
 const router = express.Router();
 
@@ -114,5 +118,47 @@ router.post("/updatePreferences", verifyToken, async (req, res) => {
     });
   }
 });
+
+router.get("/image/:id", async function (req, res, next) {
+  const id = req.params.id;
+
+  try {
+    const photo = await Image.findOne({ id: id });
+
+    const mimeType = photo.contentType; // e.g., image/png
+
+    res.contentType(mimeType);
+    res.send(photo.data);
+  } catch {
+    return res.sendStatus(400);
+  }
+});
+
+router.post(
+  "/updateProfilePicture",
+  verifyToken,
+  multer({}).single("file"),
+  async (req, res) => {
+    const image = req.file;
+    const userId = req.user.id;
+
+    await Photo.deleteMany({ userId: userId });
+    const newProfilePicture = new Image({
+      id: uuid(),
+      userId,
+      data: image.buffer,
+      contentType: image.mimetype,
+    });
+    await newProfilePicture.save();
+    await User.updateOne(
+      { _id: userId },
+      { $set: { imageId: newProfilePicture.id } }
+    );
+    res.status(201).json({
+      message: "Profile picture updated.",
+      imageId: newProfilePicture.id,
+    });
+  }
+);
 
 module.exports = router;

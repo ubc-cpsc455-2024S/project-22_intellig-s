@@ -8,6 +8,7 @@ const generateToken = (user) => {
       lastName: user.lastName,
       email: user.email,
       username: user.username,
+      imageId: user.imageId,
       preferences: user.preferences,
     },
     "your_jwt_secret",

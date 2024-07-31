@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imageId: {
+    type: String,
+    required: false,
+  },
   preferences: {
     type: Map,
     of: mongoose.Schema.Types.Mixed,
