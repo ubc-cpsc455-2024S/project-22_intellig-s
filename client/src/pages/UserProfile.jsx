@@ -334,35 +334,43 @@ function UserProfile() {
       <Box sx={{ pt: "64px", height: "100%" }}>
         <Box sx={{ height: "100%", overflow: "auto" }}>
           <Container sx={{ mt: 4 }}>
-            <Typography variant="h3" fontWeight={900}>
-              Settings
-            </Typography>
             <Card
               variant="outlined"
-              sx={{ width: "100%", mt: 4, px: 7, py: 3 }}
+              sx={{ width: "100%", mt: 4, px: 7, pt: 4, pb: 7 }}
             >
-              {user && (
-                <Grid container spacing={7} sx={{ textAlign: "left" }}>
-                  <Grid item xs={12}>
-                    <Card variant="outlined" sx={{ p: 2 }}>
-                      <UserDetails
-                        user={user}
-                        setUploadImageDialogOpen={() =>
-                          setUploadImageDialogOpen(true)
-                        }
-                        setPersonalizeFormOpen={() =>
-                          setPersonalizeFormOpen(true)
-                        }
-                      />
-                    </Card>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Card variant="outlined" sx={{ p: 2 }}>
-                      <EditUserForm user={user}></EditUserForm>
-                    </Card>
-                  </Grid>
+              <Grid container spacing={4} sx={{ textAlign: "left" }}>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h3"
+                    fontWeight={900}
+                    textAlign={"center"}
+                  >
+                    Settings
+                  </Typography>
                 </Grid>
-              )}
+                {user && (
+                  <>
+                    <Grid item xs={12}>
+                      <Card variant="outlined" sx={{ p: 2 }}>
+                        <UserDetails
+                          user={user}
+                          setUploadImageDialogOpen={() =>
+                            setUploadImageDialogOpen(true)
+                          }
+                          setPersonalizeFormOpen={() =>
+                            setPersonalizeFormOpen(true)
+                          }
+                        />
+                      </Card>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Card variant="outlined" sx={{ p: 2 }}>
+                        <EditUserForm user={user}></EditUserForm>
+                      </Card>
+                    </Grid>
+                  </>
+                )}
+              </Grid>
             </Card>
           </Container>
 

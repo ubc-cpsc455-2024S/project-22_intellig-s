@@ -139,7 +139,7 @@ const NavBar = () => {
                     border: "1px solid white",
                   },
                 }}
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signup")}
               >
                 Sign Up
               </Button>
