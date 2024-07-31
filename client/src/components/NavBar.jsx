@@ -11,9 +11,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import PersonIcon from "@mui/icons-material/Person";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 const NavBar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -40,57 +39,114 @@ const NavBar = () => {
       sx={{ boxShadow: "none" }} // Remove the box shadow
     >
       <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="home"
-          component={Link}
-          to="/"
-        >
-          <HomeIcon />
-        </IconButton>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          AI-tinerary
-        </Typography>
-        {isSignedIn && (
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="my itineraries"
+        <Box sx={{ flex: "1 1 0px", textAlign: "left" }}>
+          <Button
+            variant="contained"
+            aria-label="home"
             component={Link}
-            to="/my-itineraries"
+            to="/"
+            sx={{
+              pl: 1.75,
+              mr: 1,
+              backgroundColor: "white",
+              border: "1px solid white",
+              color: "primary.main",
+              ":hover": {
+                backgroundColor: "primary.main",
+                color: "white",
+              },
+            }}
           >
-            <TravelExploreIcon />
-          </IconButton>
-        )}
-        <IconButton
-          edge="end"
-          aria-label="account of current user"
-          aria-controls="profile-menu"
-          aria-haspopup="true"
-          onClick={handleProfileMenuOpen}
-          color="inherit"
-        >
-          {isSignedIn ? (
-            <Avatar
-              sx={{ bgcolor: "white" }}
-              alt={user.username}
-              src={
-                user.imageId
-                  ? `${import.meta.env.VITE_BACKEND_URL}/auth/image/${
-                      user.imageId
-                    }`
-                  : null
-              }
+            <HomeIcon sx={{ mr: 1 }} />
+            Home
+          </Button>
+          {isSignedIn && (
+            <Button
+              variant="contained"
+              aria-label="my itineraries"
+              component={Link}
+              to="/my-itineraries"
+              sx={{
+                pl: 1.75,
+                border: "1px solid white",
+                color: "white",
+                ":hover": {
+                  backgroundColor: "white",
+                  color: "primary.main",
+                  border: "1px solid white",
+                },
+              }}
             >
-              <PersonIcon sx={{ color: "#3D52A0" }} fontSize="large" />
-            </Avatar>
-          ) : (
-            <Avatar>
-              <QuestionMarkIcon />
-            </Avatar>
+              <TravelExploreIcon sx={{ mr: 1 }} />
+              My Itineraries
+            </Button>
           )}
-        </IconButton>
+        </Box>
+        <Box sx={{ flex: "1 1 0px", textAlign: "center" }}>
+          <Typography variant="h6">AI-tinerary</Typography>
+        </Box>
+        <Box sx={{ flex: "1 1 0px", textAlign: "right" }}>
+          {isSignedIn ? (
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls="profile-menu"
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+              sx={{ flex: "1 1 0px" }}
+            >
+              <Avatar
+                sx={{ bgcolor: "white" }}
+                alt={user.username}
+                src={
+                  user.imageId
+                    ? `${import.meta.env.VITE_BACKEND_URL}/auth/image/${
+                        user.imageId
+                      }`
+                    : null
+                }
+              >
+                <PersonIcon sx={{ color: "#3D52A0" }} fontSize="large" />
+              </Avatar>
+            </IconButton>
+          ) : (
+            <Box sx={{ flex: "1 1 0px" }}>
+              <Button
+                variant="contained"
+                sx={{
+                  mr: 1,
+                  backgroundColor: "white",
+                  border: "1px solid white",
+                  color: "primary.main",
+                  ":hover": {
+                    backgroundColor: "primary.main",
+                    color: "white",
+                  },
+                }}
+                onClick={() => navigate("/login")}
+              >
+                Log In
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  border: "1px solid white",
+                  color: "white",
+                  ":hover": {
+                    backgroundColor: "white",
+                    color: "primary.main",
+                    border: "1px solid white",
+                  },
+                }}
+                onClick={() => navigate("/login")}
+              >
+                Sign Up
+              </Button>
+            </Box>
+          )}
+        </Box>
+
         <Menu
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
