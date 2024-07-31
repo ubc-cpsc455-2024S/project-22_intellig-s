@@ -9,8 +9,11 @@ const Login = () => {
   const navigate = useNavigate();
   const { user, isLoading, error } = useSelector((state) => state.auth);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formValues, setFormValues] = useState({
+    username: "",
+    password: "",
+  });
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     if (user) {
@@ -18,8 +21,28 @@ const Login = () => {
     }
   });
 
+  const handleChange = (event) => {
+    setFormValues({ ...formValues, [event.target.name]: event.target.value });
+  };
+
+  const validateForm = () => {
+    let errorMessages = {};
+
+    if (formValues.username === "")
+      errorMessages.username = "Username cannot be blank";
+
+    if (formValues.password === "")
+      errorMessages.password = "Password cannot be blank";
+
+    setFormErrors(errorMessages);
+    return !Object.keys(errorMessages).length;
+  };
+
   const onSubmit = () => {
-    dispatch(login({ username, password }));
+    if (validateForm())
+      dispatch(
+        login({ username: formValues.username, password: formValues.password })
+      );
   };
 
   return (
@@ -51,8 +74,10 @@ const Login = () => {
                 name="username"
                 label="Username"
                 size="small"
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleChange}
                 fullWidth
+                error={formErrors.username ? true : false}
+                helperText={formErrors.username}
               />
             </Grid>
             <Grid item xs={12}>
@@ -61,8 +86,10 @@ const Login = () => {
                 name="password"
                 label="Password"
                 size="small"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
                 fullWidth
+                error={formErrors.password ? true : false}
+                helperText={formErrors.password}
               />
             </Grid>
             {error && (

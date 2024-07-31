@@ -72,7 +72,13 @@ const NavBar = () => {
           color="inherit"
         >
           {isSignedIn ? (
-            <Avatar sx={{ bgcolor: "white" }} alt={user.username}>
+            <Avatar
+              sx={{ bgcolor: "white" }}
+              alt={user.username}
+              src={`${import.meta.env.VITE_BACKEND_URL}/auth/image/${
+                user.imageId
+              }`}
+            >
               <PersonIcon sx={{ color: "#3D52A0" }} fontSize="large" />
             </Avatar>
           ) : (

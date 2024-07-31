@@ -20,6 +20,7 @@ const Signup = () => {
 
   const { user, isLoading, usernameConflict, emailConflict, error } =
     useSelector((state) => state.auth);
+
   const [showPersonalizationForm, setShowPersonalizationForm] = useState(false);
   const [formValues, setFormValues] = useState({
     firstName: "",
@@ -97,14 +98,7 @@ const Signup = () => {
   };
 
   return (
-    <Box
-      sx={{
-        position: "absolute",
-        height: "100vh",
-        width: "100vw",
-        pt: "64px",
-      }}
-    >
+    <Box sx={{ height: "100vh", width: "100vw", pt: "64px" }}>
       <Box
         sx={{
           pt: 6,
