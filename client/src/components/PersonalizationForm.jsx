@@ -6,7 +6,6 @@ import {
   DialogTitle,
   Slider,
   Typography,
-  Box,
   Grid,
   ToggleButtonGroup,
   ToggleButton,
@@ -19,12 +18,12 @@ import { updatePreferences } from "../redux/authSlice";
 
 function FormQuestion({ question, children }) {
   return (
-    <Box sx={{ mt: 3 }}>
+    <Grid item xs={12}>
       <Card variant="outlined" sx={{ p: 2 }}>
         <Typography sx={{ mb: 1 }}>{question}</Typography>
         {children}
       </Card>
-    </Box>
+    </Grid>
   );
 }
 
@@ -107,17 +106,17 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Personalize Your Experience</DialogTitle>
+      <DialogTitle textAlign={"center"}>
+        Personalize Your Experience
+      </DialogTitle>
       <DialogContent>
-        <Box sx={{ textAlign: "center" }}>
+        <Grid container spacing={2} sx={{ textAlign: "center" }}>
           <FormQuestion question={`Are you traveling with any kids?`}>
             {renderButtonGroup("kids", ["Yes", "No"])}
           </FormQuestion>
-
           <FormQuestion question={`Will you be bringing any pets along?`}>
             {renderButtonGroup("pets", ["Yes", "No"])}
           </FormQuestion>
-
           <FormQuestion
             question={`How many people do you usually travel with?`}
           >
@@ -132,13 +131,11 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               sx={{ width: "90%" }}
             />
           </FormQuestion>
-
           <FormQuestion
             question={`Would you rather explore bustling cities or tranquil countryside?`}
           >
             {renderButtonGroup("locationPreference", ["City", "Countryside"])}
           </FormQuestion>
-
           <FormQuestion
             question={`What type of activities do you enjoy the most?`}
           >
@@ -147,7 +144,6 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               "Relaxation",
             ])}
           </FormQuestion>
-
           <FormQuestion
             question={`What kind of culinary experiences are you interested in?`}
           >
@@ -156,7 +152,6 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               "Local Cuisine",
             ])}
           </FormQuestion>
-
           <FormQuestion
             question={`Do you prefer structured tours or independent exploration?`}
           >
@@ -165,7 +160,6 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               "Independent exploration",
             ])}
           </FormQuestion>
-
           <FormQuestion
             question={`How important is nightlife to your travel plans?`}
           >
@@ -175,14 +169,12 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               "Not important",
             ])}
           </FormQuestion>
-
           <FormQuestion>
             <Typography>
               Do you have a strong interest in local culture?
             </Typography>
             {renderButtonGroup("culturalInterest", ["Yes", "No"])}
           </FormQuestion>
-
           <FormQuestion>
             <Typography>Budget per day (USD):</Typography>
             <Grid container alignContent="center">
@@ -218,13 +210,17 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               </Grid>
             </Grid>
           </FormQuestion>
-
-          <Box>
-            <Button variant="contained" color="success" onClick={handleSubmit}>
+          <Grid item xs={6}>
+            <Button fullWidth variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button fullWidth variant="contained" onClick={handleSubmit}>
               Submit
             </Button>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       </DialogContent>
     </Dialog>
   );

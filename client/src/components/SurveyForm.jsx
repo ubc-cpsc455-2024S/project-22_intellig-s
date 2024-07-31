@@ -64,7 +64,7 @@ const SurveyForm = ({ open, handleClose }) => {
       }}
       PaperProps={{ sx: { width: "30%", height: "50%" } }}
     >
-      <DialogTitle>Add Itinerary</DialogTitle>
+      <DialogTitle textAlign={"center"}>Add Itinerary</DialogTitle>
       <DialogContent>
         {step === 1 && (
           <Box className="survey-step">

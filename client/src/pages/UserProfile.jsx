@@ -8,11 +8,12 @@ import {
   Grid,
   Avatar,
   Input,
-  Tooltip,
   Dialog,
   DialogContent,
   DialogTitle,
+  Badge,
 } from "@mui/material";
+import { Edit } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import PersonalizationForm from "../components/PersonalizationForm";
@@ -23,7 +24,7 @@ import { useParams } from "react-router-dom";
 function UserDetails({
   user,
   setUploadImageDialogOpen,
-  setEditPreferenceFormOpen,
+  setPersonalizeFormOpen,
 }) {
   return (
     <Grid item container xs={12} spacing={4}>
@@ -34,23 +35,35 @@ function UserDetails({
             pt: "100%",
             width: "100%",
             borderRadius: "100%",
-            ":hover": { cursor: "pointer" },
           }}
         >
-          <Tooltip
-            placement="top"
-            title={<Typography>Click to Update</Typography>}
+          <Badge
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+            }}
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            badgeContent={
+              <Button
+                variant="contained"
+                sx={{
+                  borderRadius: "100%",
+                  aspectRatio: 1,
+                  p: 2,
+                  minWidth: "0",
+                }}
+                onClick={setUploadImageDialogOpen}
+              >
+                <Edit />
+              </Button>
+            }
           >
             <Avatar
-              sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                height: "100%",
-                width: "100%",
-              }}
+              sx={{ height: "100%", width: "100%" }}
               src={
                 user.imageId
                   ? `${import.meta.env.VITE_BACKEND_URL}/auth/image/${
@@ -58,12 +71,11 @@ function UserDetails({
                     }`
                   : null
               }
-              onClick={setUploadImageDialogOpen}
             />
-          </Tooltip>
+          </Badge>
         </Box>
       </Grid>
-      <Grid item xs={9} sx={{ alignContent: "center" }}>
+      <Grid item xs={8} sx={{ alignContent: "center" }}>
         <Typography variant="h3" fontWeight={800}>
           {`${user.firstName} ${user.lastName}`}
         </Typography>
@@ -71,7 +83,7 @@ function UserDetails({
           {user.username}
         </Typography>
         <Grid item xs={6} sx={{ mt: 2 }}>
-          <Button variant="contained" onClick={setEditPreferenceFormOpen}>
+          <Button variant="contained" onClick={setPersonalizeFormOpen}>
             Edit Travel Preferences
           </Button>
         </Grid>
@@ -202,10 +214,41 @@ function EditUserForm({ user }) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={3} />
+      <Grid item xs={6}>
         <Typography sx={{ textAlign: "center" }} variant="h4" fontWeight={900}>
           User Information
         </Typography>
+      </Grid>
+      <Grid item xs={3} textAlign={"right"}>
+        {editMode ? (
+          <>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setFormValues(user);
+                setEditMode(false);
+              }}
+              sx={{ mr: 1 }}
+            >
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={() => onSubmit()}>
+              Confirm
+            </Button>
+          </>
+        ) : (
+          <Grid item xs={12}>
+            <Button
+              variant="outlined"
+              onClick={() => setEditMode(true)}
+              sx={{ pl: 1.75 }}
+            >
+              <Edit sx={{ mr: 1 }} />
+              Edit
+            </Button>
+          </Grid>
+        )}
       </Grid>
       <Grid item xs={6}>
         <TextField
@@ -254,7 +297,6 @@ function EditUserForm({ user }) {
           }
         />
       </Grid>
-
       <Grid item xs={6}>
         <TextField
           label="Username"
@@ -272,15 +314,7 @@ function EditUserForm({ user }) {
           }
         />
       </Grid>
-      <Grid item xs={12}>
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={() => (editMode ? onSubmit() : setEditMode(true))}
-        >
-          {editMode ? `Done` : `Edit`}
-        </Button>
-      </Grid>
+      <Grid item xs={12}></Grid>
     </Grid>
   );
 }
@@ -290,15 +324,10 @@ function UserProfile() {
 
   const user = useSelector((state) => state.auth.user);
 
-  const [userInformation, setUserInformation] = useState(user);
   const [personalizeFormOpen, setPersonalizeFormOpen] = useState(
     personalize === "personalize" ? true : false
   );
   const [uploadImageDialogOpen, setUploadImageDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (user) setUserInformation(user);
-  }, [user]);
 
   return (
     <Box sx={{ top: 0, left: 0, height: "100vh" }}>
@@ -312,7 +341,7 @@ function UserProfile() {
               variant="outlined"
               sx={{ width: "100%", mt: 4, px: 7, py: 3 }}
             >
-              {userInformation && (
+              {user && (
                 <Grid container spacing={7} sx={{ textAlign: "left" }}>
                   <Grid item xs={12}>
                     <Card variant="outlined" sx={{ p: 2 }}>
@@ -368,7 +397,7 @@ EditUserForm.propTypes = {
 UserDetails.propTypes = {
   user: PropTypes.object,
   setUploadImageDialogOpen: PropTypes.func,
-  setEditPreferenceFormOpen: PropTypes.func,
+  setPersonalizeFormOpen: PropTypes.func,
 };
 
 export default UserProfile;
