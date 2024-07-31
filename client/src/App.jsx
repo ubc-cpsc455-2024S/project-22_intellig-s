@@ -53,7 +53,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/my-itineraries" element={<MyItineraries />} />
             <Route path="/itineraries/:id" element={<ItineraryDetails />} />
-            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile/:personalize?" element={<UserProfile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>

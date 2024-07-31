@@ -75,9 +75,13 @@ const NavBar = () => {
             <Avatar
               sx={{ bgcolor: "white" }}
               alt={user.username}
-              src={`${import.meta.env.VITE_BACKEND_URL}/auth/image/${
+              src={
                 user.imageId
-              }`}
+                  ? `${import.meta.env.VITE_BACKEND_URL}/auth/image/${
+                      user.imageId
+                    }`
+                  : null
+              }
             >
               <PersonIcon sx={{ color: "#3D52A0" }} fontSize="large" />
             </Avatar>

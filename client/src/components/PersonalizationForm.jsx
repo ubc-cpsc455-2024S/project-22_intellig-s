@@ -11,6 +11,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   OutlinedInput,
+  Card,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
@@ -18,31 +19,43 @@ import { updatePreferences } from "../redux/authSlice";
 
 function FormQuestion({ question, children }) {
   return (
-    <Box sx={{ mt: 3, pb: 3, borderBottom: "lightgrey solid 1px" }}>
-      <Typography sx={{ mb: 1 }}>{question}</Typography>
-      {children}
+    <Box sx={{ mt: 3 }}>
+      <Card variant="outlined" sx={{ p: 2 }}>
+        <Typography sx={{ mb: 1 }}>{question}</Typography>
+        {children}
+      </Card>
     </Box>
   );
 }
 
 const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
   const dispatch = useDispatch();
-  const [formValues, setFormValues] = useState(
-    initialFormValues
-      ? initialFormValues
-      : {
-          kids: null,
-          pets: null,
-          budget: 100,
-          peopleInParty: 1,
-          locationPreference: "",
-          activityPreference: "",
-          culinaryPreference: "",
-          explorationPreference: "",
-          nightlifeImportance: "",
-          culturalInterest: null,
-        }
-  );
+  const [formValues, setFormValues] = useState({
+    kids: initialFormValues.kids ? initialFormValues.kids : null,
+    pets: initialFormValues.pets ? initialFormValues.pets : null,
+    budget: initialFormValues.budget ? initialFormValues.budget : undefined,
+    peopleInParty: initialFormValues.peopleInParty
+      ? initialFormValues.peopleInParty
+      : 1,
+    locationPreference: initialFormValues.locationPreference
+      ? initialFormValues.locationPreference
+      : "",
+    activityPreference: initialFormValues.activityPreference
+      ? initialFormValues.activityPreference
+      : "",
+    culinaryPreference: initialFormValues.culinaryPreference
+      ? initialFormValues.culinaryPreference
+      : "",
+    explorationPreference: initialFormValues.explorationPreference
+      ? initialFormValues.explorationPreference
+      : "",
+    nightlifeImportance: initialFormValues.nightlifeImportance
+      ? initialFormValues.nightlifeImportance
+      : "",
+    culturalInterest: initialFormValues.culturalInterest
+      ? initialFormValues.culturalInterest
+      : null,
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,15 +76,18 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
         }}
         exclusive
         fullWidth
-        sx={{
-          width: "70%",
-        }}
       >
         {options.map((option) => (
           <ToggleButton
             key={option}
             value={option}
             sx={{
+              transition: "300ms",
+              "&.MuiToggleButtonGroup-grouped": {
+                borderRadius: "4px !important",
+                mx: 1,
+                border: "1px solid lightgrey !important",
+              },
               "&.Mui-selected": {
                 color: "#fff",
                 backgroundColor: "primary.main",
@@ -113,7 +129,7 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               min={1}
               max={10}
               onChange={handleInputChange}
-              sx={{ width: "70%" }}
+              sx={{ width: "90%" }}
             />
           </FormQuestion>
 
@@ -136,8 +152,8 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
             question={`What kind of culinary experiences are you interested in?`}
           >
             {renderButtonGroup("culinaryPreference", [
-              "Fine dining/gourmet experiences",
-              "Street food/local cuisine",
+              "Fine Dining",
+              "Local Cuisine",
             ])}
           </FormQuestion>
 
@@ -173,11 +189,11 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               <Grid item xs={1} />
               <Grid item xs={8} sx={{ alignContent: "center" }}>
                 <Slider
-                  value={formValues.budget}
+                  value={formValues.budget ? Number(formValues.budget) : 100}
                   name="budget"
                   onChange={handleInputChange}
                   aria-labelledby="budget-slider"
-                  min={0}
+                  min={100}
                   max={5000}
                   step={10}
                   sx={{ width: "90%" }}
@@ -185,13 +201,16 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               </Grid>
               <Grid item xs={2}>
                 <OutlinedInput
-                  value={formValues.budget}
+                  value={formValues.budget ? formValues.budget : ""}
                   name="budget"
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    if (e.target.value > 5000) e.target.value = 5000;
+                    else if (e.target.value < 100) e.target.value = 100;
+                    handleInputChange(e);
+                  }}
+                  type="number"
                   inputProps={{
-                    step: 10,
-                    min: 0,
-                    max: 5000,
+                    step: "10",
                     type: "number",
                   }}
                   sx={{ height: "100%" }}

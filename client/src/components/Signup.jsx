@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import PersonalizationForm from "./PersonalizationForm";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -21,7 +20,6 @@ const Signup = () => {
   const { user, isLoading, usernameConflict, emailConflict, error } =
     useSelector((state) => state.auth);
 
-  const [showPersonalizationForm, setShowPersonalizationForm] = useState(false);
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
@@ -33,9 +31,9 @@ const Signup = () => {
 
   useEffect(() => {
     if (user) {
-      setShowPersonalizationForm(true);
+      navigate("/profile/personalize");
     }
-  }, [user]);
+  }, [navigate, user]);
 
   const handleChange = (event) => {
     setFormValues({ ...formValues, [event.target.name]: event.target.value });
@@ -90,11 +88,6 @@ const Signup = () => {
 
   const onSubmit = () => {
     if (validateForm()) dispatch(signup(formValues));
-  };
-
-  const handleClosePersonalization = () => {
-    setShowPersonalizationForm(false);
-    navigate("/");
   };
 
   return (
@@ -207,10 +200,6 @@ const Signup = () => {
           </Grid>
         </Card>
       </Box>
-      <PersonalizationForm
-        open={showPersonalizationForm}
-        handleClose={handleClosePersonalization}
-      />
     </Box>
   );
 };
