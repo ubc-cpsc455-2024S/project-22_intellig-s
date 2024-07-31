@@ -20,6 +20,66 @@ import { useEffect, useState } from "react";
 import { updateProfilePicture } from "../redux/authSlice";
 import { useParams } from "react-router-dom";
 
+function UserDetails({
+  user,
+  setUploadImageDialogOpen,
+  setEditPreferenceFormOpen,
+}) {
+  return (
+    <Grid item container xs={12} spacing={4}>
+      <Grid item xs={3}>
+        <Box
+          sx={{
+            position: "relative",
+            pt: "100%",
+            width: "100%",
+            borderRadius: "100%",
+            ":hover": { cursor: "pointer" },
+          }}
+        >
+          <Tooltip
+            placement="top"
+            title={<Typography>Click to Update</Typography>}
+          >
+            <Avatar
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                height: "100%",
+                width: "100%",
+              }}
+              src={
+                user.imageId
+                  ? `${import.meta.env.VITE_BACKEND_URL}/auth/image/${
+                      user.imageId
+                    }`
+                  : null
+              }
+              onClick={setUploadImageDialogOpen}
+            />
+          </Tooltip>
+        </Box>
+      </Grid>
+      <Grid item xs={9} sx={{ alignContent: "center" }}>
+        <Typography variant="h3" fontWeight={800}>
+          {`${user.firstName} ${user.lastName}`}
+        </Typography>
+        <Typography variant="h6" fontWeight={500} fontStyle={"italic"}>
+          {user.username}
+        </Typography>
+        <Grid item xs={6} sx={{ mt: 2 }}>
+          <Button variant="contained" onClick={setEditPreferenceFormOpen}>
+            Edit Travel Preferences
+          </Button>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+}
+
 function UploadImageDialog({ open, handleClose }) {
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
@@ -85,17 +145,141 @@ function UploadImageDialog({ open, handleClose }) {
   );
 }
 
+function EditUserForm({ user }) {
+  const [formValues, setFormValues] = useState({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    username: user.username,
+  });
+  const [editMode, setEditMode] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+
+  function onSubmit() {
+    if (validateForm()) setEditMode(false);
+  }
+
+  function validateForm() {
+    let errorMessages = {};
+
+    const emailValidatorRegex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (formValues.firstName === "")
+      errorMessages.firstName = "First name cannot be blank";
+
+    if (formValues.lastName === "")
+      errorMessages.lastName = "Last name cannot be blank";
+
+    if (formValues.email === "") errorMessages.email = "Email cannot be blank";
+    else if (!emailValidatorRegex.test(formValues.email))
+      errorMessages.email = "Please enter a valid email";
+
+    if (formValues.username === "")
+      errorMessages.username = "Username cannot be blank";
+
+    setFormErrors(errorMessages);
+    return !Object.keys(errorMessages).length;
+  }
+
+  function handleChange(event) {
+    setFormValues({
+      ...formValues,
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Typography sx={{ textAlign: "center" }} variant="h4" fontWeight={900}>
+          User Information
+        </Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          label="First Name"
+          name="firstName"
+          value={formValues.firstName}
+          size="small"
+          fullWidth
+          InputProps={{
+            readOnly: !editMode,
+          }}
+          onChange={handleChange}
+          error={formErrors.firstName ? true : false}
+          helperText={formErrors.firstName}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          label="Last Name"
+          name="lastName"
+          value={formValues.lastName}
+          size="small"
+          fullWidth
+          InputProps={{
+            readOnly: !editMode,
+          }}
+          onChange={handleChange}
+          error={formErrors.lastName ? true : false}
+          helperText={formErrors.lastName}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          label="Email"
+          name="email"
+          value={formValues.email}
+          size="small"
+          fullWidth
+          InputProps={{
+            readOnly: !editMode,
+          }}
+          onChange={handleChange}
+          error={formErrors.email ? true : false}
+          helperText={formErrors.email}
+        />
+      </Grid>
+
+      <Grid item xs={6}>
+        <TextField
+          label="Username"
+          name="username"
+          value={formValues.username}
+          size="small"
+          fullWidth
+          InputProps={{
+            readOnly: !editMode,
+          }}
+          onChange={handleChange}
+          error={formErrors.username ? true : false}
+          helperText={formErrors.username}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => (editMode ? onSubmit() : setEditMode(true))}
+        >
+          {editMode ? `Done` : `Edit`}
+        </Button>
+      </Grid>
+    </Grid>
+  );
+}
+
 function UserProfile() {
   const { personalize } = useParams();
 
   const user = useSelector((state) => state.auth.user);
 
   const [userInformation, setUserInformation] = useState(user);
-  const [editPreferenceFormOpen, setEditPreferenceFormOpen] = useState(
+  const [personalizeFormOpen, setPersonalizeFormOpen] = useState(
     personalize === "personalize" ? true : false
   );
   const [uploadImageDialogOpen, setUploadImageDialogOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     if (user) setUserInformation(user);
@@ -117,165 +301,33 @@ function UserProfile() {
                 <Grid container spacing={7} sx={{ textAlign: "left" }}>
                   <Grid item xs={12}>
                     <Card variant="outlined" sx={{ p: 2 }}>
-                      <Grid item container xs={8} spacing={4}>
-                        <Grid item xs={3}>
-                          <Box
-                            sx={{
-                              position: "relative",
-                              pt: "100%",
-                              width: "100%",
-                              borderRadius: "100%",
-                              ":hover": { cursor: "pointer" },
-                            }}
-                          >
-                            <Tooltip
-                              placement="top"
-                              title={<Typography>Click to Update</Typography>}
-                            >
-                              <Avatar
-                                sx={{
-                                  position: "absolute",
-                                  top: 0,
-                                  left: 0,
-                                  bottom: 0,
-                                  right: 0,
-                                  height: "100%",
-                                  width: "100%",
-                                }}
-                                src={
-                                  user.imageId
-                                    ? `${
-                                        import.meta.env.VITE_BACKEND_URL
-                                      }/auth/image/${user.imageId}`
-                                    : null
-                                }
-                                onClick={() => setUploadImageDialogOpen(true)}
-                              />
-                            </Tooltip>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={9} sx={{ alignContent: "center" }}>
-                          <Typography variant="h4" fontWeight={900}>
-                            {`${user.firstName} ${user.lastName}`}
-                          </Typography>{" "}
-                          <Typography variant="h6" fontWeight={600}>
-                            {user.username}
-                          </Typography>
-                          <Grid item xs={6}>
-                            <Button
-                              variant="contained"
-                              onClick={() => setEditPreferenceFormOpen(true)}
-                            >
-                              Edit Travel Preferences
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      <UserDetails
+                        user={user}
+                        setUploadImageDialogOpen={() =>
+                          setUploadImageDialogOpen(true)
+                        }
+                        setPersonalizeFormOpen={() =>
+                          setPersonalizeFormOpen(true)
+                        }
+                      />
                     </Card>
                   </Grid>
                   <Grid item xs={12}>
                     <Card variant="outlined" sx={{ p: 2 }}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                          <Typography
-                            sx={{ textAlign: "center" }}
-                            variant="h4"
-                            fontWeight={900}
-                          >
-                            User Information
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField
-                            label="First Name"
-                            value={userInformation.firstName}
-                            size="small"
-                            fullWidth
-                            InputProps={{
-                              readOnly: !editMode,
-                            }}
-                            onChange={(event) =>
-                              setUserInformation({
-                                ...userInformation,
-                                firstName: event.target.value,
-                              })
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField
-                            label="Last Name"
-                            value={userInformation.lastName}
-                            size="small"
-                            fullWidth
-                            InputProps={{
-                              readOnly: !editMode,
-                            }}
-                            onChange={(event) =>
-                              setUserInformation({
-                                ...userInformation,
-                                lastName: event.target.value,
-                              })
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={6}>
-                          <TextField
-                            label="Email"
-                            value={userInformation.email}
-                            size="small"
-                            fullWidth
-                            InputProps={{
-                              readOnly: !editMode,
-                            }}
-                            onChange={(event) =>
-                              setUserInformation({
-                                ...userInformation,
-                                email: event.target.value,
-                              })
-                            }
-                          />
-                        </Grid>
-
-                        <Grid item xs={6}>
-                          <TextField
-                            label="Username"
-                            value={userInformation.username}
-                            size="small"
-                            fullWidth
-                            InputProps={{
-                              readOnly: !editMode,
-                            }}
-                            onChange={(event) =>
-                              setUserInformation({
-                                ...userInformation,
-                                username: event.target.value,
-                              })
-                            }
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Button
-                            variant="contained"
-                            fullWidth
-                            onClick={() => setEditMode(!editMode)}
-                          >
-                            {editMode ? `Done` : `Edit`}
-                          </Button>
-                        </Grid>
-                      </Grid>
+                      <EditUserForm user={user}></EditUserForm>
                     </Card>
                   </Grid>
                 </Grid>
               )}
             </Card>
           </Container>
+
           {user && (
             <>
               <PersonalizationForm
-                open={editPreferenceFormOpen}
+                open={personalizeFormOpen}
                 initialFormValues={user.preferences}
-                handleClose={() => setEditPreferenceFormOpen(false)}
+                handleClose={() => setPersonalizeFormOpen(false)}
               ></PersonalizationForm>
               <UploadImageDialog
                 open={uploadImageDialogOpen}
@@ -292,6 +344,16 @@ function UserProfile() {
 UploadImageDialog.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
+};
+
+EditUserForm.propTypes = {
+  user: PropTypes.object,
+};
+
+UserDetails.propTypes = {
+  user: PropTypes.object,
+  setUploadImageDialogOpen: PropTypes.func,
+  setEditPreferenceFormOpen: PropTypes.func,
 };
 
 export default UserProfile;
