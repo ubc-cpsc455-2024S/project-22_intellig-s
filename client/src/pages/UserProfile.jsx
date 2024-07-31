@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import PersonalizationForm from "../components/PersonalizationForm";
 import { useEffect, useState } from "react";
-import { updateProfilePicture } from "../redux/authSlice";
+import { editUser, updateProfilePicture } from "../redux/authSlice";
 import { useParams } from "react-router-dom";
 
 function UserDetails({
@@ -146,6 +146,11 @@ function UploadImageDialog({ open, handleClose }) {
 }
 
 function EditUserForm({ user }) {
+  const dispatch = useDispatch();
+
+  const { usernameConflict, emailConflict } = useSelector(
+    (state) => state.auth
+  );
   const [formValues, setFormValues] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
@@ -155,8 +160,21 @@ function EditUserForm({ user }) {
   const [editMode, setEditMode] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
+  function handleChange(event) {
+    setFormValues({
+      ...formValues,
+      [event.target.name]: event.target.value,
+    });
+  }
+
   function onSubmit() {
-    if (validateForm()) setEditMode(false);
+    if (validateForm()) {
+      dispatch(editUser(formValues))
+        .unwrap()
+        .then(() => {
+          setEditMode(false);
+        });
+    }
   }
 
   function validateForm() {
@@ -180,13 +198,6 @@ function EditUserForm({ user }) {
 
     setFormErrors(errorMessages);
     return !Object.keys(errorMessages).length;
-  }
-
-  function handleChange(event) {
-    setFormValues({
-      ...formValues,
-      [event.target.name]: event.target.value,
-    });
   }
 
   return (
@@ -237,8 +248,10 @@ function EditUserForm({ user }) {
             readOnly: !editMode,
           }}
           onChange={handleChange}
-          error={formErrors.email ? true : false}
-          helperText={formErrors.email}
+          error={emailConflict || formErrors.email ? true : false}
+          helperText={
+            emailConflict ? "Email is already in use" : formErrors.email
+          }
         />
       </Grid>
 
@@ -253,8 +266,10 @@ function EditUserForm({ user }) {
             readOnly: !editMode,
           }}
           onChange={handleChange}
-          error={formErrors.username ? true : false}
-          helperText={formErrors.username}
+          error={usernameConflict || formErrors.email ? true : false}
+          helperText={
+            usernameConflict ? "Username is already in use" : formErrors.email
+          }
         />
       </Grid>
       <Grid item xs={12}>

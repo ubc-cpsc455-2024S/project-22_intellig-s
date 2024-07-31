@@ -98,6 +98,59 @@ router.post("/signin", async (req, res, next) => {
   }
 });
 
+router.post("/edit", verifyToken, async (req, res) => {
+  const { firstName, lastName, email, username } = req.body;
+  if (!firstName || !lastName || !email || !username)
+    return res.status(400).json({
+      status: 400,
+      message: "request field missing",
+    });
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    const usernameConflict = await User.findOne({
+      _id: { $ne: userId },
+      username,
+    });
+    const emailConflict = await User.findOne({
+      _id: { $ne: userId },
+      email,
+    });
+
+    if (usernameConflict || emailConflict)
+      return res.status(409).json({
+        status: 409,
+        usernameConflict: usernameConflict ? true : false,
+        emailConflict: emailConflict ? true : false,
+        message: "Information conflicts with an existing user!",
+      });
+
+    const newUser = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          username: username,
+        },
+      },
+      { returnDocument: "after" }
+    );
+
+    const token = generateToken(newUser);
+    res.status(201).json({ token: token });
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: `An internal error occurred with database connection. ${error.message}`,
+    });
+  }
+});
+
 // New route for updating user preferences
 router.post("/updatePreferences", verifyToken, async (req, res) => {
   const preferences = req.body;

@@ -49,6 +49,25 @@ export const login = createAsyncThunk(
   }
 );
 
+export const editUser = createAsyncThunk(
+  "auth/editUser",
+  async (userDetails, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+    try {
+      const response = await axios.post(`${API_URL}/edit`, userDetails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const updatePreferences = createAsyncThunk(
   "auth/updatePreferences",
   async (preferences, { getState, rejectWithValue }) => {
@@ -168,6 +187,23 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addCase(editUser.pending, (state) => {
+        state.isLoading = true;
+        state.usernameConflict = false;
+        state.emailConflict = false;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.user = jwtDecode(action.payload.token);
+        localStorage.setItem("token", action.payload.token);
+      })
+      .addCase(editUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.usernameConflict = action.payload.usernameConflict;
+        state.emailConflict = action.payload.emailConflict;
       })
       .addCase(updateProfilePicture.pending, (state) => {
         state.isLoading = true;
