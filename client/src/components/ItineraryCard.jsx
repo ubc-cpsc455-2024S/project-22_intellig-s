@@ -17,7 +17,7 @@ function ItineraryCard({ itinerary }) {
   const navigate = useNavigate();
 
   return (
-    <Card>
+    <Card variant="outlined">
       <CardMedia
         component="img"
         height={140}
@@ -30,7 +30,7 @@ function ItineraryCard({ itinerary }) {
         sx={{ textOverflow: "ellipsis", height: "4em" }}
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
       >
-        <Typography noWrap={true} variant="h5">
+        <Typography noWrap={true} variant="h5" fontWeight={500}>
           {itinerary.location}
         </Typography>
         <Typography noWrap={true} fontSize={"0.9em"}>
