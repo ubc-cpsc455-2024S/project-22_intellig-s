@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import PropTypes from "prop-types";
 import DayCard from "./DayCard";
@@ -60,7 +60,12 @@ export default function DayList({ itineraryId, activeDay, setActiveDay }) {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="day-list">
         {(provided) => (
-          <Box ref={provided.innerRef} {...provided.droppableProps}>
+          <Grid
+            container
+            spacing={2}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
             {dayList.map((day, index) => (
               <Draggable
                 key={day.dayNumber}
@@ -68,10 +73,11 @@ export default function DayList({ itineraryId, activeDay, setActiveDay }) {
                 index={index}
               >
                 {(provided) => (
-                  <Box
+                  <Grid
+                    item
+                    xs={12}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    sx={{ mb: 1 }}
                   >
                     <DayCard
                       day={{
@@ -82,12 +88,12 @@ export default function DayList({ itineraryId, activeDay, setActiveDay }) {
                       dragHandleProps={provided.dragHandleProps}
                       key={day.dayNumber}
                     />
-                  </Box>
+                  </Grid>
                 )}
               </Draggable>
             ))}
             {provided.placeholder}
-          </Box>
+          </Grid>
         )}
       </Droppable>
     </DragDropContext>

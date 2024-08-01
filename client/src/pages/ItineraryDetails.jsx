@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { AutoAwesome, CalendarMonth, RestartAlt } from "@mui/icons-material";
+
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { useDispatch, useSelector } from "react-redux";
 
 import ControlledMap from "../components/ControlledMap";
 import DayList from "../components/DayList";
@@ -53,7 +55,7 @@ const ItineraryDetails = () => {
     : [];
 
   return (
-    <Box sx={{ position: "absolute", top: 0, left: 0, height: "100vh" }}>
+    <Box sx={{ height: "100vh", width: "100vw" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
         <Grid item xs={12} md={9} sx={{ height: { xs: "50%", md: "100%" } }}>
           <APIProvider
@@ -85,12 +87,14 @@ const ItineraryDetails = () => {
           item
           xs={12}
           md={3}
-          container
-          spacing={2}
-          sx={{ height: { xs: "50%", md: "100%" }, overflow: "auto", p: 2 }}
+          sx={{
+            height: { xs: "50%", md: "100%" },
+            overflow: "auto",
+            p: 2,
+          }}
         >
           <Grid item xs={12}>
-            <Card variant="outlined" sx={{ p: 3 }}>
+            <Card variant="outlined" sx={{ p: 3, mb: 2 }}>
               {itinerary && (
                 <>
                   <Typography variant="h4" sx={{ fontWeight: "900" }}>

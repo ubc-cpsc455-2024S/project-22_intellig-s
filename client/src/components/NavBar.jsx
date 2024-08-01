@@ -1,19 +1,22 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import HomeIcon from "@mui/icons-material/Home";
-import MenuIcon from "@mui/icons-material/Menu";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Home, MenuSharp, Person, TravelExplore } from "@mui/icons-material";
+
 import { logout } from "../redux/authSlice";
-import PersonIcon from "@mui/icons-material/Person";
-import { Box, Button } from "@mui/material";
 
 const NavBar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -49,8 +52,7 @@ const NavBar = () => {
             <Button
               variant="contained"
               aria-label="home"
-              component={Link}
-              to="/"
+              onClick={() => navigate("/")}
               sx={{
                 pl: 1.75,
                 mr: 1,
@@ -63,15 +65,14 @@ const NavBar = () => {
                 },
               }}
             >
-              <HomeIcon sx={{ mr: 1 }} />
+              <Home sx={{ mr: 1 }} />
               Home
             </Button>
             {isSignedIn && (
               <Button
                 variant="contained"
                 aria-label="my itineraries"
-                component={Link}
-                to="/my-itineraries"
+                onClick={() => navigate("/my-itineraries")}
                 sx={{
                   pl: 1.75,
                   border: "1px solid white",
@@ -83,7 +84,7 @@ const NavBar = () => {
                   },
                 }}
               >
-                <TravelExploreIcon sx={{ mr: 1 }} />
+                <TravelExplore sx={{ mr: 1 }} />
                 My Itineraries
               </Button>
             )}
@@ -94,7 +95,7 @@ const NavBar = () => {
               onClick={handleNavMenuOpen}
               edge="start"
             >
-              <MenuIcon />
+              <MenuSharp />
             </IconButton>
             <Menu
               anchorEl={navAnchorEl}
@@ -104,43 +105,45 @@ const NavBar = () => {
               onClose={handleNavMenuClose}
               sx={{ mt: 5 }}
             >
-              <MenuItem
-                onClick={() => {
-                  navigate(`/`);
-                  handleNavMenuClose();
-                }}
-              >
-                Home
-              </MenuItem>
-              {isSignedIn ? (
+              <Box>
                 <MenuItem
                   onClick={() => {
-                    navigate("/my-itineraries");
+                    navigate(`/`);
                     handleNavMenuClose();
                   }}
                 >
-                  My Itineraries
+                  Home
                 </MenuItem>
-              ) : (
-                <>
+                {isSignedIn ? (
                   <MenuItem
                     onClick={() => {
-                      navigate("/login");
+                      navigate("/my-itineraries");
                       handleNavMenuClose();
                     }}
                   >
-                    Log in
+                    My Itineraries
                   </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      navigate("/signup");
-                      handleNavMenuClose();
-                    }}
-                  >
-                    Sign up
-                  </MenuItem>
-                </>
-              )}
+                ) : (
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        navigate("/login");
+                        handleNavMenuClose();
+                      }}
+                    >
+                      Log in
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        navigate("/signup");
+                        handleNavMenuClose();
+                      }}
+                    >
+                      Sign up
+                    </MenuItem>
+                  </>
+                )}
+              </Box>
             </Menu>
           </Box>
         </Box>
@@ -178,7 +181,7 @@ const NavBar = () => {
                     : null
                 }
               >
-                <PersonIcon sx={{ color: "#3D52A0" }} fontSize="large" />
+                <Person sx={{ color: "#3D52A0" }} fontSize="large" />
               </Avatar>
             </IconButton>
           ) : (
