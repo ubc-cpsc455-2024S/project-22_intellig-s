@@ -31,7 +31,7 @@ const MyItineraries = () => {
                     variant="h3"
                     color="primary"
                     gutterBottom
-                    fontWeight={900}
+                    fontWeight={800}
                   >
                     My Itineraries
                   </Typography>
