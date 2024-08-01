@@ -94,18 +94,23 @@ router.post("/:userId", async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
   const { userId } = req.params;
 
+  let preferences = {};
   try {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.preferences) {
+      preferences = user.preferences;
+    }
   } catch (err) {
     return res
       .status(500)
       .json({ message: "Error occurred connecting to the database" });
   }
-
   try {
     const aiResponse = await retry(3, async () =>
-      JSON.parse(await generateItinerary(location, startDate, endDate))
+      JSON.parse(
+        await generateItinerary(location, startDate, endDate, preferences)
+      )
     );
 
     const itineraryId = uuid();
