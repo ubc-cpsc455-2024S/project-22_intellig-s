@@ -5,6 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
+import MenuIcon from "@mui/icons-material/Menu";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -20,17 +21,21 @@ const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [navAnchorEl, setNavAnchorEl] = React.useState(null);
+  const handleNavMenuOpen = (event) => {
+    setNavAnchorEl(event.currentTarget);
+  };
+  const handleNavMenuClose = () => {
+    setNavAnchorEl(null);
+  };
 
+  const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
   const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setProfileAnchorEl(event.currentTarget);
   };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const handleProfileMenuClose = () => {
+    setProfileAnchorEl(null);
   };
-
-  const isMenuOpen = Boolean(anchorEl);
 
   return (
     <AppBar
@@ -38,52 +43,118 @@ const NavBar = () => {
       color="primary"
       sx={{ boxShadow: "none" }} // Remove the box shadow
     >
-      <Toolbar>
+      <Toolbar sx={{ height: "64px" }}>
         <Box sx={{ flex: "1 1 0px", textAlign: "left" }}>
-          <Button
-            variant="contained"
-            aria-label="home"
-            component={Link}
-            to="/"
-            sx={{
-              pl: 1.75,
-              mr: 1,
-              backgroundColor: "white",
-              border: "1px solid white",
-              color: "primary.main",
-              ":hover": {
-                backgroundColor: "primary.main",
-                color: "white",
-              },
-            }}
-          >
-            <HomeIcon sx={{ mr: 1 }} />
-            Home
-          </Button>
-          {isSignedIn && (
+          <Box display={{ xs: "none", md: "block" }}>
             <Button
               variant="contained"
-              aria-label="my itineraries"
+              aria-label="home"
               component={Link}
-              to="/my-itineraries"
+              to="/"
               sx={{
                 pl: 1.75,
+                mr: 1,
+                backgroundColor: "white",
                 border: "1px solid white",
-                color: "white",
+                color: "primary.main",
                 ":hover": {
-                  backgroundColor: "white",
-                  color: "primary.main",
-                  border: "1px solid white",
+                  backgroundColor: "primary.main",
+                  color: "white",
                 },
               }}
             >
-              <TravelExploreIcon sx={{ mr: 1 }} />
-              My Itineraries
+              <HomeIcon sx={{ mr: 1 }} />
+              Home
             </Button>
-          )}
+            {isSignedIn && (
+              <Button
+                variant="contained"
+                aria-label="my itineraries"
+                component={Link}
+                to="/my-itineraries"
+                sx={{
+                  pl: 1.75,
+                  border: "1px solid white",
+                  color: "white",
+                  ":hover": {
+                    backgroundColor: "white",
+                    color: "primary.main",
+                    border: "1px solid white",
+                  },
+                }}
+              >
+                <TravelExploreIcon sx={{ mr: 1 }} />
+                My Itineraries
+              </Button>
+            )}
+          </Box>
+          <Box display={{ xs: "block", md: "none" }}>
+            <IconButton
+              sx={{ color: "white" }}
+              onClick={handleNavMenuOpen}
+              edge="start"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={navAnchorEl}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+              open={navAnchorEl ? true : false}
+              onClose={handleNavMenuClose}
+              sx={{ mt: 5 }}
+            >
+              <MenuItem
+                onClick={() => {
+                  navigate(`/`);
+                  handleNavMenuClose();
+                }}
+              >
+                Home
+              </MenuItem>
+              {isSignedIn ? (
+                <MenuItem
+                  onClick={() => {
+                    navigate("/my-itineraries");
+                    handleNavMenuClose();
+                  }}
+                >
+                  My Itineraries
+                </MenuItem>
+              ) : (
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/login");
+                      handleNavMenuClose();
+                    }}
+                  >
+                    Log in
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/signup");
+                      handleNavMenuClose();
+                    }}
+                  >
+                    Sign up
+                  </MenuItem>
+                </>
+              )}
+            </Menu>
+          </Box>
         </Box>
         <Box sx={{ flex: "1 1 0px", textAlign: "center" }}>
-          <Typography variant="h6">AI-tinerary</Typography>
+          <Typography
+            sx={{
+              typography: {
+                xs: { fontSize: "15px" },
+                md: { fontSize: "20px" },
+              },
+            }}
+          >
+            AI-tinerary
+          </Typography>
         </Box>
         <Box sx={{ flex: "1 1 0px", textAlign: "right" }}>
           {isSignedIn ? (
@@ -111,7 +182,7 @@ const NavBar = () => {
               </Avatar>
             </IconButton>
           ) : (
-            <Box sx={{ flex: "1 1 0px" }}>
+            <Box display={{ xs: "none", md: "block" }}>
               <Button
                 variant="contained"
                 sx={{
@@ -148,13 +219,13 @@ const NavBar = () => {
         </Box>
 
         <Menu
-          anchorEl={anchorEl}
+          anchorEl={profileAnchorEl}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           id="profile-menu"
           keepMounted
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
+          open={profileAnchorEl ? true : false}
+          onClose={handleProfileMenuClose}
           sx={{ mt: 5 }}
         >
           {isSignedIn ? (
@@ -162,7 +233,7 @@ const NavBar = () => {
               <MenuItem
                 onClick={() => {
                   navigate(`/profile`);
-                  handleMenuClose();
+                  handleProfileMenuClose();
                 }}
               >
                 Profile
@@ -171,7 +242,7 @@ const NavBar = () => {
                 onClick={() => {
                   dispatch(logout());
                   navigate("/");
-                  handleMenuClose();
+                  handleProfileMenuClose();
                 }}
               >
                 Logout
@@ -181,7 +252,7 @@ const NavBar = () => {
             <MenuItem
               onClick={() => {
                 navigate("/login");
-                handleMenuClose();
+                handleProfileMenuClose();
               }}
             >
               Login

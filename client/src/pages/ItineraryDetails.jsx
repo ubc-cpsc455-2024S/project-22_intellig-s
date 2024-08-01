@@ -55,7 +55,7 @@ const ItineraryDetails = () => {
   return (
     <Box sx={{ position: "absolute", top: 0, left: 0, height: "100vh" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
-        <Grid item xs={9} sx={{ width: "74vw", height: "100%" }}>
+        <Grid item xs={12} md={9} sx={{ height: { xs: "50%", md: "100%" } }}>
           <APIProvider
             apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             libraries={["places"]}
@@ -83,10 +83,11 @@ const ItineraryDetails = () => {
 
         <Grid
           item
-          xs={3}
+          xs={12}
+          md={3}
           container
           spacing={2}
-          sx={{ height: "100%", overflow: "auto", p: 2 }}
+          sx={{ height: { xs: "50%", md: "100%" }, overflow: "auto", p: 2 }}
         >
           <Grid item xs={12}>
             <Card variant="outlined" sx={{ p: 3 }}>

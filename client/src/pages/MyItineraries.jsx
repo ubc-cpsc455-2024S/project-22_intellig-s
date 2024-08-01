@@ -24,33 +24,35 @@ const MyItineraries = () => {
       <Box sx={{ pt: "64px", height: "100vh", width: "100vw" }}>
         <Box sx={{ height: "100%", overflow: "auto", pt: 2 }}>
           <Container sx={{ mb: 2 }}>
-            <Card variant="outlined" sx={{ p: 4 }}>
+            <Card variant="outlined" sx={{ p: { xs: 2, md: 4 } }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography
-                    variant="h3"
-                    color="primary"
-                    gutterBottom
-                    fontWeight={800}
-                  >
+                  <Typography variant="h3" color="primary" fontWeight={800}>
                     My Itineraries
                   </Typography>
                 </Grid>
-                <Grid item xs={0} sm={2} md={4} />
-                <Grid item xs={12} sm={8} md={4}>
+                <Grid
+                  item
+                  sm={1}
+                  md={3}
+                  display={{ xs: "none", sm: "block" }}
+                />
+                <Grid item xs={12} sm={10} md={6}>
                   <Button
                     variant="contained"
                     color="primary"
                     fullWidth
                     onClick={() => setFormOpen(true)}
-                    sx={{
-                      mb: 2,
-                    }}
                   >
                     Add Itinerary
                   </Button>
                 </Grid>
-                <Grid item xs={0} sm={2} md={4} />
+                <Grid
+                  item
+                  sm={1}
+                  md={3}
+                  display={{ xs: "none", sm: "block" }}
+                />
 
                 {itineraries.map((itinerary) => (
                   <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
