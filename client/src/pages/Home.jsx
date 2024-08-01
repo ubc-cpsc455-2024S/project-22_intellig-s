@@ -78,19 +78,19 @@ const Home = () => {
                   sx={{
                     typography: {
                       fontWeight: 600,
-                      xs: { fontSize: 60, textAlign: "center" },
+                      xs: { fontSize: 40, textAlign: "center" },
                       md: { fontSize: 80, textAlign: "left" },
                     },
                   }}
                   color="primary"
                 >
-                  Your Perfect Journey, Crafted by AI{" "}
+                  Your Perfect Journey, Crafted by AI
                 </Typography>
                 <Typography
                   sx={{
                     typography: {
                       fontWeight: "200",
-                      xs: { fontSize: 30, textAlign: "center" },
+                      xs: { fontSize: 15, textAlign: "center" },
                       md: { fontSize: 30, textAlign: "left" },
                     },
                     textAlign: "left",

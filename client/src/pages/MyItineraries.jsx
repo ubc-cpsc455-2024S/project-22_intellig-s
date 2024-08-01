@@ -20,7 +20,7 @@ const MyItineraries = () => {
   }, [dispatch, userId]);
 
   return (
-    <Box sx={{ position: "absolute", top: 0, left: 0 }}>
+    <Box>
       <Box sx={{ pt: "64px", height: "100vh", width: "100vw" }}>
         <Box sx={{ height: "100%", overflow: "auto", pt: 2 }}>
           <Container sx={{ mb: 2 }}>
@@ -59,17 +59,13 @@ const MyItineraries = () => {
                     <ItineraryCard itinerary={itinerary} />
                   </Grid>
                 ))}
-
-                <SurveyForm
-                  open={formOpen}
-                  handleClose={() => setFormOpen(false)}
-                />
-                <LoadingDialog isOpen={itineraryStatus === "generating"}>
-                  Generating...
-                </LoadingDialog>
               </Grid>
             </Card>
           </Container>
+          <SurveyForm open={formOpen} handleClose={() => setFormOpen(false)} />
+          <LoadingDialog isOpen={itineraryStatus === "generating"}>
+            Generating...
+          </LoadingDialog>
         </Box>
       </Box>
     </Box>

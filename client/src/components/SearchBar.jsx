@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
-import * as React from "react";
 import {
   Autocomplete,
-  IconButton,
-  InputAdornment,
   Paper,
   TextField,
   Box,
@@ -16,7 +13,7 @@ import { debounce } from "@mui/material/utils";
 
 import SearchIcon from "@mui/icons-material/Search";
 import PublicIcon from "@mui/icons-material/Public";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useEffect, useMemo, useState, useRef } from "react";
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -36,10 +33,10 @@ function loadScript(src, position, id) {
 const autocompleteService = { current: null };
 
 function SearchBar({ handleChange }) {
-  const [value, setValue] = React.useState(null);
-  const [inputValue, setInputValue] = React.useState("");
-  const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
+  const [value, setValue] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [options, setOptions] = useState([]);
+  const loaded = useRef(false);
 
   // load the google maps script on page load
   if (typeof window !== "undefined" && !loaded.current) {
@@ -57,7 +54,7 @@ function SearchBar({ handleChange }) {
   }
 
   // used to limit amount of fetch calls, prevent too much network usage if there is fast typing
-  const fetch = React.useMemo(
+  const fetch = useMemo(
     () =>
       debounce((request, callback) => {
         autocompleteService.current.getPlacePredictions(request, callback);
@@ -65,7 +62,7 @@ function SearchBar({ handleChange }) {
     []
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     let active = true;
 
     // initialize google maps autocomplete service if required
@@ -129,29 +126,18 @@ function SearchBar({ handleChange }) {
       renderInput={(params) => (
         <TextField
           {...params}
+          size="small"
+          fullWidth
           InputProps={{
             ...params.InputProps,
             style: {
-              outline: 0,
-              borderRadius: "100em",
               backgroundColor: "#FFF",
-              boxShadow: "0 0 10px 1px rgba(0,0,0,0.1)",
-              padding: 4,
+              paddingRight: "6px",
             },
-            startAdornment: (
-              <InputAdornment position="start">
-                <PublicIcon />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
+            startAdornment: <PublicIcon />,
+            endAdornment: <SearchIcon />,
           }}
-          placeholder="Search destinations..."
+          placeholder="Search"
         />
       )}
       renderOption={(props, option) => {
@@ -164,15 +150,13 @@ function SearchBar({ handleChange }) {
         );
 
         return (
-          <Box {...props} key={props.key}>
+          <Box
+            {...props}
+            key={props.key}
+            sx={{ borderBottom: "1px solid lightgrey", py: 1.5, m: 0 }}
+          >
             <Grid container alignItems="center">
-              <Grid item sx={{ display: "flex", width: 44 }}>
-                <LocationOnIcon sx={{ color: "text.secondary" }} />
-              </Grid>
-              <Grid
-                item
-                sx={{ width: "calc(100% - 44px)", wordWrap: "break-word" }}
-              >
+              <Grid item sx={{ width: "100%", wordWrap: "break-word" }}>
                 {parts.map((part, index) => (
                   <Box
                     key={index}
@@ -204,8 +188,7 @@ function CustomPaper({ children }) {
     <Paper
       sx={{
         mt: 1,
-        borderRadius: 5,
-        outline: 2,
+        border: "2px solid",
         maxHeight: "200px",
         overflowX: "scroll",
         scrollbarWidth: "none",
@@ -214,9 +197,6 @@ function CustomPaper({ children }) {
         },
         "&-ms-overflow-style:": {
           display: "none", // Hide the scrollbar for IE
-        },
-        "& .MuiAutocomplete-option": {
-          mt: 0.5,
         },
       }}
     >

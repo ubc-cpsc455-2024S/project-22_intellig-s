@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Button, Card, Grid, Typography } from "@mui/material";
-import { AutoAwesome, CalendarMonth, RestartAlt } from "@mui/icons-material";
+import { Box, Button, Card, Fab, Grid, Typography } from "@mui/material";
+import {
+  AutoAwesome,
+  CalendarMonth,
+  Place,
+  RestartAlt,
+} from "@mui/icons-material";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 
@@ -25,6 +30,8 @@ const ItineraryDetails = () => {
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
   const [activeDay, setActiveDay] = useState(null);
+
+  const [mapMode, setMapMode] = useState(false);
 
   useEffect(() => {
     const fetchDaysFromDB = async () => {
@@ -57,7 +64,18 @@ const ItineraryDetails = () => {
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
-        <Grid item xs={12} md={9} sx={{ height: { xs: "50%", md: "100%" } }}>
+        <Grid
+          item
+          xs={12}
+          md={9}
+          sx={{
+            height: "100%",
+            display: {
+              xs: mapMode ? "block" : "none",
+              md: "block",
+            },
+          }}
+        >
           <APIProvider
             apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             libraries={["places"]}
@@ -70,7 +88,7 @@ const ItineraryDetails = () => {
                 resetButton={
                   <Button
                     variant="contained"
-                    sx={{ m: 2, pl: 1 }}
+                    sx={{ display: { xs: "none", md: "flex" }, m: 2, pl: 1 }}
                     onClick={() => setActiveDay(null)}
                     disabled={!activeDay}
                   >
@@ -88,9 +106,13 @@ const ItineraryDetails = () => {
           xs={12}
           md={3}
           sx={{
-            height: { xs: "50%", md: "100%" },
+            height: "100%",
             overflow: "auto",
             p: 2,
+            display: {
+              xs: mapMode ? "none" : "block",
+              md: "block",
+            },
           }}
         >
           <Grid item xs={12}>
@@ -151,6 +173,66 @@ const ItineraryDetails = () => {
       <LoadingDialog isOpen={dayStatus === "generating"}>
         Generating...
       </LoadingDialog>
+
+      {/* Mobile buttons */}
+      <Fab
+        variant="extended"
+        size="medium"
+        disabled={activeDay === null}
+        sx={{
+          display: { xs: mapMode ? "flex" : "none", md: "none" },
+          position: "fixed",
+          bottom: 100,
+          right: 10,
+          backgroundColor: "white",
+          color: "primary.main",
+          border: "2px solid",
+        }}
+        onClick={() => setActiveDay(null)}
+      >
+        Reset Markers
+      </Fab>
+      <Fab
+        variant="extended"
+        size="medium"
+        sx={{
+          display: { xs: mapMode ? "flex" : "none", md: "none" },
+          position: "fixed",
+          bottom: 55,
+          right: 10,
+          backgroundColor: "white",
+          color: "primary.main",
+          border: "2px solid",
+          pl: 1,
+        }}
+        onClick={() =>
+          setActiveDay(() => {
+            if (activeDay === null) return 1;
+            const currentIndex = days.findIndex(
+              (day) => day.dayNumber === activeDay
+            );
+            if (days[currentIndex + 1]) return days[currentIndex + 1].dayNumber;
+            return 1;
+          })
+        }
+      >
+        <Place sx={{ mr: 1, ml: 0 }} />
+        {activeDay ? `Day: ${activeDay}` : "Day: All Days"}
+      </Fab>
+      <Fab
+        variant="extended"
+        size="medium"
+        color="primary"
+        sx={{
+          display: { xs: "block", md: "none" },
+          position: "fixed",
+          bottom: 10,
+          right: 10,
+        }}
+        onClick={() => setMapMode(!mapMode)}
+      >
+        {mapMode ? `View List` : `View Map`}
+      </Fab>
     </Box>
   );
 };
