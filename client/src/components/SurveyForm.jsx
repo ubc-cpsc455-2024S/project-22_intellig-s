@@ -38,7 +38,9 @@ const SurveyForm = ({ open, handleClose }) => {
     const newItinerary = {
       ...formValues,
     };
-    dispatch(generateItineraryAsync({itinerary: newItinerary, userId: user.id}));
+    dispatch(
+      generateItineraryAsync({ itinerary: newItinerary, userId: user.id })
+    );
     handleClose();
     setStep(1); // Reset to the first step
     setFormValues({
@@ -62,7 +64,7 @@ const SurveyForm = ({ open, handleClose }) => {
       }}
       PaperProps={{ sx: { width: "30%", height: "50%" } }}
     >
-      <DialogTitle>Add Itinerary</DialogTitle>
+      <DialogTitle textAlign={"center"}>Add Itinerary</DialogTitle>
       <DialogContent>
         {step === 1 && (
           <Box className="survey-step">
@@ -95,7 +97,7 @@ const SurveyForm = ({ open, handleClose }) => {
                 name="startDate"
                 views={["year", "month", "day"]}
                 disablePast
-                sx={{ px: 1, mb: 1 }}
+                sx={{ mb: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
@@ -115,10 +117,9 @@ const SurveyForm = ({ open, handleClose }) => {
                 }
                 maxDate={
                   formValues.startDate
-                    ? dayjs(formValues.startDate).add(5, "day")
+                    ? dayjs(formValues.startDate).add(4, "day")
                     : null
                 }
-                sx={{ px: 1 }}
                 onChange={(newDate) =>
                   setFormValues({
                     ...formValues,
