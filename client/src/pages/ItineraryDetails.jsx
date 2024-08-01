@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { AutoAwesome, CalendarMonth, RestartAlt } from "@mui/icons-material";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useDispatch, useSelector } from "react-redux";
 
 import ControlledMap from "../components/ControlledMap";
-import DayForm from "../components/DayForm";
 import DayList from "../components/DayList";
 import LoadingDialog from "../components/LoadingDialog";
 
@@ -24,7 +23,6 @@ const ItineraryDetails = () => {
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
   const [activeDay, setActiveDay] = useState(null);
-  const [addDayFormOpen, setAddDayFormOpen] = useState(false);
 
   useEffect(() => {
     const fetchDaysFromDB = async () => {
@@ -83,49 +81,57 @@ const ItineraryDetails = () => {
           </APIProvider>
         </Grid>
 
-        <Grid item xs={3} container sx={{ height: "100%", overflow: "auto" }}>
-          <Grid item xs={12} sx={{ p: 2 }}>
-            {itinerary && (
-              <Box sx={{ mb: 1 }}>
-                <Typography variant="h4" sx={{ fontWeight: "900" }}>
-                  {itinerary.location}
-                </Typography>
-                <Typography>
-                  {new Date(itinerary.startDate).toLocaleDateString()}
-                  {" - "}
-                  {new Date(itinerary.endDate).toLocaleDateString()}
-                </Typography>
-              </Box>
-            )}
-            <Button
-              variant="contained"
-              sx={{ mr: 1, mb: 1, pl: 1 }}
-              onClick={() => {
-                dispatch(generateNewDay({ itineraryId: id }))
-                  .unwrap()
-                  .then(() => {
-                    dispatch(incrementItineraryEndDate({ itineraryId: id }));
-                  });
-              }}
-            >
-              <AutoAwesome sx={{ mr: 0.75 }} />
-              Generate New Day
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{ mr: 1, mb: 1, pl: 1 }}
-              onClick={() => {
-                window.open(
-                  `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${id}`
-                );
-              }}
-            >
-              <CalendarMonth sx={{ mr: 0.75 }} />
-              Add to Calendar
-            </Button>
+        <Grid
+          item
+          xs={3}
+          container
+          spacing={2}
+          sx={{ height: "100%", overflow: "auto", p: 2 }}
+        >
+          <Grid item xs={12}>
+            <Card variant="outlined" sx={{ p: 3 }}>
+              {itinerary && (
+                <>
+                  <Typography variant="h4" sx={{ fontWeight: "900" }}>
+                    {itinerary.location}
+                  </Typography>
+                  <Typography>
+                    {new Date(itinerary.startDate).toLocaleDateString()}
+                    {" - "}
+                    {new Date(itinerary.endDate).toLocaleDateString()}
+                  </Typography>
+                </>
+              )}
+              <Button
+                variant="contained"
+                sx={{ mr: 1, mb: 1, pl: 1 }}
+                onClick={() => {
+                  dispatch(generateNewDay({ itineraryId: id }))
+                    .unwrap()
+                    .then(() => {
+                      dispatch(incrementItineraryEndDate({ itineraryId: id }));
+                    });
+                }}
+              >
+                <AutoAwesome sx={{ mr: 0.75 }} />
+                Generate New Day
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ mr: 1, mb: 1, pl: 1 }}
+                onClick={() => {
+                  window.open(
+                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${id}`
+                  );
+                }}
+              >
+                <CalendarMonth sx={{ mr: 0.75 }} />
+                Add to Calendar
+              </Button>
+            </Card>
           </Grid>
 
-          <Grid item xs={12} sx={{ px: 2 }}>
+          <Grid item xs={12}>
             {days && (
               <DayList
                 itineraryId={id}
@@ -137,11 +143,6 @@ const ItineraryDetails = () => {
         </Grid>
       </Grid>
 
-      <DayForm
-        itineraryId={id}
-        open={addDayFormOpen}
-        handleClose={() => setAddDayFormOpen(false)}
-      />
       <LoadingDialog isOpen={dayStatus === "generating"}>
         Generating...
       </LoadingDialog>
