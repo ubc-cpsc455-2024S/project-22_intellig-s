@@ -11,6 +11,7 @@ import {
   ToggleButton,
   OutlinedInput,
   Card,
+  useMediaQuery,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
@@ -66,9 +67,12 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
     handleClose();
   };
 
+  const xs = useMediaQuery("(min-width:600px)");
+
   const renderButtonGroup = (field, options) => {
     return (
       <ToggleButtonGroup
+        orientation={`${xs ? `horizontal` : `vertical`}`}
         value={formValues[field]}
         onChange={(event, newValue) => {
           setFormValues({ ...formValues, [field]: newValue });
@@ -83,9 +87,10 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
             sx={{
               transition: "300ms",
               "&.MuiToggleButtonGroup-grouped": {
-                borderRadius: "4px !important",
-                mx: 1,
-                border: "1px solid lightgrey !important",
+                borderRadius: "4px",
+                mx: { xs: 0, sm: 0.5 },
+                my: { xs: 0.5, sm: 0 },
+                border: "1px solid lightgrey",
               },
               "&.Mui-selected": {
                 color: "#fff",
