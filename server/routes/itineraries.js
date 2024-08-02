@@ -232,10 +232,9 @@ router.post("/:userId", async function (req, res, next) {
         imageUrl: dayImageUrl,
         activities: activities,
       });
+      await newDay.save();
 
       dayDate.setDate(dayDate.getDate() + 1);
-
-      await newDay.save();
       index++;
     }
 

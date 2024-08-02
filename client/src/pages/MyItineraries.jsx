@@ -24,7 +24,7 @@ const MyItineraries = () => {
       <Box sx={{ pt: "64px", height: "100vh", width: "100vw" }}>
         <Box sx={{ height: "100%", overflow: "auto", pt: 2 }}>
           <Container>
-            <Typography variant="h4" color="primary" gutterBottom>
+            <Typography variant="h4" color="primary" fontWeight={800}>
               My Itineraries
             </Typography>
 
