@@ -11,8 +11,7 @@ import {
 import parse from "autosuggest-highlight/parse";
 import { debounce } from "@mui/material/utils";
 
-import SearchIcon from "@mui/icons-material/Search";
-import PublicIcon from "@mui/icons-material/Public";
+import { Search, Public } from "@mui/icons-material";
 import { useEffect, useMemo, useState, useRef } from "react";
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -134,10 +133,10 @@ function SearchBar({ handleChange }) {
               backgroundColor: "#FFF",
               paddingRight: "6px",
             },
-            startAdornment: <PublicIcon />,
-            endAdornment: <SearchIcon />,
+            startAdornment: <Public />,
+            endAdornment: <Search />,
           }}
-          placeholder="Search"
+          placeholder="Search cities..."
         />
       )}
       renderOption={(props, option) => {

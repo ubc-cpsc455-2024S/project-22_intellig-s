@@ -27,7 +27,16 @@ const MyItineraries = () => {
             <Card variant="outlined" sx={{ p: { xs: 2, md: 4 } }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography variant="h3" color="primary" fontWeight={800}>
+                  <Typography
+                    sx={{
+                      typography: {
+                        xs: { fontSize: 35, fontWeight: 700 },
+                        sm: { fontSize: 40, fontWeight: 800 },
+                      },
+                    }}
+                    color="primary"
+                    fontWeight={800}
+                  >
                     My Itineraries
                   </Typography>
                 </Grid>

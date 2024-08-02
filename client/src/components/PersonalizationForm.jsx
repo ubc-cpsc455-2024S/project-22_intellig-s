@@ -72,7 +72,7 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
   const renderButtonGroup = (field, options) => {
     return (
       <ToggleButtonGroup
-        orientation={`${xs ? `horizontal` : `vertical`}`}
+        orientation={xs ? `horizontal` : `vertical`}
         value={formValues[field]}
         onChange={(event, newValue) => {
           setFormValues({ ...formValues, [field]: newValue });
@@ -87,10 +87,9 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
             sx={{
               transition: "300ms",
               "&.MuiToggleButtonGroup-grouped": {
-                borderRadius: "4px",
-                mx: { xs: 0, sm: 0.5 },
-                my: { xs: 0.5, sm: 0 },
-                border: "1px solid lightgrey",
+                borderRadius: "4px !important",
+                border: "1px solid lightgrey !important",
+                m: 0.5,
               },
               "&.Mui-selected": {
                 color: "#fff",

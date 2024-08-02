@@ -83,22 +83,23 @@ function UserDetails({
           variant="h3"
           fontWeight={800}
           sx={{
-            textAlign: {
-              xs: "center",
-              sm: "left",
+            typography: {
+              xs: { textAlign: "center", fontSize: 35, fontWeight: 700 },
+              sm: { textAlign: "left" },
+              md: { fontSize: 40, fontWeight: 800 },
             },
           }}
         >
           {`${user.firstName} ${user.lastName}`}
         </Typography>
         <Typography
-          variant="h6"
           fontWeight={500}
           fontStyle={"italic"}
           sx={{
             typography: {
-              xs: { textAlign: "center" },
+              xs: { textAlign: "center", fontSize: 18 },
               sm: { textAlign: "left" },
+              md: { fontSize: 20 },
             },
           }}
         >
@@ -242,7 +243,15 @@ function EditUserForm({ user }) {
     <Grid container spacing={2}>
       <Grid item xs={0} md={3} />
       <Grid item xs={12} md={6}>
-        <Typography sx={{ textAlign: "center" }} variant="h4" fontWeight={900}>
+        <Typography
+          sx={{
+            typography: {
+              xs: { fontSize: 30, fontWeight: 800 },
+              md: { fontSize: 40, fontWeight: 900 },
+              textAlign: "center",
+            },
+          }}
+        >
           User Information
         </Typography>
       </Grid>
@@ -370,14 +379,18 @@ function UserProfile() {
           <Container sx={{ mt: 4 }}>
             <Card
               variant="outlined"
-              sx={{ width: "100%", mt: 4, px: { xs: 4, md: 7 }, pt: 4, pb: 7 }}
+              sx={{ width: "100%", mt: 4, px: { xs: 2, md: 7 }, pt: 4, pb: 7 }}
             >
               <Grid container spacing={4} sx={{ textAlign: "left" }}>
                 <Grid item xs={12}>
                   <Typography
-                    variant="h3"
-                    fontWeight={900}
-                    textAlign={"center"}
+                    sx={{
+                      typography: {
+                        textAlign: "center",
+                        xs: { fontSize: 35, fontWeight: 900 },
+                        md: { fontSize: 45, fontWeight: 900 },
+                      },
+                    }}
                   >
                     Settings
                   </Typography>
