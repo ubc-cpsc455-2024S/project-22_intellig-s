@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Card,
+  Container,
   Grid,
   List,
   ListItem,
@@ -92,21 +93,25 @@ const Signup = () => {
 
   return (
     <Box sx={{ height: "100vh", width: "100vw", pt: "64px" }}>
-      <Box
-        sx={{
-          pt: 6,
-          position: "relative",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "450px",
-        }}
-      >
-        <Card variant="outlined" sx={{ width: "100%", px: 7, py: 5 }}>
-          <Typography variant={"h3"} fontWeight={900} sx={{ mb: 4 }}>
+      <Container sx={{ pt: 6 }} maxWidth={"xs"}>
+        <Card
+          variant="outlined"
+          sx={{ width: "100%", px: { xs: 3, sm: 4 }, py: 5 }}
+        >
+          <Typography
+            sx={{
+              typography: {
+                fontWeight: 900,
+                xs: { fontSize: 30 },
+                sm: { fontSize: 45 },
+              },
+              mb: 4,
+            }}
+          >
             Sign-up
           </Typography>
           <Grid container spacing={1}>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 type="text"
                 name="firstName"
@@ -118,7 +123,7 @@ const Signup = () => {
                 helperText={formErrors.firstName}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 type="text"
                 name="lastName"
@@ -199,7 +204,7 @@ const Signup = () => {
             </Grid>
           </Grid>
         </Card>
-      </Box>
+      </Container>
     </Box>
   );
 };

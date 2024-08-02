@@ -1,7 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 
 const Login = () => {
@@ -54,17 +62,21 @@ const Login = () => {
         pt: "64px",
       }}
     >
-      <Box
-        sx={{
-          pt: 6,
-          position: "relative",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "450px",
-        }}
-      >
-        <Card variant="outlined" sx={{ width: "100%", px: 7, py: 5 }}>
-          <Typography variant={"h3"} fontWeight={900} sx={{ mb: 4 }}>
+      <Container sx={{ pt: 6 }} maxWidth={"xs"}>
+        <Card
+          variant="outlined"
+          sx={{ width: "100%", px: { xs: 3, sm: 4 }, py: 5 }}
+        >
+          <Typography
+            sx={{
+              typography: {
+                fontWeight: 900,
+                xs: { fontSize: 30 },
+                sm: { fontSize: 45 },
+              },
+              mb: 4,
+            }}
+          >
             Login
           </Typography>
           <Grid container spacing={1}>
@@ -118,7 +130,7 @@ const Login = () => {
             </Grid>
           </Grid>
         </Card>
-      </Box>
+      </Container>
     </Box>
   );
 };

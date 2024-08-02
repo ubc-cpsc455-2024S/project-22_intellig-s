@@ -78,19 +78,19 @@ const Home = () => {
                   sx={{
                     typography: {
                       fontWeight: 600,
-                      xs: { fontSize: 60, textAlign: "center" },
+                      xs: { fontSize: 40, textAlign: "center" },
                       md: { fontSize: 80, textAlign: "left" },
                     },
                   }}
                   color="primary"
                 >
-                  Your Perfect Journey, Crafted by AI{" "}
+                  Your Perfect Journey, Crafted by AI
                 </Typography>
                 <Typography
                   sx={{
                     typography: {
                       fontWeight: "200",
-                      xs: { fontSize: 30, textAlign: "center" },
+                      xs: { fontSize: 15, textAlign: "center" },
                       md: { fontSize: 30, textAlign: "left" },
                     },
                     textAlign: "left",
@@ -112,22 +112,22 @@ const Home = () => {
               >
                 <Logo />
               </Grid>
-            </Grid>
-          </Container>
-          <Typography variant="h4" color="secondary">
-            Explore
-          </Typography>
-          <Container sx={{ mt: 5 }}>
-            <Grid container spacing={4}>
-              {itineraries.map((itinerary) => (
-                <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-                  <ItineraryCard
-                    itinerary={itinerary}
-                    onDelete={handleDeleteItinerary}
-                    onOpen={openDetails}
-                  />
+              <Grid item xs={12}>
+                <Typography variant="h4" color="secondary">
+                  Explore
+                </Typography>
+                <Grid container spacing={4}>
+                  {itineraries.map((itinerary) => (
+                    <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
+                      <ItineraryCard
+                        itinerary={itinerary}
+                        onDelete={handleDeleteItinerary}
+                        onOpen={openDetails}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
+              </Grid>
             </Grid>
           </Container>
         </Box>

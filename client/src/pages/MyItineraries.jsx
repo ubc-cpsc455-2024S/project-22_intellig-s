@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Typography, Grid, Button, Box, Container } from "@mui/material";
+import { Typography, Grid, Button, Box, Container, Card } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import SurveyForm from "../components/SurveyForm";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,41 +20,61 @@ const MyItineraries = () => {
   }, [dispatch, userId]);
 
   return (
-    <Box sx={{ position: "absolute", top: 0, left: 0 }}>
+    <Box>
       <Box sx={{ pt: "64px", height: "100vh", width: "100vw" }}>
         <Box sx={{ height: "100%", overflow: "auto", pt: 2 }}>
-          <Container>
-            <Typography variant="h4" color="primary" fontWeight={800}>
-              My Itineraries
-            </Typography>
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setFormOpen(true)}
-              sx={{
-                mb: 2,
-              }}
-            >
-              Add Itinerary
-            </Button>
-
-            <Grid container spacing={2} sx={{ mb: 10 }}>
-              {itineraries.map((itinerary) => (
-                <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-                  <ItineraryCard itinerary={itinerary} />
+          <Container sx={{ mb: 2 }}>
+            <Card variant="outlined" sx={{ p: { xs: 2, md: 4 } }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography
+                    sx={{
+                      typography: {
+                        xs: { fontSize: 35, fontWeight: 700 },
+                        sm: { fontSize: 40, fontWeight: 800 },
+                      },
+                    }}
+                    color="primary"
+                    fontWeight={800}
+                  >
+                    My Itineraries
+                  </Typography>
                 </Grid>
-              ))}
-            </Grid>
+                <Grid
+                  item
+                  sm={1}
+                  md={3}
+                  display={{ xs: "none", sm: "block" }}
+                />
+                <Grid item xs={12} sm={10} md={6}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={() => setFormOpen(true)}
+                  >
+                    Add Itinerary
+                  </Button>
+                </Grid>
+                <Grid
+                  item
+                  sm={1}
+                  md={3}
+                  display={{ xs: "none", sm: "block" }}
+                />
 
-            <SurveyForm
-              open={formOpen}
-              handleClose={() => setFormOpen(false)}
-            />
-            <LoadingDialog isOpen={itineraryStatus === "generating"}>
-              Generating...
-            </LoadingDialog>
+                {itineraries.map((itinerary) => (
+                  <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
+                    <ItineraryCard itinerary={itinerary} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Card>
           </Container>
+          <SurveyForm open={formOpen} handleClose={() => setFormOpen(false)} />
+          <LoadingDialog isOpen={itineraryStatus === "generating"}>
+            Generating...
+          </LoadingDialog>
         </Box>
       </Box>
     </Box>

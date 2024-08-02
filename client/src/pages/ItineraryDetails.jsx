@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Button, Card, Grid, Typography } from "@mui/material";
-import { AutoAwesome, CalendarMonth, RestartAlt } from "@mui/icons-material";
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { APIProvider } from "@vis.gl/react-google-maps";
 import { useDispatch, useSelector } from "react-redux";
+
+import { Box, Button, Card, Fab, Grid, Typography } from "@mui/material";
+import {
+  AutoAwesome,
+  CalendarMonth,
+  PictureAsPdf,
+  Place,
+  RestartAlt,
+} from "@mui/icons-material";
+
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 import ControlledMap from "../components/ControlledMap";
 import DayList from "../components/DayList";
@@ -24,6 +31,8 @@ const ItineraryDetails = () => {
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
   const [activeDay, setActiveDay] = useState(null);
+
+  const [mapMode, setMapMode] = useState(false);
 
   useEffect(() => {
     const fetchDaysFromDB = async () => {
@@ -54,9 +63,20 @@ const ItineraryDetails = () => {
     : [];
 
   return (
-    <Box sx={{ position: "absolute", top: 0, left: 0, height: "100vh" }}>
+    <Box sx={{ height: "100vh", width: "100vw" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
-        <Grid item xs={9} sx={{ width: "74vw", height: "100%" }}>
+        <Grid
+          item
+          xs={12}
+          md={9}
+          sx={{
+            height: "100%",
+            display: {
+              xs: mapMode ? "block" : "none",
+              md: "block",
+            },
+          }}
+        >
           <APIProvider
             apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             libraries={["places"]}
@@ -69,7 +89,7 @@ const ItineraryDetails = () => {
                 resetButton={
                   <Button
                     variant="contained"
-                    sx={{ m: 2, pl: 1 }}
+                    sx={{ display: { xs: "none", md: "flex" }, m: 2, pl: 1 }}
                     onClick={() => setActiveDay(null)}
                     disabled={!activeDay}
                   >
@@ -84,13 +104,20 @@ const ItineraryDetails = () => {
 
         <Grid
           item
-          xs={3}
-          container
-          spacing={2}
-          sx={{ height: "100%", overflow: "auto", p: 2 }}
+          xs={12}
+          md={3}
+          sx={{
+            height: "100%",
+            overflow: "auto",
+            p: 2,
+            display: {
+              xs: mapMode ? "none" : "block",
+              md: "block",
+            },
+          }}
         >
           <Grid item xs={12}>
-            <Card variant="outlined" sx={{ p: 3 }}>
+            <Card variant="outlined" sx={{ p: 3, mb: 2 }}>
               {itinerary && (
                 <>
                   <Typography variant="h4" sx={{ fontWeight: "900" }}>
@@ -130,17 +157,17 @@ const ItineraryDetails = () => {
                 Add to Calendar
               </Button>
               <Button
-            variant="outlined"
-            sx={{ mr: 1, mb: 1, pl: 1 }}
-            onClick={() => {
-              window.open(
-                `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${id}`
-              );
-            }}
-            >
-              <PictureAsPdfIcon sx={{mr: 0.75}}/>
-              Save as PDF
-            </Button>
+                variant="outlined"
+                sx={{ mr: 1, mb: 1, pl: 1 }}
+                onClick={() => {
+                  window.open(
+                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${id}`
+                  );
+                }}
+              >
+                <PictureAsPdf sx={{ mr: 0.75 }} />
+                Save as PDF
+              </Button>
             </Card>
           </Grid>
 
@@ -159,6 +186,66 @@ const ItineraryDetails = () => {
       <LoadingDialog isOpen={dayStatus === "generating"}>
         Generating...
       </LoadingDialog>
+
+      {/* Mobile buttons */}
+      <Fab
+        variant="extended"
+        size="medium"
+        disabled={activeDay === null}
+        sx={{
+          display: { xs: mapMode ? "flex" : "none", md: "none" },
+          position: "fixed",
+          bottom: 100,
+          right: 10,
+          backgroundColor: "white",
+          color: "primary.main",
+          border: "2px solid",
+        }}
+        onClick={() => setActiveDay(null)}
+      >
+        Reset Markers
+      </Fab>
+      <Fab
+        variant="extended"
+        size="medium"
+        sx={{
+          display: { xs: mapMode ? "flex" : "none", md: "none" },
+          position: "fixed",
+          bottom: 55,
+          right: 10,
+          backgroundColor: "white",
+          color: "primary.main",
+          border: "2px solid",
+          pl: 1,
+        }}
+        onClick={() =>
+          setActiveDay(() => {
+            if (activeDay === null) return 1;
+            const currentIndex = days.findIndex(
+              (day) => day.dayNumber === activeDay
+            );
+            if (days[currentIndex + 1]) return days[currentIndex + 1].dayNumber;
+            return 1;
+          })
+        }
+      >
+        <Place sx={{ mr: 1, ml: 0 }} />
+        {activeDay ? `Day: ${activeDay}` : "Day: All Days"}
+      </Fab>
+      <Fab
+        variant="extended"
+        size="medium"
+        color="primary"
+        sx={{
+          display: { xs: "block", md: "none" },
+          position: "fixed",
+          bottom: 10,
+          right: 10,
+        }}
+        onClick={() => setMapMode(!mapMode)}
+      >
+        {mapMode ? `View List` : `View Map`}
+      </Fab>
     </Box>
   );
 };

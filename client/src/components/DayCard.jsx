@@ -55,7 +55,7 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
 
         <Button
           variant="contained"
-          sx={{ my: 1, pl: 1 }}
+          sx={{ display: { xs: "none", md: "flex" }, my: 1, pl: 1 }}
           onClick={() => setActiveDay(day.dayNumber)}
         >
           <Place sx={{ mr: 0.75 }} />

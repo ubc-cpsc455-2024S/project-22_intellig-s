@@ -67,7 +67,7 @@ const itinerarySlice = createSlice({
       })
       .addCase(generateItineraryAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.itineraryList.push(action.payload);
+        state.itineraryList.unshift(action.payload);
       })
       .addCase(deleteItineraryAsync.fulfilled, (state, action) => {
         const membersList = state.itineraryList;

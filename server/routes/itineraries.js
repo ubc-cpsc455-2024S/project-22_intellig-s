@@ -40,7 +40,7 @@ router.get("/:userId", async function (req, res, next) {
   }
 
   try {
-    res.send(await Itinerary.find({ userId: userId }));
+    res.send(await Itinerary.find({ userId: userId }).sort({ $natural: -1 }));
   } catch (e) {
     res
       .status(500)

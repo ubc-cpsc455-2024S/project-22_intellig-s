@@ -28,7 +28,8 @@ function UserDetails({
 }) {
   return (
     <Grid item container xs={12} spacing={4}>
-      <Grid item xs={3}>
+      <Grid item xs={2} display={{ sm: "none" }} />
+      <Grid item xs={8} sm={3}>
         <Box
           sx={{
             position: "relative",
@@ -53,7 +54,7 @@ function UserDetails({
                 sx={{
                   borderRadius: "100%",
                   aspectRatio: 1,
-                  p: 2,
+                  p: { xs: 1, md: 2 },
                   minWidth: "0",
                 }}
                 onClick={setUploadImageDialogOpen}
@@ -75,15 +76,41 @@ function UserDetails({
           </Badge>
         </Box>
       </Grid>
-      <Grid item xs={8} sx={{ alignContent: "center" }}>
-        <Typography variant="h3" fontWeight={800}>
+      <Grid item xs={2} display={{ sm: "none" }} />
+
+      <Grid item xs={12} sm={9} sx={{ alignContent: "center" }}>
+        <Typography
+          variant="h3"
+          fontWeight={800}
+          sx={{
+            typography: {
+              xs: { textAlign: "center", fontSize: 35, fontWeight: 700 },
+              sm: { textAlign: "left" },
+              md: { fontSize: 40, fontWeight: 800 },
+            },
+          }}
+        >
           {`${user.firstName} ${user.lastName}`}
         </Typography>
-        <Typography variant="h6" fontWeight={500} fontStyle={"italic"}>
+        <Typography
+          fontWeight={500}
+          fontStyle={"italic"}
+          sx={{
+            typography: {
+              xs: { textAlign: "center", fontSize: 18 },
+              sm: { textAlign: "left" },
+              md: { fontSize: 20 },
+            },
+          }}
+        >
           {user.username}
         </Typography>
-        <Grid item xs={6} sx={{ mt: 2 }}>
-          <Button variant="contained" onClick={setPersonalizeFormOpen}>
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          <Button
+            sx={{ width: { xs: "100%", sm: "auto" } }}
+            variant="contained"
+            onClick={setPersonalizeFormOpen}
+          >
             Edit Travel Preferences
           </Button>
         </Grid>
@@ -214,35 +241,51 @@ function EditUserForm({ user }) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3} />
-      <Grid item xs={6}>
-        <Typography sx={{ textAlign: "center" }} variant="h4" fontWeight={900}>
+      <Grid item xs={0} md={3} />
+      <Grid item xs={12} md={6}>
+        <Typography
+          sx={{
+            typography: {
+              xs: { fontSize: 30, fontWeight: 800 },
+              md: { fontSize: 40, fontWeight: 900 },
+              textAlign: "center",
+            },
+          }}
+        >
           User Information
         </Typography>
       </Grid>
-      <Grid item xs={3} textAlign={"right"}>
+      <Grid item container spacing={1} xs={12} md={3} textAlign={"right"}>
         {editMode ? (
           <>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setFormValues(user);
-                setEditMode(false);
-              }}
-              sx={{ mr: 1 }}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={() => onSubmit()}>
-              Confirm
-            </Button>
+            <Grid item xs={12} md={6}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setFormValues(user);
+                  setEditMode(false);
+                }}
+                sx={{ width: { xs: "100%", md: "auto" } }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Button
+                variant="contained"
+                onClick={() => onSubmit()}
+                sx={{ width: { xs: "100%", md: "auto" } }}
+              >
+                Confirm
+              </Button>
+            </Grid>
           </>
         ) : (
           <Grid item xs={12}>
             <Button
               variant="outlined"
               onClick={() => setEditMode(true)}
-              sx={{ pl: 1.75 }}
+              sx={{ pl: 1.75, width: { xs: "100%", md: "auto" } }}
             >
               <Edit sx={{ mr: 1 }} />
               Edit
@@ -250,7 +293,7 @@ function EditUserForm({ user }) {
           </Grid>
         )}
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="First Name"
           name="firstName"
@@ -265,7 +308,7 @@ function EditUserForm({ user }) {
           helperText={formErrors.firstName}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Last Name"
           name="lastName"
@@ -280,7 +323,7 @@ function EditUserForm({ user }) {
           helperText={formErrors.lastName}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Email"
           name="email"
@@ -297,7 +340,7 @@ function EditUserForm({ user }) {
           }
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <TextField
           label="Username"
           name="username"
@@ -336,14 +379,18 @@ function UserProfile() {
           <Container sx={{ mt: 4 }}>
             <Card
               variant="outlined"
-              sx={{ width: "100%", mt: 4, px: 7, pt: 4, pb: 7 }}
+              sx={{ width: "100%", mt: 4, px: { xs: 2, md: 7 }, pt: 4, pb: 7 }}
             >
               <Grid container spacing={4} sx={{ textAlign: "left" }}>
                 <Grid item xs={12}>
                   <Typography
-                    variant="h3"
-                    fontWeight={900}
-                    textAlign={"center"}
+                    sx={{
+                      typography: {
+                        textAlign: "center",
+                        xs: { fontSize: 35, fontWeight: 900 },
+                        md: { fontSize: 45, fontWeight: 900 },
+                      },
+                    }}
                   >
                     Settings
                   </Typography>
