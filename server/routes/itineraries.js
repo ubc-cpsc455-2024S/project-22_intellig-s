@@ -3,6 +3,9 @@ var router = express.Router();
 const { v4: uuid } = require("uuid");
 const ics = require("ics");
 
+const path = require("path");
+const pupeteer = require("puppeteer");
+
 const Itinerary = require("../models/itineraryModel");
 const Day = require("../models/dayModel");
 const User = require("../models/userModel");
@@ -85,6 +88,92 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
       })
       .status(200)
       .send(cal.value);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+router.get("/pdf/:itineraryId", async (req, res, next) => {
+  const itineraryId = req.params.itineraryId;
+  try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    const days = await Day.find({ parentItineraryId: itineraryId });
+    const itineraryLocation = itinerary.location;
+
+    const diffTime = Math.abs(
+      new Date(itinerary.endDate) - new Date(itinerary.startDate)
+    );
+    const welcomeMessage = `Welcome to your ${
+      Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1
+    }-day getaway`;
+
+    const dayComponents = days
+      .map((day) => {
+        return `
+      <article id="intro">
+        <h2 class="major">Day ${day.dayNumber}</h2>
+        <span style="display: flex; justify-content: center; align-items: center;"><img src="${
+          day.imageUrl
+        }" alt="" height="200" width="200"/></span>
+        </br>
+        <ol>
+        ${day.activities
+          .map((activity) => {
+            return `
+          <li>
+            ${activity.activity}
+            <ul>
+              <li>${activity.time}</li>
+              <li>${activity.address}</li>
+            </ul>
+          </li>
+          `;
+          })
+          .join("\n")}
+        </ol>
+      </article>
+      `;
+      })
+      .join("\n");
+
+    const browser = await pupeteer.launch();
+    const page = await browser.newPage();
+
+    const filePath = path.resolve(__dirname, "..", "pdf", "index.html");
+    await page.goto(`file://${filePath}`, { waitUntil: "domcontentloaded" });
+
+    await page.evaluate(
+      (location, welcome, days) => {
+        console.log("here");
+        const locationElement = document.getElementById("itinerary-location");
+        if (locationElement) locationElement.textContent = location;
+
+        const welcomeElement = document.getElementById("itinerary-welcome");
+        welcomeElement.textContent = welcome;
+
+        const mainElement = document.getElementById("main");
+        mainElement.innerHTML = days;
+      },
+      itineraryLocation,
+      welcomeMessage,
+      dayComponents
+    );
+
+    await page.emulateMediaType("screen");
+
+    const pdfBuffer = await page.pdf({
+      printBackground: true,
+      format: "letter",
+    });
+    await browser.close();
+
+    return res
+      .set({
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=itinerary.pdf`,
+      })
+      .status(200)
+      .send(pdfBuffer);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

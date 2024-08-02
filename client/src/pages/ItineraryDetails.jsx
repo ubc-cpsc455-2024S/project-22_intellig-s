@@ -6,6 +6,7 @@ import { Box, Button, Card, Fab, Grid, Typography } from "@mui/material";
 import {
   AutoAwesome,
   CalendarMonth,
+  PictureAsPdf,
   Place,
   RestartAlt,
 } from "@mui/icons-material";
@@ -154,6 +155,18 @@ const ItineraryDetails = () => {
               >
                 <CalendarMonth sx={{ mr: 0.75 }} />
                 Add to Calendar
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ mr: 1, mb: 1, pl: 1 }}
+                onClick={() => {
+                  window.open(
+                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${id}`
+                  );
+                }}
+              >
+                <PictureAsPdf sx={{ mr: 0.75 }} />
+                Save as PDF
               </Button>
             </Card>
           </Grid>
