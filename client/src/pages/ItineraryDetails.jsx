@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { AutoAwesome, CalendarMonth, RestartAlt } from "@mui/icons-material";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -128,6 +129,18 @@ const ItineraryDetails = () => {
                 <CalendarMonth sx={{ mr: 0.75 }} />
                 Add to Calendar
               </Button>
+              <Button
+            variant="outlined"
+            sx={{ mr: 1, mb: 1, pl: 1 }}
+            onClick={() => {
+              window.open(
+                `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${id}`
+              );
+            }}
+            >
+              <PictureAsPdfIcon sx={{mr: 0.75}}/>
+              Save as PDF
+            </Button>
             </Card>
           </Grid>
 
