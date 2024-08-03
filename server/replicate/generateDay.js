@@ -1,10 +1,12 @@
 const replicate = require("./replicate");
+const preferencesToLanguage = require("../utils/preferencesUtils");
 
-async function generateDay(location, activities) {
+async function generateDay(location, activities, preferences) {
+  const preferences_string = preferencesToLanguage(preferences);
   const input = {
     top_k: 0,
     top_p: 0.95,
-    prompt: `give me a plan for a day in ${location} with four activities. make sure the day does not include this list of activities: ${activities}`,
+    prompt: `give me a plan for a day in ${location} with four activities${preferences_string}. make sure the day does not include this list of activities: ${activities}`,
     max_tokens: 2000,
     temperature: 0.7,
     system_prompt: `Please only respond with JSON format text, I do not want any extra text and only want to see JSON text that I can take into a javascript application. The format should be as follows:
