@@ -181,9 +181,8 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
           </FormQuestion>
           <FormQuestion>
             <Typography>Budget per day (USD):</Typography>
-            <Grid container alignContent="center">
-              <Grid item xs={1} />
-              <Grid item xs={8} sx={{ alignContent: "center" }}>
+            <Grid container alignContent="center" justifyContent="center">
+              <Grid item xs={10} sx={{ alignContent: "center" }}>
                 <Slider
                   value={formValues.budget ? Number(formValues.budget) : 100}
                   name="budget"

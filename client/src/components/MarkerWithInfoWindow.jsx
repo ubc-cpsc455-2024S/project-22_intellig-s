@@ -7,7 +7,8 @@ import {
 } from "@vis.gl/react-google-maps";
 
 import PropType from "prop-types";
-import { Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 export function MarkerWithInfoWindow({
   position,
@@ -21,7 +22,7 @@ export function MarkerWithInfoWindow({
     <>
       <AdvancedMarker
         ref={markerRef}
-        onClick={() => setInfoWindowOpen(true)}
+        onClick={() => setInfoWindowOpen(!infoWindowOpen)}
         position={position}
         title={"AdvancedMarker that opens an Infowindow when clicked."}
       >
@@ -34,10 +35,22 @@ export function MarkerWithInfoWindow({
       {infoWindowOpen && (
         <InfoWindow
           anchor={marker}
-          maxWidth={300}
           onCloseClick={() => setInfoWindowOpen(false)}
+          headerDisabled
         >
-          <Typography>{infoWindowContent}</Typography>
+          <Grid container spacing={0.5} sx={{ px: 1, overflow: "hidden" }}>
+            <Grid item xs={11}>
+              <Typography>{infoWindowContent}</Typography>
+            </Grid>
+            <Grid item xs={1} sx={{ alignContent: "center" }}>
+              <IconButton
+                sx={{ width: 22, height: 22 }}
+                onClick={() => setInfoWindowOpen(false)}
+              >
+                <Close sx={{ width: 22, height: 22 }} />
+              </IconButton>
+            </Grid>
+          </Grid>
         </InfoWindow>
       )}
     </>

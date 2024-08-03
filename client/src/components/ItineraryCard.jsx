@@ -31,7 +31,8 @@ function ItineraryCard({ itinerary }) {
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
       >
         <Typography noWrap={true} variant="h5" fontWeight={500}>
-          {itinerary.location}
+          {/* exclude country from location to maintain clean look */}
+          {`${itinerary.location.split(",").slice(0, -1).join(",")}`}
         </Typography>
         <Typography noWrap={true} fontSize={"0.9em"}>
           {new Date(itinerary.startDate).getMonth() ===
