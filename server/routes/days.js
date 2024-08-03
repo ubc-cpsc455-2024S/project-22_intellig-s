@@ -8,6 +8,7 @@ const generateDay = require("../replicate/generateDay");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
+const debugJson = require("../replicate/debugJson");
 
 async function retry(maxRetries, fn) {
   return await fn().catch(function (err) {
@@ -107,11 +108,19 @@ router.post("/generate", async (req, res) => {
       .map((day) => day.activities.map((activity) => activity.activity))
       .flat();
 
-    const aiResponse = await retry(3, async () =>
-      JSON.parse(
-        await generateDay(itinerary.location, currentActivities.join(", "))
-      )
-    );
+    const aiResponse = await retry(2, async () => {
+      const jsonString = await generateDay(
+        itinerary.location,
+        currentActivities.join(", ")
+      );
+
+      try {
+        return JSON.parse(jsonString);
+      } catch (e) {
+        console.log("debugging json");
+        return JSON.parse(await debugJson(jsonString));
+      }
+    });
 
     const imageUrl = await getImageFromSearch(
       `${aiResponse.activities[0].location}, ${itinerary.location}`

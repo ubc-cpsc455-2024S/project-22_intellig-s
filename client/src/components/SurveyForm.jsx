@@ -163,7 +163,7 @@ const SurveyForm = ({ open, handleClose }) => {
                     }
                     maxDate={
                       formValues.startDate
-                        ? dayjs(formValues.startDate).add(4, "day")
+                        ? dayjs(formValues.startDate).add(6, "day")
                         : null
                     }
                     onChange={(newDate) =>
