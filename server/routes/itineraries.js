@@ -12,6 +12,7 @@ const User = require("../models/userModel");
 
 const generateItinerary = require("../replicate/generateItinerary");
 const debugJson = require("../replicate/debugJson");
+
 const getImageFromSearch = require("../google/getImageFromSearch");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");

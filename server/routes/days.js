@@ -4,11 +4,13 @@ const { v4: uuid } = require("uuid");
 
 const Day = require("../models/dayModel"); // Import the Day model
 const Itinerary = require("../models/itineraryModel");
+
 const generateDay = require("../replicate/generateDay");
+const debugJson = require("../replicate/debugJson");
+
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
-const debugJson = require("../replicate/debugJson");
 
 async function retry(maxRetries, fn) {
   return await fn().catch(function (err) {
