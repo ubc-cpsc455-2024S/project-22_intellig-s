@@ -4,6 +4,7 @@ const { v4: uuid } = require("uuid");
 
 const Day = require("../models/dayModel"); // Import the Day model
 const Itinerary = require("../models/itineraryModel");
+const User = require("../models/userModel");
 const generateDay = require("../replicate/generateDay");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
@@ -95,10 +96,17 @@ router.put("/activities/reorder", async (req, res) => {
 
 router.post("/generate", async (req, res) => {
   const { itineraryId } = req.body;
+  let preferences = {};
 
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
     const days = await Day.find({ parentItineraryId: itineraryId });
+    if (itinerary.userId) {
+      const user = await User.findById(itinerary.userId);
+      if (user.preferences) {
+        preferences = user.preferences;
+      }
+    }
 
     const endDate = new Date(itinerary.endDate);
     const newDate = new Date(endDate).setDate(endDate.getDate() + 1);
@@ -109,7 +117,11 @@ router.post("/generate", async (req, res) => {
 
     const aiResponse = await retry(3, async () =>
       JSON.parse(
-        await generateDay(itinerary.location, currentActivities.join(", "))
+        await generateDay(
+          itinerary.location,
+          currentActivities.join(", "),
+          preferences
+        )
       )
     );
 
