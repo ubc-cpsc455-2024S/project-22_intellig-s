@@ -5,7 +5,10 @@ const { v4: uuid } = require("uuid");
 const Day = require("../models/dayModel"); // Import the Day model
 const Itinerary = require("../models/itineraryModel");
 const User = require("../models/userModel");
+
 const generateDay = require("../replicate/generateDay");
+const debugJson = require("../replicate/debugJson");
+
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
@@ -115,15 +118,20 @@ router.post("/generate", async (req, res) => {
       .map((day) => day.activities.map((activity) => activity.activity))
       .flat();
 
-    const aiResponse = await retry(3, async () =>
-      JSON.parse(
-        await generateDay(
-          itinerary.location,
-          currentActivities.join(", "),
-          preferences
-        )
-      )
-    );
+    const aiResponse = await retry(2, async () => {
+      const jsonString = await generateDay(
+        itinerary.location,
+        currentActivities.join(", "),
+        preferences
+      );
+
+      try {
+        return JSON.parse(jsonString);
+      } catch (e) {
+        console.log("debugging json");
+        return JSON.parse(await debugJson(jsonString));
+      }
+    });
 
     const imageUrl = await getImageFromSearch(
       `${aiResponse.activities[0].location}, ${itinerary.location}`

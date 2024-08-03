@@ -11,6 +11,8 @@ const Day = require("../models/dayModel");
 const User = require("../models/userModel");
 
 const generateItinerary = require("../replicate/generateItinerary");
+const debugJson = require("../replicate/debugJson");
+
 const getImageFromSearch = require("../google/getImageFromSearch");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
@@ -143,7 +145,7 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
     await page.goto(`file://${filePath}`, { waitUntil: "domcontentloaded" });
 
     await page.evaluate(
-      (location, welcome, days) => {
+      async (location, welcome, days) => {
         console.log("here");
         const locationElement = document.getElementById("itinerary-location");
         if (locationElement) locationElement.textContent = location;
@@ -153,6 +155,17 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
 
         const mainElement = document.getElementById("main");
         mainElement.innerHTML = days;
+
+        const images = Array.from(document.querySelectorAll("img"));
+        await Promise.all(
+          images.map((img) => {
+            if (img.complete) return;
+            return new Promise((resolve, reject) => {
+              img.addEventListener("load", resolve);
+              img.addEventListener("error", resolve);
+            });
+          })
+        );
       },
       itineraryLocation,
       welcomeMessage,
@@ -196,11 +209,21 @@ router.post("/:userId", async function (req, res, next) {
       .json({ message: "Error occurred connecting to the database" });
   }
   try {
-    const aiResponse = await retry(3, async () =>
-      JSON.parse(
-        await generateItinerary(location, startDate, endDate, preferences)
-      )
-    );
+    const aiResponse = await retry(2, async () => {
+      const jsonString = await generateItinerary(
+        location,
+        startDate,
+        endDate,
+        preferences
+      );
+
+      try {
+        return JSON.parse(jsonString);
+      } catch (e) {
+        console.log("debugging json");
+        return JSON.parse(await debugJson(jsonString));
+      }
+    });
 
     const itineraryId = uuid();
     const bounds = await getBoundsFromLocation(location);
