@@ -10,8 +10,11 @@ const actionTypes = {
 
 export const getItinerariesAsync = createAsyncThunk(
   actionTypes.GET_ITINERARIES,
-  async (userId) => {
-    return await itinerariesAPI.getItineraries(userId);
+  async (_, { getState }) => {
+    const {
+      auth: { token },
+    } = getState();
+    return await itinerariesAPI.getItineraries(token);
   }
 );
 

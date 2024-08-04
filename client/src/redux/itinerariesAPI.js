@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const addItinerary = async (itineraryPayload) => {
   const { itinerary, userId } = itineraryPayload;
   const response = await fetch(
@@ -40,14 +42,16 @@ const deleteItinerary = async (id) => {
   return id;
 };
 
-const getItineraries = async (userId) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${userId}`,
+const getItineraries = async (token) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries/`,
     {
-      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
-  return await response.json();
+  return await response.data;
 };
 
 export default {

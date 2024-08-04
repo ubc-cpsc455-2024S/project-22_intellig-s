@@ -17,6 +17,7 @@ const getImageFromSearch = require("../google/getImageFromSearch");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
+const { verifyToken } = require("../utils/jwtUtils");
 
 async function retry(maxRetries, fn) {
   return await fn().catch(function (err) {
@@ -29,8 +30,8 @@ async function retry(maxRetries, fn) {
 }
 
 /* GET itineraries listing. */
-router.get("/:userId", async function (req, res, next) {
-  const { userId } = req.params;
+router.get("/", verifyToken, async function (req, res, next) {
+  const userId = req.user.id;
 
   try {
     const user = await User.findById(userId);

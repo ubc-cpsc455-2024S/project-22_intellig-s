@@ -20,8 +20,6 @@ import UserProfile from "./pages/UserProfile";
 import theme from "./theme";
 import "./App.css";
 
-import { jwtDecode } from "jwt-decode";
-
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -35,8 +33,7 @@ const App = () => {
           .unwrap()
           .then(() => {
             if (token) {
-              const decodedUser = jwtDecode(token);
-              dispatch(getItinerariesAsync(decodedUser.id));
+              dispatch(getItinerariesAsync());
             }
           });
       }
