@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,9 @@ const Login = () => {
     if (validateForm())
       dispatch(
         login({ username: formValues.username, password: formValues.password })
-      );
+      )
+        .unwrap()
+        .then(() => dispatch(getItinerariesAsync()));
   };
 
   return (

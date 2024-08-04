@@ -51,7 +51,7 @@ router.get("/", verifyToken, async function (req, res, next) {
   }
 });
 
-router.get("/cal/:itineraryId", async (req, res, next) => {
+router.get("/cal/:itineraryId", verifyToken, async (req, res, next) => {
   const itineraryId = req.params.itineraryId;
 
   try {
@@ -87,7 +87,6 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
     return res
       .set({
         "Content-Type": "text/calendar",
-        "Content-Disposition": `attachment; filename="itinerary.ics"`,
       })
       .status(200)
       .send(cal.value);

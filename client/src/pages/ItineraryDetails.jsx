@@ -18,7 +18,10 @@ import DayList from "../components/DayList";
 import LoadingDialog from "../components/LoadingDialog";
 
 import { fetchDays, generateNewDay } from "../redux/daySlice";
-import { incrementItineraryEndDate } from "../redux/itinerarySlice";
+import {
+  getItineraryCalendar,
+  incrementItineraryEndDate,
+} from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
   const { id } = useParams();
@@ -148,9 +151,7 @@ const ItineraryDetails = () => {
                 variant="outlined"
                 sx={{ mr: 1, mb: 1, pl: 1 }}
                 onClick={() => {
-                  window.open(
-                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${id}`
-                  );
+                  dispatch(getItineraryCalendar(id));
                 }}
               >
                 <CalendarMonth sx={{ mr: 0.75 }} />

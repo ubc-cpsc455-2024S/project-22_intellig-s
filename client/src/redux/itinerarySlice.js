@@ -1,11 +1,13 @@
 // src/redux/itinerarySlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import itinerariesAPI from "./itinerariesAPI";
+import axios from "axios";
 
 const actionTypes = {
   GET_ITINERARIES: "itineraries/getItineraries",
   ADD_ITINERARY: "itineraries/addItinerary",
   DELETE_ITINERARY: "itineraries/deleteItinerary",
+  GET_ITINERARY_CALENDAR: "itineraries/getItineraryCalendar",
 };
 
 export const getItinerariesAsync = createAsyncThunk(
@@ -29,6 +31,41 @@ export const deleteItineraryAsync = createAsyncThunk(
   actionTypes.DELETE_ITINERARY,
   async (itinerary) => {
     return await itinerariesAPI.deleteItinerary(itinerary);
+  }
+);
+
+export const getItineraryCalendar = createAsyncThunk(
+  actionTypes.GET_ITINERARY_CALENDAR,
+  async (itineraryId, { getState }) => {
+    const {
+      auth: { token },
+      itineraries: { itineraryList },
+    } = getState();
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${itineraryId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const itineraryTitle = itineraryList.find(
+      (itinerary) => itinerary.id === itineraryId
+    ).location;
+
+    var url = window.URL.createObjectURL(response.data, {
+      type: "text/calendar",
+    });
+
+    var linkElement = document.createElement("a");
+    // linkElement.setAttribute("style", "display:'none'");
+    linkElement.setAttribute("href", url);
+    linkElement.setAttribute("download", `${itineraryTitle}.ics`);
+    linkElement.click();
+    URL.revokeObjectURL(url);
   }
 );
 
