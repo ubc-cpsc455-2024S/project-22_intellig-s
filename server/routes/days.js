@@ -12,16 +12,7 @@ const debugJson = require("../replicate/debugJson");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
-
-async function retry(maxRetries, fn) {
-  return await fn().catch(function (err) {
-    if (maxRetries <= 0) {
-      throw err;
-    }
-    console.log(err.message);
-    return retry(maxRetries - 1, fn);
-  });
-}
+const retry = require("../utils/retry");
 
 // Get all days for an itinerary
 router.get("/:itineraryId", async (req, res) => {

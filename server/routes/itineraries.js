@@ -18,16 +18,7 @@ const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const { verifyToken } = require("../utils/jwtUtils");
-
-async function retry(maxRetries, fn) {
-  return await fn().catch(function (err) {
-    if (maxRetries <= 0) {
-      throw err;
-    }
-    console.log(err.message);
-    return retry(maxRetries - 1, fn);
-  });
-}
+const retry = require("../utils/retry");
 
 /* GET itineraries listing. */
 router.get("/", verifyToken, async function (req, res, next) {
@@ -191,9 +182,9 @@ router.get("/pdf/:itineraryId", verifyToken, async (req, res, next) => {
   }
 });
 
-router.post("/:userId", async function (req, res, next) {
+router.post("/", verifyToken, async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
-  const { userId } = req.params;
+  const userId = req.user.id;
 
   let preferences = {};
   try {

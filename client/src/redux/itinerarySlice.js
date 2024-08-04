@@ -17,14 +17,22 @@ export const getItinerariesAsync = createAsyncThunk(
     const {
       auth: { token },
     } = getState();
+
     return await itinerariesAPI.getItineraries(token);
   }
 );
 
 export const generateItineraryAsync = createAsyncThunk(
   actionTypes.ADD_ITINERARY,
-  async (itineraryPayload) => {
-    return await itinerariesAPI.addItinerary(itineraryPayload);
+  async (itineraryPayload, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+    try {
+      return await itinerariesAPI.addItinerary(itineraryPayload, token);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 

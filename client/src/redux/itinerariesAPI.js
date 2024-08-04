@@ -1,25 +1,19 @@
 import axios from "axios";
 
-const addItinerary = async (itineraryPayload) => {
-  const { itinerary, userId } = itineraryPayload;
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${userId}`,
+const addItinerary = async (itineraryPayload, token) => {
+  const response = await axios.post(
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
+
+    itineraryPayload,
     {
-      method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(itinerary),
     }
   );
 
-  const data = await response.json();
-  if (!response.ok) {
-    const errorMsg = data?.message;
-    throw new Error(errorMsg);
-  }
-
-  return data;
+  return response.data;
 };
 
 const deleteItinerary = async (id) => {
