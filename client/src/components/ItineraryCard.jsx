@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { deleteItineraryAsync } from "../redux/itinerarySlice";
 import { useNavigate } from "react-router-dom";
 
-function ItineraryCard({ itinerary }) {
+function ItineraryCard({ itinerary, showDeleteButton = true}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,40 +26,52 @@ function ItineraryCard({ itinerary }) {
         onClick={() => navigate(`/itineraries/${itinerary.id}`)}
       />
 
-      <CardContent
-        sx={{ textOverflow: "ellipsis", height: "4em" }}
-        onClick={() => navigate(`/itineraries/${itinerary.id}`)}
-      >
-        <Typography noWrap={true} variant="h5" fontWeight={500}>
-          {itinerary.location}
-        </Typography>
-        <Typography noWrap={true} fontSize={"0.9em"}>
-          {new Date(itinerary.startDate).getMonth() ===
-          new Date(itinerary.endDate).getMonth()
-            ? new Date(itinerary.startDate).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-              })
-            : `${new Date(itinerary.startDate).toLocaleDateString("en-US", {
-                month: "long",
-              })} - 
-              ${new Date(itinerary.endDate).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-              })}`}
-        </Typography>
-      </CardContent>
+  <CardContent
+    sx={{
+      p: 2,  
+      overflow: "hidden",
+    }}
+    onClick={() => navigate(`/itineraries/${itinerary.id}`)}
+  >
+    <Typography variant="h5" fontWeight={500} gutterBottom>
+      {itinerary.location}
+    </Typography>
+    <Typography
+      sx={{
+        fontSize: "0.9em",
+        overflow: "auto", 
+        maxHeight: "3em", 
+      }}
+    >
+      {new Date(itinerary.startDate).getMonth() ===
+      new Date(itinerary.endDate).getMonth()
+        ? new Date(itinerary.startDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+          })
+        : `${new Date(itinerary.startDate).toLocaleDateString("en-US", {
+            month: "long",
+          })} - 
+          ${new Date(itinerary.endDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+          })}`}
+    </Typography>
+  </CardContent>
 
-      <CardActions>
-        <Button
-          size="small"
-          onClick={() => {
-            dispatch(deleteItineraryAsync(itinerary.id));
-          }}
-        >
-          Delete
+
+      {showDeleteButton && (
+        <CardActions>
+          <Button
+            size="small"
+            onClick={() => {
+              dispatch(deleteItineraryAsync(itinerary.id));
+            }}
+          >
+            Delete
         </Button>
       </CardActions>
+      )}
     </Card>
   );
 }
@@ -68,6 +80,7 @@ ItineraryCard.propTypes = {
   itinerary: PropType.object,
   onDelete: PropType.func,
   onOpen: PropType.func,
+  showDeleteButton: PropType.bool,
 };
 
 export default ItineraryCard;
