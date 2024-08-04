@@ -61,11 +61,12 @@ const MyItineraries = () => {
                   sm={1}
                   md={3}
                   display={{ xs: "none", sm: "block" }}
+                  spacing={4}
                 />
 
                 {itineraries.map((itinerary) => (
                   <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-                    <ItineraryCard itinerary={itinerary} />
+                    <ItineraryCard itinerary={itinerary} showDeleteButton={true}/>
                   </Grid>
                 ))}
               </Grid>
