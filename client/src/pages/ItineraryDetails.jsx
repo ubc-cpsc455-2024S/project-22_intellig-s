@@ -20,6 +20,7 @@ import LoadingDialog from "../components/LoadingDialog";
 import { fetchDays, generateNewDay } from "../redux/daySlice";
 import {
   getItineraryCalendar,
+  getItineraryPdf,
   incrementItineraryEndDate,
 } from "../redux/itinerarySlice";
 
@@ -31,6 +32,7 @@ const ItineraryDetails = () => {
   const dayStatus = useSelector((state) => state.days.status);
 
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
+  const itineraryStatus = useSelector((state) => state.itineraries.status);
   const itinerary = itineraries.find((itinerary) => itinerary.id === id);
 
   const [activeDay, setActiveDay] = useState(null);
@@ -161,9 +163,7 @@ const ItineraryDetails = () => {
                 variant="outlined"
                 sx={{ mr: 1, mb: 1, pl: 1 }}
                 onClick={() => {
-                  window.open(
-                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${id}`
-                  );
+                  dispatch(getItineraryPdf(id));
                 }}
               >
                 <PictureAsPdf sx={{ mr: 0.75 }} />
@@ -185,7 +185,11 @@ const ItineraryDetails = () => {
       </Grid>
 
       <LoadingDialog isOpen={dayStatus === "generating"}>
-        Generating...
+        Generating new day...
+      </LoadingDialog>
+
+      <LoadingDialog isOpen={itineraryStatus === "downloading"}>
+        Downloading...
       </LoadingDialog>
 
       {/* Mobile buttons */}

@@ -8,6 +8,7 @@ const actionTypes = {
   ADD_ITINERARY: "itineraries/addItinerary",
   DELETE_ITINERARY: "itineraries/deleteItinerary",
   GET_ITINERARY_CALENDAR: "itineraries/getItineraryCalendar",
+  GET_ITINERARY_PDF: "itineraries/getItineraryPdf",
 };
 
 export const getItinerariesAsync = createAsyncThunk(
@@ -56,14 +57,47 @@ export const getItineraryCalendar = createAsyncThunk(
       (itinerary) => itinerary.id === itineraryId
     ).location;
 
-    var url = window.URL.createObjectURL(response.data, {
+    const url = window.URL.createObjectURL(response.data, {
       type: "text/calendar",
     });
 
-    var linkElement = document.createElement("a");
-    // linkElement.setAttribute("style", "display:'none'");
+    const linkElement = document.createElement("a");
     linkElement.setAttribute("href", url);
     linkElement.setAttribute("download", `${itineraryTitle}.ics`);
+    linkElement.click();
+    URL.revokeObjectURL(url);
+  }
+);
+
+export const getItineraryPdf = createAsyncThunk(
+  actionTypes.GET_ITINERARY_PDF,
+  async (itineraryId, { getState }) => {
+    const {
+      auth: { token },
+      itineraries: { itineraryList },
+    } = getState();
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${itineraryId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const itineraryTitle = itineraryList.find(
+      (itinerary) => itinerary.id === itineraryId
+    ).location;
+
+    const url = window.URL.createObjectURL(response.data, {
+      type: "application/pdf",
+    });
+
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", `${url}`);
+    linkElement.setAttribute("download", `${itineraryTitle}.pdf`);
     linkElement.click();
     URL.revokeObjectURL(url);
   }
@@ -115,6 +149,26 @@ const itinerarySlice = createSlice({
           return member.id != action.payload;
         });
         state.itineraryList = removedMembersList;
+      })
+      .addCase(getItineraryCalendar.pending, (state) => {
+        state.status = "downloading";
+      })
+      .addCase(getItineraryCalendar.rejected, (state) => {
+        state.status = "failed";
+        alert("Downloading calendar invitation failed, please try again");
+      })
+      .addCase(getItineraryCalendar.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(getItineraryPdf.pending, (state) => {
+        state.status = "downloading";
+      })
+      .addCase(getItineraryPdf.rejected, (state) => {
+        state.status = "failed";
+        alert("Downloading PDF failed, please try again");
+      })
+      .addCase(getItineraryPdf.fulfilled, (state) => {
+        state.status = "succeeded";
       });
   },
 });

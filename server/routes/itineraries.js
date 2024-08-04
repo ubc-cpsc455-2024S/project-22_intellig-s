@@ -95,7 +95,7 @@ router.get("/cal/:itineraryId", verifyToken, async (req, res, next) => {
   }
 });
 
-router.get("/pdf/:itineraryId", async (req, res, next) => {
+router.get("/pdf/:itineraryId", verifyToken, async (req, res, next) => {
   const itineraryId = req.params.itineraryId;
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
@@ -183,7 +183,6 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
     return res
       .set({
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename=itinerary.pdf`,
       })
       .status(200)
       .send(pdfBuffer);
