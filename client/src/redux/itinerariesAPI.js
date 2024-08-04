@@ -16,22 +16,17 @@ const addItinerary = async (itineraryPayload, token) => {
   return response.data;
 };
 
-const deleteItinerary = async (id) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${id}`,
-    {
-      method: "DELETE",
+const deleteItinerary = async (id, token) => {
+  const response = await axios
+    .delete(`${import.meta.env.VITE_BACKEND_URL}/itineraries/${id}`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    }
-  );
-
-  const data = await response.json();
-  if (!response.ok) {
-    const errorMsg = data?.message;
-    throw new Error(errorMsg);
-  }
+    })
+    .catch(() => {
+      return response.data;
+    });
 
   return id;
 };

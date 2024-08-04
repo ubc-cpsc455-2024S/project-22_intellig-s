@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import { Container, Typography, Grid, Box } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getItinerariesAsync, deleteItineraryAsync } from "../redux/itinerarySlice";
+import { getItinerariesAsync } from "../redux/itinerarySlice";
 import Logo from "../assets/home_page.svg?react";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const userId = '66afb602f4473e78404aced1';
-  
+  const userId = "66afb602f4473e78404aced1";
+
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
 
   useEffect(() => {
@@ -68,7 +67,10 @@ const Home = () => {
                 <Grid container spacing={4}>
                   {itineraries.map((itinerary) => (
                     <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-                      <ItineraryCard itinerary={itinerary} showDeleteButton={false}/>
+                      <ItineraryCard
+                        itinerary={itinerary}
+                        showDeleteButton={false}
+                      />
                     </Grid>
                   ))}
                 </Grid>

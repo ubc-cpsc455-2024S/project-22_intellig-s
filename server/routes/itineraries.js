@@ -277,12 +277,25 @@ router.post("/", verifyToken, async function (req, res, next) {
   }
 });
 
-router.delete("/:itineraryId", async function (req, res, next) {
+router.delete("/:itineraryId", verifyToken, async function (req, res, next) {
   const itineraryId = req.params.itineraryId;
+  const userId = req.user.id;
 
-  await Day.deleteMany({ parentItineraryId: itineraryId });
-  await Itinerary.deleteOne({ id: itineraryId });
-  return res.status(200).send({ message: "Member deleted successfully" });
+  try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this itinerary" });
+
+    await Day.deleteMany({ parentItineraryId: itineraryId });
+    await Itinerary.deleteOne({ id: itineraryId });
+    return res.status(200).send({ message: "Itinerary deleted successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "There was a problem with the database connection" });
+  }
 });
 
 module.exports = router;

@@ -28,18 +28,27 @@ export const generateItineraryAsync = createAsyncThunk(
     const {
       auth: { token },
     } = getState();
+
     try {
       return await itinerariesAPI.addItinerary(itineraryPayload, token);
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error);
     }
   }
 );
 
 export const deleteItineraryAsync = createAsyncThunk(
   actionTypes.DELETE_ITINERARY,
-  async (itinerary) => {
-    return await itinerariesAPI.deleteItinerary(itinerary);
+  async (itineraryId, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+
+    try {
+      return await itinerariesAPI.deleteItinerary(itineraryId, token);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
