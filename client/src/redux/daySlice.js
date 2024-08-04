@@ -12,12 +12,24 @@ const initialState = {
 // Fetch days for a specific itinerary
 export const fetchDays = createAsyncThunk(
   "days/fetchDays",
-  async (itineraryId) => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}`
-    );
-    console.log("In fetchDays: ", response.data);
-    return { itineraryId, days: response.data };
+  async (itineraryId, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return { itineraryId, days: response.data };
+    } catch (error) {
+      rejectWithValue(error);
+    }
   }
 );
 

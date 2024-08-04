@@ -43,7 +43,7 @@ router.get("/", verifyToken, async function (req, res, next) {
 });
 
 router.get("/cal/:itineraryId", verifyToken, async (req, res, next) => {
-  const itineraryId = req.params.itineraryId;
+  const { itineraryId } = req.params;
 
   try {
     const days = await Day.find({ parentItineraryId: itineraryId });
@@ -87,7 +87,7 @@ router.get("/cal/:itineraryId", verifyToken, async (req, res, next) => {
 });
 
 router.get("/pdf/:itineraryId", verifyToken, async (req, res, next) => {
-  const itineraryId = req.params.itineraryId;
+  const { itineraryId } = req.params;
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
     const days = await Day.find({ parentItineraryId: itineraryId });
@@ -278,7 +278,7 @@ router.post("/", verifyToken, async function (req, res, next) {
 });
 
 router.delete("/:itineraryId", verifyToken, async function (req, res, next) {
-  const itineraryId = req.params.itineraryId;
+  const { itineraryId } = req.params;
   const userId = req.user.id;
 
   try {

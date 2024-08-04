@@ -33,7 +33,7 @@ const deleteItinerary = async (id, token) => {
 
 const getItineraries = async (token) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/`,
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

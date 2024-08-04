@@ -13,35 +13,28 @@ const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
 const retry = require("../utils/retry");
+const { verifyToken } = require("../utils/jwtUtils");
 
 // Get all days for an itinerary
-router.get("/:itineraryId", async (req, res) => {
+router.get("/:itineraryId", verifyToken, async (req, res) => {
+  const { itineraryId } = req.params;
+  const userId = req.user.id;
+
   try {
-    console.log("In get by itinerary id: ", req.params.itineraryId);
-    const days = await Day.find({ parentItineraryId: req.params.itineraryId });
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
+    const days = await Day.find({ parentItineraryId: itineraryId });
     res.status(200).json(days);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Add a new day
-router.post("/", async (req, res) => {
-  console.log("In days.js");
-  const day = new Day(req.body.day);
-  console.log("In days.js", req.body);
-  try {
-    const newDay = await day.save();
-    res.status(201).json(newDay);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
 // Reorder all days by itinerary id
 router.put("/reorder", async (req, res) => {
-  const itineraryId = req.body.itineraryId;
-  const days = req.body.days;
+  const { itineraryId, days } = req.body;
   try {
     days.forEach(async (day) => {
       await Day.updateOne(
@@ -70,8 +63,7 @@ router.put("/reorder", async (req, res) => {
 
 // Reorder all activities by day id
 router.put("/activities/reorder", async (req, res) => {
-  const dayId = req.body.dayId;
-  const activities = req.body.activities;
+  const { dayId, activities } = req.body;
   try {
     const day = await Day.updateOne(
       { id: dayId },
