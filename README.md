@@ -37,23 +37,23 @@ If time permits, some additional functionality that we can add is the ability to
 2. [x] Include calendar functionality to track upcoming travel
    - [x] Have the itinerary sync to Google Calendar / Outlook
 3. [x] View previously-visited destinations and itineraries in a gallery
-4. [ ] Be able to favorite different locations when browsing
-5. [ ] Be able to whitelist and blacklist various locations if desired
-6. [x] Interactive map view
+4. [x] Be able to view different locations on homepage
+5. [x] Interactive map view
    - [x] Be able to drop pins and see pictures of destinations
-   - [ ] Include danger warnings for different destinations
-     - [ ] Political unrest markers
-     - [ ] Weather concern markers
-   - [ ] Be able to see recently popular travel destinations
+   - [ ] ~~Include danger warnings for different destinations~~
+     - [ ] ~~Political unrest markers~~
+     - [ ] ~~Weather concern markers~~
+   - [ ] ~~Be able to see recently popular travel destinations~~
 
 ### Stretch requirements
 
-1. [ ] Create itineraries on how to get to the destination
+1. [x] Auto-generate a PDF summary of a user's itinerary
+2. [ ] Create itineraries on how to get to the destination
    - [ ] Include information on flights and hotels
    - [ ] Incorporate a user's budget into this
-2. [ ] Create a family and friends list
+3. [ ] Create a family and friends list
    - [ ] Allow for group-based itineraries and linking with other accounts
-3. [ ] Collect user data based on search history and website traffic
+4. [ ] Collect user data based on search history and website traffic
 
 ## Team Members
 
