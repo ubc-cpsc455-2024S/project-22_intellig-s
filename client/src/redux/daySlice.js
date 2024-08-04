@@ -33,81 +33,107 @@ export const fetchDays = createAsyncThunk(
   }
 );
 
-// Add a new day to a specific itinerary
-export const addNewDay = createAsyncThunk(
-  "days/addNewDay",
-  async ({ itineraryId, day }) => {
-    console.log("In daySlice.js", itineraryId, { day: day });
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/day`,
-      {
-        day: day,
-      }
-    );
-    return { itineraryId, day: response.data };
-  }
-);
-
 // AI generate a new day for a specific itinerary
 export const generateNewDay = createAsyncThunk(
   "days/generateNewDay",
-  async ({ itineraryId }) => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/days/generate`,
-      {
-        itineraryId: itineraryId,
-      }
-    );
-    return { itineraryId, day: response.data };
-  }
-);
+  async ({ itineraryId }, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
 
-// Update an existing day in a specific itinerary
-export const updateDay = createAsyncThunk(
-  "days/updateDay",
-  async ({ itineraryId, dayNumber, changes }) => {
-    const response = await axios.put(
-      `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}/${dayNumber}`,
-      changes
-    );
-    return { itineraryId, dayNumber, changes: response.data };
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/days/generate`,
+        { itineraryId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return { itineraryId, day: response.data };
+    } catch (error) {
+      rejectWithValue(error);
+    }
   }
 );
 
 // Remove a day from a specific itinerary
 export const removeDay = createAsyncThunk(
   "days/removeDay",
-  async ({ itineraryId, id }) => {
-    await axios.delete(
-      `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}/${id}`
-    );
-    return { itineraryId, id };
+  async ({ itineraryId, id }, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/days/${itineraryId}/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return { itineraryId, id };
+    } catch (error) {
+      rejectWithValue(error);
+    }
   }
 );
 
 // Reorder all days by itinerary id
 export const reorderDays = createAsyncThunk(
   "days/reorderDays",
-  async ({ itineraryId, days }) => {
-    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/days/reorder`, {
-      itineraryId: itineraryId,
-      days: days,
-    });
-    return { itineraryId, days: days };
+  async ({ itineraryId, days }, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/days/reorder`,
+        {
+          itineraryId: itineraryId,
+          days: days,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return { itineraryId, days: days };
+    } catch (error) {
+      rejectWithValue(error);
+    }
   }
 );
 
 // Reorder all activities by day id
 export const reorderActivities = createAsyncThunk(
   "days/reorderActivities",
-  async ({ itineraryId, dayId, activities }) => {
-    await axios.put(
-      `${import.meta.env.VITE_BACKEND_URL}/days/activities/reorder`,
-      {
-        dayId: dayId,
-        activities: activities,
-      }
-    );
+  async ({ itineraryId, dayId, activities }, { getState, rejectWithValue }) => {
+    const {
+      auth: { token },
+    } = getState();
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/days/activities/reorder`,
+        {
+          dayId: dayId,
+          activities: activities,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      rejectWithValue(error);
+    }
     return { itineraryId, dayId, activities };
   }
 );
@@ -131,14 +157,6 @@ const daySlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(addNewDay.fulfilled, (state, action) => {
-        const { itineraryId, day } = action.payload;
-        if (state.dayLists[itineraryId]) {
-          state.dayLists[itineraryId].push(day);
-        } else {
-          state.dayLists[itineraryId] = [day];
-        }
-      })
       .addCase(generateNewDay.pending, (state) => {
         state.status = "generating";
       })
@@ -150,14 +168,6 @@ const daySlice = createSlice({
         const { itineraryId, day } = action.payload;
         state.status = "succeeded";
         state.dayLists[itineraryId].push(day);
-      })
-      .addCase(updateDay.fulfilled, (state, action) => {
-        const { itineraryId, dayNumber, changes } = action.payload;
-        const days = state.dayLists[itineraryId];
-        const index = days.findIndex((day) => day.dayNumber === dayNumber);
-        if (index !== -1) {
-          days[index] = { ...days[index], ...changes };
-        }
       })
       .addCase(removeDay.pending, (state) => {
         state.status = "deleting";
