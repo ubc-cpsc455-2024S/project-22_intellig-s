@@ -1,5 +1,5 @@
 import { Container, Typography, Grid, Box, Card } from "@mui/material";
-import ItineraryCard from "../components/ItineraryCard";
+import ItineraryCard from "../components/my-itineraries/ItineraryCard";
 import { useSelector } from "react-redux";
 
 const Home = () => {

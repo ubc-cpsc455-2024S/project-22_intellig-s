@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { signup } from "../redux/authSlice";
+import { signup } from "../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,

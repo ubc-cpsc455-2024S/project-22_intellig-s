@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { Typography, Grid, Button, Box, Container, Card } from "@mui/material";
-import ItineraryCard from "../components/ItineraryCard";
-import SurveyForm from "../components/SurveyForm";
+import ItineraryCard from "../components/my-itineraries/ItineraryCard";
+import AddItineraryForm from "../components/my-itineraries/AddItineraryForm";
 import { useSelector } from "react-redux";
-import LoadingDialog from "../components/LoadingDialog";
+import LoadingDialog from "../components/common/LoadingDialog";
+import PersonalizationForm from "../components/user/PersonalizationForm";
 
 const MyItineraries = () => {
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
   const itineraryStatus = useSelector((state) => state.itineraries.status);
-  const [formOpen, setFormOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+
+  const [generateItineraryFormOpen, setGenerateItineraryFormOpen] =
+    useState(false);
+  const [personalizationFormOpen, setPersonalizationFormOpen] = useState(false);
 
   return (
     <Box>
@@ -42,7 +47,7 @@ const MyItineraries = () => {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    onClick={() => setFormOpen(true)}
+                    onClick={() => setGenerateItineraryFormOpen(true)}
                   >
                     Add Itinerary
                   </Button>
@@ -52,7 +57,7 @@ const MyItineraries = () => {
                     variant="outlined"
                     color="primary"
                     fullWidth
-                    onClick={() => setFormOpen(true)}
+                    onClick={() => setPersonalizationFormOpen(true)}
                   >
                     Set Preferences
                   </Button>
@@ -69,7 +74,17 @@ const MyItineraries = () => {
               </Grid>
             </Card>
           </Container>
-          <SurveyForm open={formOpen} handleClose={() => setFormOpen(false)} />
+          <AddItineraryForm
+            open={generateItineraryFormOpen}
+            handleClose={() => setGenerateItineraryFormOpen(false)}
+          />
+          {user && (
+            <PersonalizationForm
+              open={personalizationFormOpen}
+              handleClose={() => setPersonalizationFormOpen(false)}
+              initialFormValues={user.preferences}
+            />
+          )}
           <LoadingDialog isOpen={itineraryStatus === "generating"}>
             Generating...
           </LoadingDialog>

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, Typography } from "@mui/material";
 import SkewLoader from "react-spinners/SkewLoader";
-import theme from "../theme";
+import theme from "../../theme";
 import PropTypes from "prop-types";
 
 export default function LoadingDialog({ isOpen, children }) {

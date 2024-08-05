@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import PropTypes from "prop-types";
-import { reorderActivities } from "../redux/daySlice";
+import { reorderActivities } from "../../redux/daySlice";
 import ActivityCard from "./ActivityCard";
 
 function reorder(activities, startIndex, endIndex) {

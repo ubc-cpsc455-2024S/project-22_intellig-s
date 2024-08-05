@@ -11,10 +11,10 @@ import {
   Box,
 } from "@mui/material";
 import { ExpandMore, ExpandLess, Place, Delete } from "@mui/icons-material";
-import { removeDay } from "../redux/daySlice";
+import { removeDay } from "../../redux/daySlice";
 import { useDispatch, useSelector } from "react-redux";
 import ActivityList from "./ActivityList";
-import { decrementItineraryEndDate } from "../redux/itinerarySlice";
+import { decrementItineraryEndDate } from "../../redux/itinerarySlice";
 
 export default function DayCard({
   day,
