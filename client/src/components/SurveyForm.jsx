@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Button,
   Container,
@@ -19,7 +19,6 @@ import dayjs from "dayjs";
 
 const SurveyForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
   const [step, setStep] = useState(1);
   const [formValues, setFormValues] = useState({
     location: "",
@@ -36,12 +35,7 @@ const SurveyForm = ({ open, handleClose }) => {
   };
 
   const handleSubmit = () => {
-    const newItinerary = {
-      ...formValues,
-    };
-    dispatch(
-      generateItineraryAsync({ itinerary: newItinerary, userId: user.id })
-    );
+    dispatch(generateItineraryAsync(formValues));
     handleClose();
     setStep(1); // Reset to the first step
     setFormValues({

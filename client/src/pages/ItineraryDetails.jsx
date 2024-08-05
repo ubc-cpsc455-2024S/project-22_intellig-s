@@ -17,34 +17,37 @@ import ControlledMap from "../components/ControlledMap";
 import DayList from "../components/DayList";
 import LoadingDialog from "../components/LoadingDialog";
 
-import { fetchDays, generateNewDay } from "../redux/daySlice";
-import { incrementItineraryEndDate } from "../redux/itinerarySlice";
+import { fetchDays, fetchExploreDays, generateNewDay } from "../redux/daySlice";
+import {
+  getItineraryCalendar,
+  getItineraryPdf,
+  incrementItineraryEndDate,
+} from "../redux/itinerarySlice";
 
 const ItineraryDetails = () => {
-  const { id } = useParams();
+  const { explore, id } = useParams();
+  const isExplore = explore === "explore";
+
   const dispatch = useDispatch();
 
   const days = useSelector((state) => state.days.dayLists[id]);
   const dayStatus = useSelector((state) => state.days.status);
 
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
-  const itinerary = itineraries.find((itinerary) => itinerary.id === id);
+  const exploreItineraries = useSelector(
+    (state) => state.itineraries.exploreItineraries
+  );
+  const itineraryStatus = useSelector((state) => state.itineraries.status);
+  const itinerary = isExplore
+    ? exploreItineraries.find((itinerary) => itinerary.id === id)
+    : itineraries.find((itinerary) => itinerary.id === id);
 
   const [activeDay, setActiveDay] = useState(null);
-
   const [mapMode, setMapMode] = useState(false);
 
   useEffect(() => {
-    const fetchDaysFromDB = async () => {
-      try {
-        dispatch(fetchDays(id));
-      } catch (error) {
-        console.error("Error in dispatching fetchDays:", error);
-      }
-    };
-
-    fetchDaysFromDB();
-  }, [dispatch, id]);
+    isExplore ? dispatch(fetchExploreDays(id)) : dispatch(fetchDays(id));
+  }, [dispatch, id, isExplore]);
 
   const markers = days
     ? days
@@ -123,51 +126,55 @@ const ItineraryDetails = () => {
                   <Typography variant="h4" sx={{ fontWeight: "900" }}>
                     {itinerary.location}
                   </Typography>
-                  <Typography>
+                  <Typography sx={{ mt: 1 }}>
                     {new Date(itinerary.startDate).toLocaleDateString()}
                     {" - "}
                     {new Date(itinerary.endDate).toLocaleDateString()}
                   </Typography>
                 </>
               )}
-              <Button
-                variant="contained"
-                sx={{ mr: 1, mb: 1, pl: 1 }}
-                onClick={() => {
-                  dispatch(generateNewDay({ itineraryId: id }))
-                    .unwrap()
-                    .then(() => {
-                      dispatch(incrementItineraryEndDate({ itineraryId: id }));
-                    });
-                }}
-              >
-                <AutoAwesome sx={{ mr: 0.75 }} />
-                Generate New Day
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ mr: 1, mb: 1, pl: 1 }}
-                onClick={() => {
-                  window.open(
-                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/cal/${id}`
-                  );
-                }}
-              >
-                <CalendarMonth sx={{ mr: 0.75 }} />
-                Add to Calendar
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ mr: 1, mb: 1, pl: 1 }}
-                onClick={() => {
-                  window.open(
-                    `${import.meta.env.VITE_BACKEND_URL}/itineraries/pdf/${id}`
-                  );
-                }}
-              >
-                <PictureAsPdf sx={{ mr: 0.75 }} />
-                Save as PDF
-              </Button>
+              <Box sx={{ mt: 1.5 }}>
+                {!isExplore && (
+                  <>
+                    <Button
+                      variant="contained"
+                      sx={{ mr: 1, mb: 1, pl: 1 }}
+                      onClick={() => {
+                        dispatch(generateNewDay({ itineraryId: id }))
+                          .unwrap()
+                          .then(() => {
+                            dispatch(
+                              incrementItineraryEndDate({ itineraryId: id })
+                            );
+                          });
+                      }}
+                    >
+                      <AutoAwesome sx={{ mr: 0.75 }} />
+                      Generate New Day
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{ mr: 1, mb: 1, pl: 1 }}
+                      onClick={() => {
+                        dispatch(getItineraryCalendar(id));
+                      }}
+                    >
+                      <CalendarMonth sx={{ mr: 0.75 }} />
+                      Add to Calendar
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{ mr: 1, mb: 1, pl: 1 }}
+                      onClick={() => {
+                        dispatch(getItineraryPdf(id));
+                      }}
+                    >
+                      <PictureAsPdf sx={{ mr: 0.75 }} />
+                      Save as PDF
+                    </Button>
+                  </>
+                )}
+              </Box>
             </Card>
           </Grid>
 
@@ -177,6 +184,7 @@ const ItineraryDetails = () => {
                 itineraryId={id}
                 activeDay={activeDay}
                 setActiveDay={setActiveDay}
+                isExplore={isExplore}
               />
             )}
           </Grid>
@@ -184,7 +192,11 @@ const ItineraryDetails = () => {
       </Grid>
 
       <LoadingDialog isOpen={dayStatus === "generating"}>
-        Generating...
+        Generating new day...
+      </LoadingDialog>
+
+      <LoadingDialog isOpen={itineraryStatus === "downloading"}>
+        Downloading...
       </LoadingDialog>
 
       {/* Mobile buttons */}

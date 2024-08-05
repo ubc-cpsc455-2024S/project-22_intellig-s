@@ -2,26 +2,33 @@ import PropTypes from "prop-types";
 import { Typography, Card, CardContent, Box, IconButton } from "@mui/material";
 import { DragHandle } from "@mui/icons-material";
 
-export default function ActivityCard({ activity, dragHandleProps }) {
+export default function ActivityCard({ activity, dragHandleProps, isExplore }) {
   return (
     <Card variant="outlined">
       <CardContent className="day-card" sx={{ pt: 1, width: "100%" }}>
         <Box sx={{ width: "100%" }}>
-          <IconButton
-            variant="outlined"
-            disableRipple
-            sx={{
-              width: 50,
-              height: 30,
-              borderRadius: 1,
-              left: "50%",
-              transform: "translateX(-50%)",
-              "&:hover": { backgroundColor: "rgba(0,0,0,0.1)", cursor: "grab" },
-            }}
-            {...dragHandleProps}
-          >
-            <DragHandle color="primary"></DragHandle>
-          </IconButton>
+          {isExplore ? (
+            <Box sx={{ height: 30 }}></Box>
+          ) : (
+            <IconButton
+              variant="outlined"
+              disableRipple
+              sx={{
+                width: 50,
+                height: 30,
+                borderRadius: 1,
+                left: "50%",
+                transform: "translateX(-50%)",
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0.1)",
+                  cursor: "grab",
+                },
+              }}
+              {...dragHandleProps}
+            >
+              <DragHandle color="primary"></DragHandle>
+            </IconButton>
+          )}
 
           <Typography variant="h6">{activity.activity}</Typography>
           <Typography>
@@ -45,4 +52,5 @@ export default function ActivityCard({ activity, dragHandleProps }) {
 ActivityCard.propTypes = {
   activity: PropTypes.object,
   dragHandleProps: PropTypes.object,
+  isExplore: PropTypes.bool,
 };

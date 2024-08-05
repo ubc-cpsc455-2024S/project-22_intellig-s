@@ -16,7 +16,12 @@ import { useDispatch, useSelector } from "react-redux";
 import ActivityList from "./ActivityList";
 import { decrementItineraryEndDate } from "../redux/itinerarySlice";
 
-export default function DayCard({ day, setActiveDay, dragHandleProps }) {
+export default function DayCard({
+  day,
+  setActiveDay,
+  dragHandleProps,
+  isExplore,
+}) {
   const [showActivities, setShowActivities] = useState(false);
   const dispatch = useDispatch();
 
@@ -87,31 +92,34 @@ export default function DayCard({ day, setActiveDay, dragHandleProps }) {
           itineraryId={day.parentItineraryId}
           dayId={day.id}
           initialActivities={day.activities}
+          isExplore={isExplore}
         />
         <Box sx={{ mb: 1 }}>
-          <Button
-            variant="contained"
-            color="error"
-            sx={{ mr: 1, pl: 1 }}
-            onClick={() => {
-              setShowActivities(false);
-              dispatch(
-                removeDay({ itineraryId: day.parentItineraryId, id: day.id })
-              )
-                .unwrap()
-                .then(() => {
-                  if (status === "succeeded")
-                    dispatch(
-                      decrementItineraryEndDate({
-                        itineraryId: day.parentItineraryId,
-                      })
-                    );
-                });
-            }}
-          >
-            <Delete sx={{ mr: 0.75 }} />
-            Delete
-          </Button>
+          {!isExplore && (
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ mr: 1, pl: 1 }}
+              onClick={() => {
+                setShowActivities(false);
+                dispatch(
+                  removeDay({ itineraryId: day.parentItineraryId, id: day.id })
+                )
+                  .unwrap()
+                  .then(() => {
+                    if (status === "succeeded")
+                      dispatch(
+                        decrementItineraryEndDate({
+                          itineraryId: day.parentItineraryId,
+                        })
+                      );
+                  });
+              }}
+            >
+              <Delete sx={{ mr: 0.75 }} />
+              Delete
+            </Button>
+          )}
         </Box>
       </Collapse>
     </Card>
@@ -135,4 +143,5 @@ DayCard.propTypes = {
   }).isRequired,
   setActiveDay: PropTypes.func,
   dragHandleProps: PropTypes.object,
+  isExplore: PropTypes.bool,
 };

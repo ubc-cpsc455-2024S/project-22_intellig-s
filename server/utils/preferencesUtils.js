@@ -5,66 +5,74 @@ function preferencesToLanguage(preferences) {
   }
 
   const descriptions = [];
+  if (preferences.has("kids")) {
+    if (preferences.get("kids") === "Yes")
+      descriptions.push("family-friendly activities");
+    else if (preferences.get("kids") === "No")
+      descriptions.push("activities suited for adults");
+  }
 
-  if (preferences.get("kids") !== null) {
-    descriptions.push(
-      preferences.get("kids") === "Yes"
-        ? "family-friendly activities"
-        : "activities suited for adults"
-    );
+  if (preferences.has("pets")) {
+    if (preferences.get("pets") === "Yes")
+      descriptions.push("pet-friendly locations");
   }
-  if (preferences.get("pets") !== null) {
-    descriptions.push(
-      preferences.get("pets") === "Yes" ? "pet-friendly locations" : ""
-    );
-  }
-  if (preferences.get("budget") !== null) {
+
+  if (preferences.has("budget"))
     descriptions.push(`a budget of $${preferences.get("budget")} per day`);
-  }
-  if (preferences.get("peopleInParty") !== null) {
+
+  if (
+    preferences.has("peopleInParty") &&
+    preferences.get("peopleInParty") > 1
+  ) {
     descriptions.push(
       `accommodations for ${preferences.get("peopleInParty")} people`
     );
   }
-  if (preferences.get("locationPreference") !== null) {
-    descriptions.push(
-      preferences.get("locationPreference") === "City"
-        ? "exploring urban environments"
-        : "exploring rural areas"
-    );
+
+  if (preferences.has("locationPreference")) {
+    if (preferences.get("locationPreference") === "City")
+      descriptions.push("exploring urban environments");
+    if (preferences.get("locationPreference") === "Countryside")
+      descriptions.push("exploring rural areas");
   }
-  if (preferences.get("activityPreference") !== null) {
+
+  if (preferences.has("activityPreference")) {
     descriptions.push(
       `engaging in ${preferences
         .get("activityPreference")
         .toLowerCase()} activities`
     );
   }
-  if (preferences.get("culinaryPreference") !== null) {
+
+  if (preferences.has("culinaryPreference")) {
     descriptions.push(
       `enjoying ${preferences.get("culinaryPreference").toLowerCase()}`
     );
   }
-  if (preferences.get("explorationPreference") !== null) {
-    descriptions.push(
-      preferences.get("explorationPreference") === "Guided tours"
-        ? "joining guided tours"
-        : "independent exploration"
-    );
+
+  if (preferences.has("explorationPreference")) {
+    if (preferences.get("explorationPreference") === "Structured tours")
+      descriptions.push("joining guided tours");
+    else if (
+      preferences.get("explorationPreference") === "Independent exploration"
+    )
+      descriptions.push("independent exploration");
   }
-  if (preferences.get("nightlifeImportance") !== null) {
-    descriptions.push(
-      preferences.get("nightlifeImportance") === "Very important"
-        ? "experiencing vibrant nightlife"
-        : "less focus on nightlife"
-    );
+
+  if (preferences.has("nightlifeImportance")) {
+    if (preferences.get("nightlifeImportance") === "Very important")
+      descriptions.push("experiencing vibrant nightlife");
+    else if (preferences.get("nightlifeImportance") === "Somewhat important")
+      descriptions.push("experiencing a little bit of nightlife");
+    else if (preferences.get("nightlifeImportance") === "Not important")
+      descriptions.push("no emphasis on nightlife");
   }
-  if (preferences.get("culturalInterest") !== null) {
-    descriptions.push(
-      preferences.get("culturalInterest") === "Yes"
-        ? "emphasizing local culture"
-        : "less emphasis on cultural activities"
-    );
+
+  if (preferences.has("culturalInterest")) {
+    if (preferences.get("culturalInterest") === "Yes")
+      descriptions.push("emphasizing local culture");
+    if (preferences.get("culturalInterest") === "No")
+      descriptions.push("less emphasis on cultural activities");
   }
 
   if (descriptions.length > 0) {

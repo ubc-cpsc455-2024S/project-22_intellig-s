@@ -13,7 +13,7 @@ async function generateDay(location, activities, preferences) {
         {
           "activities": [
             {
-              "time": "time (AM/PM)", 
+              "time": "time (AM/PM)",
               "location": "location name",
             }
           ]

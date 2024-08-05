@@ -17,20 +17,12 @@ const getImageFromSearch = require("../google/getImageFromSearch");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
-
-async function retry(maxRetries, fn) {
-  return await fn().catch(function (err) {
-    if (maxRetries <= 0) {
-      throw err;
-    }
-    console.log(err.message);
-    return retry(maxRetries - 1, fn);
-  });
-}
+const { verifyToken } = require("../utils/jwtUtils");
+const retry = require("../utils/retry");
 
 /* GET itineraries listing. */
-router.get("/:userId", async function (req, res, next) {
-  const { userId } = req.params;
+router.get("/", verifyToken, async function (req, res, next) {
+  const userId = req.user.id;
 
   try {
     const user = await User.findById(userId);
@@ -44,14 +36,28 @@ router.get("/:userId", async function (req, res, next) {
   try {
     res.send(await Itinerary.find({ userId: userId }).sort({ $natural: -1 }));
   } catch (e) {
-    res
-      .status(500)
-      .json({ message: `Getting itineraries from database, ${e.message}` });
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
   }
 });
 
-router.get("/cal/:itineraryId", async (req, res, next) => {
-  const itineraryId = req.params.itineraryId;
+router.get("/explore", async function (req, res, next) {
+  try {
+    res.send(
+      await Itinerary.find({ userId: { $exists: false } }).sort({
+        $natural: -1,
+      })
+    );
+  } catch (e) {
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
+  }
+});
+
+router.get("/cal/:itineraryId", verifyToken, async (req, res, next) => {
+  const { itineraryId } = req.params;
 
   try {
     const days = await Day.find({ parentItineraryId: itineraryId });
@@ -86,7 +92,6 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
     return res
       .set({
         "Content-Type": "text/calendar",
-        "Content-Disposition": `attachment; filename="itinerary.ics"`,
       })
       .status(200)
       .send(cal.value);
@@ -95,8 +100,8 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
   }
 });
 
-router.get("/pdf/:itineraryId", async (req, res, next) => {
-  const itineraryId = req.params.itineraryId;
+router.get("/pdf/:itineraryId", verifyToken, async (req, res, next) => {
+  const { itineraryId } = req.params;
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
     const days = await Day.find({ parentItineraryId: itineraryId });
@@ -183,7 +188,6 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
     return res
       .set({
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename=itinerary.pdf`,
       })
       .status(200)
       .send(pdfBuffer);
@@ -192,9 +196,9 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
   }
 });
 
-router.post("/:userId", async function (req, res, next) {
+router.post("/", verifyToken, async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
-  const { userId } = req.params;
+  const userId = req.user.id;
 
   let preferences = {};
   try {
@@ -287,12 +291,25 @@ router.post("/:userId", async function (req, res, next) {
   }
 });
 
-router.delete("/:itineraryId", async function (req, res, next) {
-  const itineraryId = req.params.itineraryId;
+router.delete("/:itineraryId", verifyToken, async function (req, res, next) {
+  const { itineraryId } = req.params;
+  const userId = req.user.id;
 
-  await Day.deleteMany({ parentItineraryId: itineraryId });
-  await Itinerary.deleteOne({ id: itineraryId });
-  return res.status(200).send({ message: "Member deleted successfully" });
+  try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this itinerary" });
+
+    await Day.deleteMany({ parentItineraryId: itineraryId });
+    await Itinerary.deleteOne({ id: itineraryId });
+    return res.status(200).send({ message: "Itinerary deleted successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "There was a problem with the database connection" });
+  }
 });
 
 module.exports = router;

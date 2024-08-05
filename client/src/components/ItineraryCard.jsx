@@ -12,56 +12,50 @@ import { useDispatch } from "react-redux";
 import { deleteItineraryAsync } from "../redux/itinerarySlice";
 import { useNavigate } from "react-router-dom";
 
-function ItineraryCard({ itinerary, showDeleteButton = true}) {
+function ItineraryCard({ itinerary, isExplore }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  function handleNavigate() {
+    isExplore
+      ? navigate(`/itinerary/explore/${itinerary.id}`)
+      : navigate(`/itinerary/${itinerary.id}`);
+  }
+
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ pb: isExplore ? 3 : 0 }}>
       <CardMedia
         component="img"
         height={140}
         image={itinerary.imageUrl}
         alt={`Image of ${itinerary.location}`}
-        onClick={() => navigate(`/itineraries/${itinerary.id}`)}
+        onClick={handleNavigate}
       />
-
-  <CardContent
-    sx={{
-      p: 2,  
-      overflow: "hidden",
-    }}
-    onClick={() => navigate(`/itineraries/${itinerary.id}`)}
-  >
-    <Typography variant="h5" fontWeight={500} gutterBottom>
-      {itinerary.location}
-    </Typography>
-    <Typography
-      sx={{
-        fontSize: "0.9em",
-        overflow: "auto", 
-        maxHeight: "3em", 
-      }}
-    >
-      {new Date(itinerary.startDate).getMonth() ===
-      new Date(itinerary.endDate).getMonth()
-        ? new Date(itinerary.startDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-          })
-        : `${new Date(itinerary.startDate).toLocaleDateString("en-US", {
-            month: "long",
-          })} - 
-          ${new Date(itinerary.endDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-          })}`}
-    </Typography>
-  </CardContent>
-
-
-      {showDeleteButton && (
-        <CardActions>
+      <CardContent
+        sx={{ textOverflow: "ellipsis", height: "4em" }}
+        onClick={handleNavigate}
+      >
+        <Typography noWrap={true} variant="h5" fontWeight={500}>
+          {itinerary.location}
+        </Typography>
+        <Typography noWrap={true} fontSize="0.9em">
+          {new Date(itinerary.startDate).getMonth() ===
+          new Date(itinerary.endDate).getMonth()
+            ? new Date(itinerary.startDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })
+            : `${new Date(itinerary.startDate).toLocaleDateString("en-US", {
+                month: "long",
+              })} - 
+              ${new Date(itinerary.endDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })}`}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        {!isExplore && (
           <Button
             size="small"
             onClick={() => {
@@ -69,9 +63,9 @@ function ItineraryCard({ itinerary, showDeleteButton = true}) {
             }}
           >
             Delete
-        </Button>
+          </Button>
+        )}
       </CardActions>
-      )}
     </Card>
   );
 }
@@ -80,7 +74,7 @@ ItineraryCard.propTypes = {
   itinerary: PropType.object,
   onDelete: PropType.func,
   onOpen: PropType.func,
-  showDeleteButton: PropType.bool,
+  isExplore: PropType.bool,
 };
 
 export default ItineraryCard;

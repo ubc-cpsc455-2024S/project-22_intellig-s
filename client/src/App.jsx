@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { fetchUser } from "./redux/authSlice";
-import { getItinerariesAsync } from "./redux/itinerarySlice";
+import {
+  getExploreItineraries,
+  getItinerariesAsync,
+} from "./redux/itinerarySlice";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./redux/store";
 
@@ -20,14 +23,14 @@ import UserProfile from "./pages/UserProfile";
 import theme from "./theme";
 import "./App.css";
 
-import { jwtDecode } from "jwt-decode";
-
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
+    dispatch(getExploreItineraries());
+
     if (!user) {
       const oldToken = localStorage.getItem("token");
       if (oldToken) {
@@ -35,8 +38,7 @@ const App = () => {
           .unwrap()
           .then(() => {
             if (token) {
-              const decodedUser = jwtDecode(token);
-              dispatch(getItinerariesAsync(decodedUser.id));
+              dispatch(getItinerariesAsync());
             }
           });
       }
@@ -52,7 +54,10 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/my-itineraries" element={<MyItineraries />} />
-            <Route path="/itineraries/:id" element={<ItineraryDetails />} />
+            <Route
+              path="/itinerary/:explore?/:id"
+              element={<ItineraryDetails />}
+            />
             <Route path="/profile/:personalize?" element={<UserProfile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
