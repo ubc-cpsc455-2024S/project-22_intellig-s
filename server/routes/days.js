@@ -4,50 +4,61 @@ const { v4: uuid } = require("uuid");
 
 const Day = require("../models/dayModel"); // Import the Day model
 const Itinerary = require("../models/itineraryModel");
+const User = require("../models/userModel");
+
 const generateDay = require("../replicate/generateDay");
+const debugJson = require("../replicate/debugJson");
+
 const getAddressFromLocation = require("../google/getAddressFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getImageFromSearch = require("../google/getImageFromSearch");
-
-async function retry(maxRetries, fn) {
-  return await fn().catch(function (err) {
-    if (maxRetries <= 0) {
-      throw err;
-    }
-    console.log(err.message);
-    return retry(maxRetries - 1, fn);
-  });
-}
+const retry = require("../utils/retry");
+const { verifyToken } = require("../utils/jwtUtils");
 
 // Get all days for an itinerary
-router.get("/:itineraryId", async (req, res) => {
+router.get("/:itineraryId", verifyToken, async (req, res) => {
+  const { itineraryId } = req.params;
+  const userId = req.user.id;
+
   try {
-    console.log("In get by itinerary id: ", req.params.itineraryId);
-    const days = await Day.find({ parentItineraryId: req.params.itineraryId });
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
+    const days = await Day.find({ parentItineraryId: itineraryId });
     res.status(200).json(days);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Add a new day
-router.post("/", async (req, res) => {
-  console.log("In days.js");
-  const day = new Day(req.body.day);
-  console.log("In days.js", req.body);
+router.get("/explore/:itineraryId", async function (req, res, next) {
+  const { itineraryId } = req.params;
+
   try {
-    const newDay = await day.save();
-    res.status(201).json(newDay);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId)
+      return res.status(403).json({ message: "Unauthorized" });
+
+    const days = await Day.find({ parentItineraryId: itineraryId });
+    res.status(200).json(days);
+  } catch (e) {
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
   }
 });
 
 // Reorder all days by itinerary id
-router.put("/reorder", async (req, res) => {
-  const itineraryId = req.body.itineraryId;
-  const days = req.body.days;
+router.post("/reorder", verifyToken, async (req, res) => {
+  const { itineraryId, days } = req.body;
+  const userId = req.user.id;
+
   try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
     days.forEach(async (day) => {
       await Day.updateOne(
         { parentItineraryId: day.parentItineraryId, id: day.id },
@@ -74,14 +85,17 @@ router.put("/reorder", async (req, res) => {
 });
 
 // Reorder all activities by day id
-router.put("/activities/reorder", async (req, res) => {
-  const dayId = req.body.dayId;
-  const activities = req.body.activities;
+router.post("/activities/reorder", verifyToken, async (req, res) => {
+  const { dayId, activities } = req.body;
+  const userId = req.user.id;
+
   try {
-    const day = await Day.updateOne(
-      { id: dayId },
-      { $set: { activities: activities } }
-    );
+    const day = await Day.findOne({ id: dayId });
+    const itinerary = await Itinerary.findOne({ id: day.parentItineraryId });
+    if (itinerary.userId !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
+    await Day.updateOne({ id: dayId }, { $set: { activities: activities } });
 
     res.status(200).json({
       dayId: dayId,
@@ -93,12 +107,23 @@ router.put("/activities/reorder", async (req, res) => {
   }
 });
 
-router.post("/generate", async (req, res) => {
+router.post("/generate", verifyToken, async (req, res) => {
   const { itineraryId } = req.body;
+  const userId = req.user.id;
+  let preferences = {};
 
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
     const days = await Day.find({ parentItineraryId: itineraryId });
+    if (itinerary.userId) {
+      const user = await User.findById(itinerary.userId);
+      if (user.preferences) {
+        preferences = user.preferences;
+      }
+    }
 
     const endDate = new Date(itinerary.endDate);
     const newDate = new Date(endDate).setDate(endDate.getDate() + 1);
@@ -107,11 +132,20 @@ router.post("/generate", async (req, res) => {
       .map((day) => day.activities.map((activity) => activity.activity))
       .flat();
 
-    const aiResponse = await retry(3, async () =>
-      JSON.parse(
-        await generateDay(itinerary.location, currentActivities.join(", "))
-      )
-    );
+    const aiResponse = await retry(2, async () => {
+      const jsonString = await generateDay(
+        itinerary.location,
+        currentActivities.join(", "),
+        preferences
+      );
+
+      try {
+        return JSON.parse(jsonString);
+      } catch (e) {
+        console.log("debugging json");
+        return JSON.parse(await debugJson(jsonString));
+      }
+    });
 
     const imageUrl = await getImageFromSearch(
       `${aiResponse.activities[0].location}, ${itinerary.location}`
@@ -156,34 +190,16 @@ router.post("/generate", async (req, res) => {
   }
 });
 
-// Update an existing day
-router.put("/:itineraryId/:dayNumber", async (req, res) => {
-  try {
-    const { itineraryId, dayNumber } = req.params;
-    const updatedFields = req.body;
-
-    const updatedDay = await Day.findOneAndUpdate(
-      { parentItineraryId: itineraryId, dayNumber: dayNumber },
-      updatedFields,
-      { new: true } // Returns the updated document
-    );
-
-    if (!updatedDay) {
-      return res.status(404).json({ message: "Day not found" });
-    }
-
-    res.status(200).json(updatedDay);
-  } catch (error) {
-    console.error("Error updating day:", error.message);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
 // Delete a day
-router.delete("/:itineraryId/:id", async (req, res) => {
+router.delete("/:itineraryId/:id", verifyToken, async (req, res) => {
   const { itineraryId, id } = req.params;
+  const userId = req.user.id;
+
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res.status(403).json({ message: "Not authorized" });
+
     const startDate = new Date(itinerary.startDate);
     const endDate = new Date(itinerary.endDate);
 

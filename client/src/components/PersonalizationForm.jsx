@@ -12,6 +12,7 @@ import {
   OutlinedInput,
   Card,
   useMediaQuery,
+  DialogActions,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
@@ -31,35 +32,39 @@ function FormQuestion({ question, children }) {
 const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
   const dispatch = useDispatch();
   const [formValues, setFormValues] = useState({
-    kids: initialFormValues.kids ? initialFormValues.kids : null,
-    pets: initialFormValues.pets ? initialFormValues.pets : null,
+    kids: initialFormValues.kids ? initialFormValues.kids : undefined,
+    pets: initialFormValues.pets ? initialFormValues.pets : undefined,
     budget: initialFormValues.budget ? initialFormValues.budget : undefined,
     peopleInParty: initialFormValues.peopleInParty
       ? initialFormValues.peopleInParty
-      : 1,
+      : undefined,
     locationPreference: initialFormValues.locationPreference
       ? initialFormValues.locationPreference
-      : "",
+      : undefined,
     activityPreference: initialFormValues.activityPreference
       ? initialFormValues.activityPreference
-      : "",
+      : undefined,
     culinaryPreference: initialFormValues.culinaryPreference
       ? initialFormValues.culinaryPreference
-      : "",
+      : undefined,
     explorationPreference: initialFormValues.explorationPreference
       ? initialFormValues.explorationPreference
-      : "",
+      : undefined,
     nightlifeImportance: initialFormValues.nightlifeImportance
       ? initialFormValues.nightlifeImportance
-      : "",
+      : undefined,
     culturalInterest: initialFormValues.culturalInterest
       ? initialFormValues.culturalInterest
-      : null,
+      : undefined,
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
+  };
+
+  const handleReset = (name) => {
+    setFormValues({ ...formValues, [name]: undefined });
   };
 
   const handleSubmit = () => {
@@ -71,40 +76,45 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
 
   const renderButtonGroup = (field, options) => {
     return (
-      <ToggleButtonGroup
-        orientation={xs ? `horizontal` : `vertical`}
-        value={formValues[field]}
-        onChange={(event, newValue) => {
-          setFormValues({ ...formValues, [field]: newValue });
-        }}
-        exclusive
-        fullWidth
-      >
-        {options.map((option) => (
-          <ToggleButton
-            key={option}
-            value={option}
-            sx={{
-              transition: "300ms",
-              "&.MuiToggleButtonGroup-grouped": {
-                borderRadius: "4px !important",
-                border: "1px solid lightgrey !important",
-                m: 0.5,
-              },
-              "&.Mui-selected": {
-                color: "#fff",
-                backgroundColor: "primary.main",
-                "&:hover": {
+      <>
+        <ToggleButtonGroup
+          orientation={xs ? `horizontal` : `vertical`}
+          value={formValues[field]}
+          onChange={(event, newValue) => {
+            setFormValues({ ...formValues, [field]: newValue });
+          }}
+          exclusive
+          fullWidth
+        >
+          {options.map((option) => (
+            <ToggleButton
+              key={option}
+              value={option}
+              sx={{
+                transition: "300ms",
+                "&.MuiToggleButtonGroup-grouped": {
+                  borderRadius: "4px !important",
+                  border: "1px solid lightgrey !important",
+                  m: 0.5,
+                },
+                "&.Mui-selected": {
                   color: "#fff",
                   backgroundColor: "primary.main",
+                  "&:hover": {
+                    color: "#fff",
+                    backgroundColor: "primary.main",
+                  },
                 },
-              },
-            }}
-          >
-            {option}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
+              }}
+            >
+              {option}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+        <Button sx={{ mt: 1 }} onClick={() => handleReset(field)}>
+          Reset
+        </Button>
+      </>
     );
   };
 
@@ -125,7 +135,9 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
             question={`How many people do you usually travel with?`}
           >
             <Slider
-              value={formValues.peopleInParty}
+              value={
+                formValues.peopleInParty ? Number(formValues.peopleInParty) : 1
+              }
               name="peopleInParty"
               valueLabelDisplay="auto"
               step={1}
@@ -134,6 +146,9 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
               onChange={handleInputChange}
               sx={{ width: "90%" }}
             />
+            <Button sx={{ mt: 1 }} onClick={() => handleReset("peopleInParty")}>
+              Reset
+            </Button>
           </FormQuestion>
           <FormQuestion
             question={`Would you rather explore bustling cities or tranquil countryside?`}
@@ -212,7 +227,14 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
                 />
               </Grid>
             </Grid>
+            <Button sx={{ mt: 1 }} onClick={() => handleReset("budget")}>
+              Reset
+            </Button>
           </FormQuestion>
+        </Grid>
+      </DialogContent>
+      <DialogActions sx={{ pt: 1, boxShadow: "0px -1px 5px lightgrey" }}>
+        <Grid container spacing={2}>
           <Grid item xs={6}>
             <Button fullWidth variant="outlined" onClick={handleClose}>
               Cancel
@@ -224,7 +246,7 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
             </Button>
           </Grid>
         </Grid>
-      </DialogContent>
+      </DialogActions>
     </Dialog>
   );
 };

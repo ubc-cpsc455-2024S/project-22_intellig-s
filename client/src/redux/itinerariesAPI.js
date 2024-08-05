@@ -1,57 +1,58 @@
-const addItinerary = async (itineraryPayload) => {
-  const { itinerary, userId } = itineraryPayload;
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${userId}`,
+import axios from "axios";
+
+const addItinerary = async (itineraryPayload, token) => {
+  const response = await axios.post(
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
+
+    itineraryPayload,
     {
-      method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(itinerary),
     }
   );
 
-  const data = await response.json();
-  if (!response.ok) {
-    const errorMsg = data?.message;
-    throw new Error(errorMsg);
-  }
-
-  return data;
+  return response.data;
 };
 
-const deleteItinerary = async (id) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${id}`,
-    {
-      method: "DELETE",
+const deleteItinerary = async (id, token) => {
+  const response = await axios
+    .delete(`${import.meta.env.VITE_BACKEND_URL}/itineraries/${id}`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    }
-  );
-
-  const data = await response.json();
-  if (!response.ok) {
-    const errorMsg = data?.message;
-    throw new Error(errorMsg);
-  }
+    })
+    .catch(() => {
+      return response.data;
+    });
 
   return id;
 };
 
-const getItineraries = async (userId) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/itineraries/${userId}`,
+const getItineraries = async (token) => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries`,
     {
-      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
-  return await response.json();
+  return await response.data;
+};
+
+const getExploreItineraries = async () => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries/explore`
+  );
+  return await response.data;
 };
 
 export default {
   addItinerary,
   deleteItinerary,
   getItineraries,
+  getExploreItineraries,
 };

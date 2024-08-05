@@ -11,24 +11,18 @@ const Day = require("../models/dayModel");
 const User = require("../models/userModel");
 
 const generateItinerary = require("../replicate/generateItinerary");
+const debugJson = require("../replicate/debugJson");
+
 const getImageFromSearch = require("../google/getImageFromSearch");
 const getBoundsFromLocation = require("../google/getBoundsFromLocation");
 const getCoordsFromLocation = require("../google/getCoordsFromLocation");
 const getAddressFromLocation = require("../google/getAddressFromLocation");
-
-async function retry(maxRetries, fn) {
-  return await fn().catch(function (err) {
-    if (maxRetries <= 0) {
-      throw err;
-    }
-    console.log(err.message);
-    return retry(maxRetries - 1, fn);
-  });
-}
+const { verifyToken } = require("../utils/jwtUtils");
+const retry = require("../utils/retry");
 
 /* GET itineraries listing. */
-router.get("/:userId", async function (req, res, next) {
-  const { userId } = req.params;
+router.get("/", verifyToken, async function (req, res, next) {
+  const userId = req.user.id;
 
   try {
     const user = await User.findById(userId);
@@ -42,14 +36,28 @@ router.get("/:userId", async function (req, res, next) {
   try {
     res.send(await Itinerary.find({ userId: userId }).sort({ $natural: -1 }));
   } catch (e) {
-    res
-      .status(500)
-      .json({ message: `Getting itineraries from database, ${e.message}` });
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
   }
 });
 
-router.get("/cal/:itineraryId", async (req, res, next) => {
-  const itineraryId = req.params.itineraryId;
+router.get("/explore", async function (req, res, next) {
+  try {
+    res.send(
+      await Itinerary.find({ userId: { $exists: false } }).sort({
+        $natural: -1,
+      })
+    );
+  } catch (e) {
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
+  }
+});
+
+router.get("/cal/:itineraryId", verifyToken, async (req, res, next) => {
+  const { itineraryId } = req.params;
 
   try {
     const days = await Day.find({ parentItineraryId: itineraryId });
@@ -84,7 +92,6 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
     return res
       .set({
         "Content-Type": "text/calendar",
-        "Content-Disposition": `attachment; filename="itinerary.ics"`,
       })
       .status(200)
       .send(cal.value);
@@ -93,8 +100,8 @@ router.get("/cal/:itineraryId", async (req, res, next) => {
   }
 });
 
-router.get("/pdf/:itineraryId", async (req, res, next) => {
-  const itineraryId = req.params.itineraryId;
+router.get("/pdf/:itineraryId", verifyToken, async (req, res, next) => {
+  const { itineraryId } = req.params;
   try {
     const itinerary = await Itinerary.findOne({ id: itineraryId });
     const days = await Day.find({ parentItineraryId: itineraryId });
@@ -143,7 +150,7 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
     await page.goto(`file://${filePath}`, { waitUntil: "domcontentloaded" });
 
     await page.evaluate(
-      (location, welcome, days) => {
+      async (location, welcome, days) => {
         console.log("here");
         const locationElement = document.getElementById("itinerary-location");
         if (locationElement) locationElement.textContent = location;
@@ -153,6 +160,17 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
 
         const mainElement = document.getElementById("main");
         mainElement.innerHTML = days;
+
+        const images = Array.from(document.querySelectorAll("img"));
+        await Promise.all(
+          images.map((img) => {
+            if (img.complete) return;
+            return new Promise((resolve, reject) => {
+              img.addEventListener("load", resolve);
+              img.addEventListener("error", resolve);
+            });
+          })
+        );
       },
       itineraryLocation,
       welcomeMessage,
@@ -170,7 +188,6 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
     return res
       .set({
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename=itinerary.pdf`,
       })
       .status(200)
       .send(pdfBuffer);
@@ -179,23 +196,38 @@ router.get("/pdf/:itineraryId", async (req, res, next) => {
   }
 });
 
-router.post("/:userId", async function (req, res, next) {
+router.post("/", verifyToken, async function (req, res, next) {
   const { location, startDate, endDate } = req.body;
-  const { userId } = req.params;
+  const userId = req.user.id;
 
+  let preferences = {};
   try {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
+    if (user.preferences) {
+      preferences = user.preferences;
+    }
   } catch (err) {
     return res
       .status(500)
       .json({ message: "Error occurred connecting to the database" });
   }
-
   try {
-    const aiResponse = await retry(3, async () =>
-      JSON.parse(await generateItinerary(location, startDate, endDate))
-    );
+    const aiResponse = await retry(2, async () => {
+      const jsonString = await generateItinerary(
+        location,
+        startDate,
+        endDate,
+        preferences
+      );
+
+      try {
+        return JSON.parse(jsonString);
+      } catch (e) {
+        console.log("debugging json");
+        return JSON.parse(await debugJson(jsonString));
+      }
+    });
 
     const itineraryId = uuid();
     const bounds = await getBoundsFromLocation(location);
@@ -259,12 +291,25 @@ router.post("/:userId", async function (req, res, next) {
   }
 });
 
-router.delete("/:itineraryId", async function (req, res, next) {
-  const itineraryId = req.params.itineraryId;
+router.delete("/:itineraryId", verifyToken, async function (req, res, next) {
+  const { itineraryId } = req.params;
+  const userId = req.user.id;
 
-  await Day.deleteMany({ parentItineraryId: itineraryId });
-  await Itinerary.deleteOne({ id: itineraryId });
-  return res.status(200).send({ message: "Member deleted successfully" });
+  try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId !== userId)
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this itinerary" });
+
+    await Day.deleteMany({ parentItineraryId: itineraryId });
+    await Itinerary.deleteOne({ id: itineraryId });
+    return res.status(200).send({ message: "Itinerary deleted successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "There was a problem with the database connection" });
+  }
 });
 
 module.exports = router;

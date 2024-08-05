@@ -55,6 +55,7 @@ export const editUser = createAsyncThunk(
     const {
       auth: { token },
     } = getState();
+
     try {
       const response = await axios.post(`${API_URL}/edit`, userDetails, {
         headers: {

@@ -1,23 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Typography, Grid, Button, Box, Container, Card } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import SurveyForm from "../components/SurveyForm";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import LoadingDialog from "../components/LoadingDialog";
-import { getItinerariesAsync } from "../redux/itinerarySlice";
 
 const MyItineraries = () => {
   const itineraries = useSelector((state) => state.itineraries.itineraryList);
   const itineraryStatus = useSelector((state) => state.itineraries.status);
   const [formOpen, setFormOpen] = useState(false);
-  const dispatch = useDispatch();
-
-  const user = useSelector((state) => state.auth.user);
-  const userId = user != null ? user.id : "";
-
-  useEffect(() => {
-    dispatch(getItinerariesAsync(userId));
-  }, [dispatch, userId]);
 
   return (
     <Box>
@@ -69,7 +60,10 @@ const MyItineraries = () => {
 
                 {itineraries.map((itinerary) => (
                   <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
-                    <ItineraryCard itinerary={itinerary} />
+                    <ItineraryCard
+                      itinerary={itinerary}
+                      personalItinerary={true}
+                    />
                   </Grid>
                 ))}
               </Grid>
