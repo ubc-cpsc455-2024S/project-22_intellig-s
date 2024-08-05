@@ -3,7 +3,6 @@ import { Container, Typography, Grid, Box } from "@mui/material";
 import ItineraryCard from "../components/ItineraryCard";
 import { useSelector, useDispatch } from "react-redux";
 import { getItinerariesAsync } from "../redux/itinerarySlice";
-import Logo from "../assets/home_page.svg?react";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -58,7 +57,11 @@ const Home = () => {
                   mb: 3,
                 }}
               >
-                <Logo />
+                <Box
+                  component="img"
+                  src="src/assets/home_page.png"
+                  sx={{ width: "100%" }}
+                />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="h4" color="secondary">
