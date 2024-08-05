@@ -126,53 +126,55 @@ const ItineraryDetails = () => {
                   <Typography variant="h4" sx={{ fontWeight: "900" }}>
                     {itinerary.location}
                   </Typography>
-                  <Typography>
+                  <Typography sx={{ mt: 1 }}>
                     {new Date(itinerary.startDate).toLocaleDateString()}
                     {" - "}
                     {new Date(itinerary.endDate).toLocaleDateString()}
                   </Typography>
                 </>
               )}
-              {!isExplore && (
-                <>
-                  <Button
-                    variant="contained"
-                    sx={{ mr: 1, mb: 1, pl: 1 }}
-                    onClick={() => {
-                      dispatch(generateNewDay({ itineraryId: id }))
-                        .unwrap()
-                        .then(() => {
-                          dispatch(
-                            incrementItineraryEndDate({ itineraryId: id })
-                          );
-                        });
-                    }}
-                  >
-                    <AutoAwesome sx={{ mr: 0.75 }} />
-                    Generate New Day
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{ mr: 1, mb: 1, pl: 1 }}
-                    onClick={() => {
-                      dispatch(getItineraryCalendar(id));
-                    }}
-                  >
-                    <CalendarMonth sx={{ mr: 0.75 }} />
-                    Add to Calendar
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{ mr: 1, mb: 1, pl: 1 }}
-                    onClick={() => {
-                      dispatch(getItineraryPdf(id));
-                    }}
-                  >
-                    <PictureAsPdf sx={{ mr: 0.75 }} />
-                    Save as PDF
-                  </Button>
-                </>
-              )}
+              <Box sx={{ mt: 1.5 }}>
+                {!isExplore && (
+                  <>
+                    <Button
+                      variant="contained"
+                      sx={{ mr: 1, mb: 1, pl: 1 }}
+                      onClick={() => {
+                        dispatch(generateNewDay({ itineraryId: id }))
+                          .unwrap()
+                          .then(() => {
+                            dispatch(
+                              incrementItineraryEndDate({ itineraryId: id })
+                            );
+                          });
+                      }}
+                    >
+                      <AutoAwesome sx={{ mr: 0.75 }} />
+                      Generate New Day
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{ mr: 1, mb: 1, pl: 1 }}
+                      onClick={() => {
+                        dispatch(getItineraryCalendar(id));
+                      }}
+                    >
+                      <CalendarMonth sx={{ mr: 0.75 }} />
+                      Add to Calendar
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{ mr: 1, mb: 1, pl: 1 }}
+                      onClick={() => {
+                        dispatch(getItineraryPdf(id));
+                      }}
+                    >
+                      <PictureAsPdf sx={{ mr: 0.75 }} />
+                      Save as PDF
+                    </Button>
+                  </>
+                )}
+              </Box>
             </Card>
           </Grid>
 
