@@ -26,6 +26,7 @@ const SurveyForm = ({ open, handleClose }) => {
     startDate: "",
     endDate: "",
   });
+  const [formErrors, setFormErrors] = useState({});
 
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1);
@@ -35,7 +36,31 @@ const SurveyForm = ({ open, handleClose }) => {
     setStep((prevStep) => prevStep - 1);
   };
 
+  const validateForm = () => {
+    let errorMessages = {};
+
+    if (formValues.startDate === "") {
+      errorMessages.startDate = "Start date cannot be blank";
+      setStep(2);
+    }
+
+    if (formValues.startDate === "") {
+      errorMessages.endDate = "End date cannot be blank";
+      setStep(2);
+    }
+
+    if (formValues.location === "") {
+      errorMessages.location = "Location cannot be blank";
+      setStep(1);
+    }
+
+    setFormErrors(errorMessages);
+    return !Object.keys(errorMessages).length;
+  };
+
   const handleSubmit = () => {
+    if (!validateForm()) return;
+
     const newItinerary = {
       ...formValues,
     };
@@ -97,6 +122,7 @@ const SurveyForm = ({ open, handleClose }) => {
                       location: newLocation.description,
                     })
                   }
+                  formError={formErrors.location}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -144,7 +170,12 @@ const SurveyForm = ({ open, handleClose }) => {
                       })
                     }
                     slotProps={{
-                      textField: { size: "small", fullWidth: true },
+                      textField: {
+                        size: "small",
+                        fullWidth: true,
+                        error: formErrors.startDate ? true : false,
+                        helperText: formErrors.startDate,
+                      },
                     }}
                   />
                 </Grid>
@@ -173,7 +204,12 @@ const SurveyForm = ({ open, handleClose }) => {
                       })
                     }
                     slotProps={{
-                      textField: { size: "small", fullWidth: true },
+                      textField: {
+                        size: "small",
+                        fullWidth: true,
+                        error: formErrors.endDate ? true : false,
+                        helperText: formErrors.endDate,
+                      },
                     }}
                   />
                 </Grid>
