@@ -5,6 +5,7 @@ import axios from "axios";
 
 const actionTypes = {
   GET_ITINERARIES: "itineraries/getItineraries",
+  GET_EXPLORE_ITINERARIES: "itineraries/getExploreItineraries",
   ADD_ITINERARY: "itineraries/addItinerary",
   DELETE_ITINERARY: "itineraries/deleteItinerary",
   GET_ITINERARY_CALENDAR: "itineraries/getItineraryCalendar",
@@ -19,6 +20,13 @@ export const getItinerariesAsync = createAsyncThunk(
     } = getState();
 
     return await itinerariesAPI.getItineraries(token);
+  }
+);
+
+export const getExploreItineraries = createAsyncThunk(
+  actionTypes.GET_EXPLORE_ITINERARIES,
+  async () => {
+    return await itinerariesAPI.getExploreItineraries();
   }
 );
 
@@ -123,6 +131,7 @@ export const getItineraryPdf = createAsyncThunk(
 const itinerarySlice = createSlice({
   name: "itineraries",
   initialState: {
+    exploreItineraries: [],
     itineraryList: [],
     status: "idle",
   },
@@ -146,6 +155,9 @@ const itinerarySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getExploreItineraries.fulfilled, (state, action) => {
+        state.exploreItineraries = action.payload;
+      })
       .addCase(getItinerariesAsync.fulfilled, (state, action) => {
         state.itineraryList = action.payload;
       })

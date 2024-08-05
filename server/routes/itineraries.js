@@ -36,9 +36,23 @@ router.get("/", verifyToken, async function (req, res, next) {
   try {
     res.send(await Itinerary.find({ userId: userId }).sort({ $natural: -1 }));
   } catch (e) {
-    res
-      .status(500)
-      .json({ message: `Getting itineraries from database, ${e.message}` });
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
+  }
+});
+
+router.get("/explore", async function (req, res, next) {
+  try {
+    res.send(
+      await Itinerary.find({ userId: { $exists: false } }).sort({
+        $natural: -1,
+      })
+    );
+  } catch (e) {
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
   }
 });
 

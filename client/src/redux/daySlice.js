@@ -33,6 +33,20 @@ export const fetchDays = createAsyncThunk(
   }
 );
 
+export const fetchExploreDays = createAsyncThunk(
+  "days/fetchExploreDays",
+  async (itineraryId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/days/explore/${itineraryId}`
+      );
+      return { itineraryId, days: response.data };
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  }
+);
+
 // AI generate a new day for a specific itinerary
 export const generateNewDay = createAsyncThunk(
   "days/generateNewDay",
@@ -154,6 +168,18 @@ const daySlice = createSlice({
         state.dayLists[itineraryId] = days;
       })
       .addCase(fetchDays.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchExploreDays.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchExploreDays.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { itineraryId, days } = action.payload;
+        state.dayLists[itineraryId] = days;
+      })
+      .addCase(fetchExploreDays.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

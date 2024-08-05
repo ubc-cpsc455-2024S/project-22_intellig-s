@@ -23,7 +23,12 @@ function reorder(days, startIndex, endIndex) {
   });
 }
 
-export default function DayList({ itineraryId, activeDay, setActiveDay }) {
+export default function DayList({
+  itineraryId,
+  activeDay,
+  setActiveDay,
+  isExplore,
+}) {
   const dispatch = useDispatch();
 
   const selectDays = useSelector((state) => state.days.dayLists[itineraryId]);
@@ -71,6 +76,7 @@ export default function DayList({ itineraryId, activeDay, setActiveDay }) {
                 key={day.dayNumber}
                 draggableId={`${day.dayNumber}`}
                 index={index}
+                isDragDisabled={isExplore}
               >
                 {(provided) => (
                   <Grid
@@ -87,6 +93,7 @@ export default function DayList({ itineraryId, activeDay, setActiveDay }) {
                       setActiveDay={setActiveDay}
                       dragHandleProps={provided.dragHandleProps}
                       key={day.dayNumber}
+                      isExplore={isExplore}
                     />
                   </Grid>
                 )}
@@ -104,4 +111,5 @@ DayList.propTypes = {
   itineraryId: PropTypes.string,
   activeDay: PropTypes.number,
   setActiveDay: PropTypes.func,
+  isExplore: PropTypes.bool,
 };

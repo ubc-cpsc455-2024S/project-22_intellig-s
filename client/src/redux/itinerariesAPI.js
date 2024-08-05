@@ -43,8 +43,16 @@ const getItineraries = async (token) => {
   return await response.data;
 };
 
+const getExploreItineraries = async () => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_BACKEND_URL}/itineraries/explore`
+  );
+  return await response.data;
+};
+
 export default {
   addItinerary,
   deleteItinerary,
   getItineraries,
+  getExploreItineraries,
 };

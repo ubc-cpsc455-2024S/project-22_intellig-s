@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { fetchUser } from "./redux/authSlice";
-import { getItinerariesAsync } from "./redux/itinerarySlice";
+import {
+  getExploreItineraries,
+  getItinerariesAsync,
+} from "./redux/itinerarySlice";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./redux/store";
 
@@ -26,6 +29,8 @@ const App = () => {
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
+    dispatch(getExploreItineraries());
+
     if (!user) {
       const oldToken = localStorage.getItem("token");
       if (oldToken) {
@@ -49,7 +54,10 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/my-itineraries" element={<MyItineraries />} />
-            <Route path="/itineraries/:id" element={<ItineraryDetails />} />
+            <Route
+              path="/itinerary/:explore?/:id"
+              element={<ItineraryDetails />}
+            />
             <Route path="/profile/:personalize?" element={<UserProfile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

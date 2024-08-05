@@ -22,7 +22,7 @@ function reorder(activities, startIndex, endIndex) {
   });
 }
 
-export default function ActivityList({ itineraryId, dayId }) {
+export default function ActivityList({ itineraryId, dayId, isExplore }) {
   const dispatch = useDispatch();
 
   const selectActivities = useSelector(
@@ -69,6 +69,7 @@ export default function ActivityList({ itineraryId, dayId }) {
                 key={activity.activityNumber}
                 draggableId={`${activity.activityNumber}`}
                 index={index}
+                isDragDisabled={isExplore}
               >
                 {(provided) => (
                   <Box
@@ -79,6 +80,7 @@ export default function ActivityList({ itineraryId, dayId }) {
                     <ActivityCard
                       activity={activity}
                       dragHandleProps={provided.dragHandleProps}
+                      isExplore={isExplore}
                     />
                   </Box>
                 )}
@@ -96,4 +98,5 @@ ActivityList.propTypes = {
   itineraryId: PropTypes.string,
   dayId: PropTypes.string,
   initialActivities: PropTypes.array,
+  isExplore: PropTypes.bool,
 };

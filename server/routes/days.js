@@ -32,6 +32,23 @@ router.get("/:itineraryId", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/explore/:itineraryId", async function (req, res, next) {
+  const { itineraryId } = req.params;
+
+  try {
+    const itinerary = await Itinerary.findOne({ id: itineraryId });
+    if (itinerary.userId)
+      return res.status(403).json({ message: "Unauthorized" });
+
+    const days = await Day.find({ parentItineraryId: itineraryId });
+    res.status(200).json(days);
+  } catch (e) {
+    res.status(500).json({
+      message: `Getting itineraries from database failed, ${e.message}`,
+    });
+  }
+});
+
 // Reorder all days by itinerary id
 router.post("/reorder", verifyToken, async (req, res) => {
   const { itineraryId, days } = req.body;
