@@ -233,28 +233,25 @@ const ItineraryDetails = () => {
             transform: "translateX(-50%)",
             width: "90%",
             zIndex: 1070,
+            boxShadow: "0 2px 10px black",
           }}
           action={
-            <Grid container alignItems="center" sx={{ height: "100%", mr: 3 }}>
-              <Grid item xs={11}>
-                <Button
-                  size="small"
-                  sx={{ color: "white" }}
-                  onClick={() => navigate("/signup")}
-                >
-                  I&#39;m convinced, sign me up!
-                </Button>
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton
-                  size="small"
-                  onClick={() => setShowAlert(false)}
-                  sx={{ color: "white" }}
-                >
-                  <Close />
-                </IconButton>
-              </Grid>
-            </Grid>
+            <>
+              <Button
+                size="small"
+                sx={{ color: "white" }}
+                onClick={() => navigate("/signup")}
+              >
+                I&#39;m convinced, sign me up!
+              </Button>
+              <IconButton
+                size="small"
+                onClick={() => setShowAlert(false)}
+                sx={{ color: "white", position: "relative", top: 0 }}
+              >
+                <Close />
+              </IconButton>
+            </>
           }
         >
           <Box sx={{ height: "100%", alignItems: "center", p: 0 }}>
