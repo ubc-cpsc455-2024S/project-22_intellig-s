@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/authSlice";
+import { login } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getItinerariesAsync } from "../redux/itinerarySlice";
+import { getItinerariesAsync } from "../../redux/itinerarySlice";
 
 const Login = () => {
   const dispatch = useDispatch();

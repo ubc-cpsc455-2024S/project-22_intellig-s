@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { updatePreferences } from "../redux/authSlice";
+import { updatePreferences } from "../../redux/authSlice";
 
 function FormQuestion({ question, children }) {
   return (

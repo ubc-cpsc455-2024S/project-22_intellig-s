@@ -4,7 +4,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import PropTypes from "prop-types";
 import DayCard from "./DayCard";
 
-import { reorderDays } from "../redux/daySlice";
+import { reorderDays } from "../../redux/daySlice";
 
 function reorder(days, startIndex, endIndex) {
   const dates = days.map((day) => day.date);

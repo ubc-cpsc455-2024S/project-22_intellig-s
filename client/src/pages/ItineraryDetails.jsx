@@ -13,9 +13,9 @@ import {
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 
-import ControlledMap from "../components/ControlledMap";
-import DayList from "../components/DayList";
-import LoadingDialog from "../components/LoadingDialog";
+import ControlledMap from "../components/itinerary-details/ControlledMap";
+import DayList from "../components/itinerary-details/DayList";
+import LoadingDialog from "../components/common/LoadingDialog";
 
 import { fetchDays, fetchExploreDays, generateNewDay } from "../redux/daySlice";
 import {

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Home, MenuSharp, Person, TravelExplore } from "@mui/icons-material";
 
-import { logout } from "../redux/authSlice";
+import { logout } from "../../redux/authSlice";
 
 const NavBar = () => {
   const user = useSelector((state) => state.auth.user);

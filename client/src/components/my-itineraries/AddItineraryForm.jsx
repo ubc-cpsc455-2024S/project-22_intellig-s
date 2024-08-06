@@ -13,11 +13,11 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PropType from "prop-types";
 
-import SearchBar from "./SearchBar";
-import { generateItineraryAsync } from "../redux/itinerarySlice";
+import MapsAutocomplete from "../common/MapsAutocomplete";
+import { generateItineraryAsync } from "../../redux/itinerarySlice";
 import dayjs from "dayjs";
 
-const SurveyForm = ({ open, handleClose }) => {
+const AddItineraryForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [formValues, setFormValues] = useState({
@@ -110,7 +110,7 @@ const SurveyForm = ({ open, handleClose }) => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sx={{ mb: 25 }}>
-                <SearchBar
+                <MapsAutocomplete
                   handleChange={(newLocation) =>
                     setFormValues({
                       ...formValues,
@@ -237,9 +237,9 @@ const SurveyForm = ({ open, handleClose }) => {
   );
 };
 
-SurveyForm.propTypes = {
+AddItineraryForm.propTypes = {
   open: PropType.bool,
   handleClose: PropType.func,
 };
 
-export default SurveyForm;
+export default AddItineraryForm;

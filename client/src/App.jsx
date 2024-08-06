@@ -11,10 +11,10 @@ import store from "./redux/store";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import NavBar from "./components/NavBar";
+import NavBar from "./components/common/NavBar";
 import Home from "./pages/Home";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+import Login from "./components/user/Login";
+import Signup from "./components/user/Signup";
 
 import MyItineraries from "./pages/MyItineraries";
 import ItineraryDetails from "./pages/ItineraryDetails";

@@ -16,7 +16,7 @@ import {
 import { Edit } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import PersonalizationForm from "../components/PersonalizationForm";
+import PersonalizationForm from "../components/user/PersonalizationForm";
 import { useEffect, useState } from "react";
 import { editUser, updateProfilePicture } from "../redux/authSlice";
 import { useParams } from "react-router-dom";

@@ -9,7 +9,7 @@ import {
 
 import PropType from "prop-types";
 import { useDispatch } from "react-redux";
-import { deleteItineraryAsync } from "../redux/itinerarySlice";
+import { deleteItineraryAsync } from "../../redux/itinerarySlice";
 import { useNavigate } from "react-router-dom";
 
 function ItineraryCard({ itinerary, isExplore }) {

@@ -31,7 +31,7 @@ function loadScript(src, position, id) {
 
 const autocompleteService = { current: null };
 
-function SearchBar({ handleChange, formError }) {
+function MapsAutocomplete({ handleChange, formError }) {
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
@@ -206,4 +206,4 @@ function CustomPaper({ children }) {
   );
 }
 
-export default SearchBar;
+export default MapsAutocomplete;
