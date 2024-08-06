@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -17,14 +15,16 @@ import {
 import { Home, MenuSharp, Person, TravelExplore } from "@mui/icons-material";
 
 import { logout } from "../../redux/authSlice";
+import { useState } from "react";
 
 const NavBar = () => {
-  const user = useSelector((state) => state.auth.user);
-  const isSignedIn = user != null;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [navAnchorEl, setNavAnchorEl] = React.useState(null);
+  const user = useSelector((state) => state.auth.user);
+  const isSignedIn = user != null;
+
+  const [navAnchorEl, setNavAnchorEl] = useState(null);
   const handleNavMenuOpen = (event) => {
     setNavAnchorEl(event.currentTarget);
   };
@@ -32,7 +32,7 @@ const NavBar = () => {
     setNavAnchorEl(null);
   };
 
-  const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const handleProfileMenuOpen = (event) => {
     setProfileAnchorEl(event.currentTarget);
   };
@@ -47,6 +47,7 @@ const NavBar = () => {
       sx={{ boxShadow: "none" }} // Remove the box shadow
     >
       <Toolbar sx={{ height: "64px" }}>
+        {/* left side of navbar */}
         <Box sx={{ flex: "1 1 0px", textAlign: "left" }}>
           <Box display={{ xs: "none", md: "block" }}>
             <Button
@@ -128,6 +129,8 @@ const NavBar = () => {
             </Menu>
           </Box>
         </Box>
+
+        {/* center of nav bar */}
         <Box sx={{ flex: "1 1 0px", textAlign: "center" }}>
           <Typography
             sx={{
@@ -140,6 +143,8 @@ const NavBar = () => {
             AI-tinerary
           </Typography>
         </Box>
+
+        {/* right side of navbar */}
         <Box sx={{ flex: "1 1 0px", textAlign: "right" }}>
           {isSignedIn ? (
             <IconButton
@@ -167,7 +172,8 @@ const NavBar = () => {
             </IconButton>
           ) : (
             <>
-              <Box display={{ xs: "none", md: "block" }}>
+              {/* buttons used for desktop site */}
+              <Box display={{ xs: "none", md: "none" }}>
                 <Button
                   variant="contained"
                   sx={{
@@ -200,6 +206,8 @@ const NavBar = () => {
                   Sign Up
                 </Button>
               </Box>
+
+              {/* icon button used for mobile site */}
               <IconButton
                 edge="end"
                 aria-label="account of current user"
@@ -207,7 +215,7 @@ const NavBar = () => {
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
                 color="inherit"
-                sx={{ flex: "1 1 0px", display: { xs: "flex", md: "none" } }}
+                sx={{ float: "right", display: { xs: "flex", md: "none" } }}
               >
                 <Avatar sx={{ bgcolor: "white", height: 30, width: 30 }}>
                   <Person sx={{ color: "#3D52A0" }} fontSize="medium" />
@@ -217,6 +225,7 @@ const NavBar = () => {
           )}
         </Box>
 
+        {/* profile options menu */}
         <Menu
           anchorEl={profileAnchorEl}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}

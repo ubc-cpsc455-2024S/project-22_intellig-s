@@ -6,6 +6,7 @@ import DayCard from "./DayCard";
 
 import { reorderDays } from "../../redux/daySlice";
 
+// helper function to process day data after drag and drop
 function reorder(days, startIndex, endIndex) {
   const dates = days.map((day) => day.date);
 

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { reorderActivities } from "../../redux/daySlice";
 import ActivityCard from "./ActivityCard";
 
+// helper function to process activity data after drag and drop
 function reorder(activities, startIndex, endIndex) {
   const times = activities.map((day) => day.time);
 

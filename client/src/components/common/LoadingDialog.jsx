@@ -5,18 +5,8 @@ import PropTypes from "prop-types";
 
 export default function LoadingDialog({ isOpen, children }) {
   return (
-    <Dialog
-      open={isOpen}
-      sx={{
-        height: "100%",
-        width: "100%",
-        alignItems: "center",
-        m: "auto",
-      }}
-    >
-      <DialogContent
-        sx={{ px: 8, py: 4, alignContent: "center", textAlign: "center" }}
-      >
+    <Dialog open={isOpen}>
+      <DialogContent sx={{ px: 8, py: 4, textAlign: "center" }}>
         <SkewLoader color={theme.palette.primary.main} />
         <Typography>{children}</Typography>
       </DialogContent>

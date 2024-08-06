@@ -35,7 +35,7 @@ export default function DayCard({
     <Card variant="outlined" sx={{ position: "relative" }}>
       <CardMedia
         component="img"
-        sx={{ height: 200, "&:hover": { cursor: "grab" } }}
+        sx={{ height: 200, "&:hover": { cursor: isExplore && "grab" } }}
         image={day.imageUrl}
         alt="Day Image"
         {...dragHandleProps}
@@ -58,6 +58,7 @@ export default function DayCard({
           })}
         </Typography>
 
+        {/* button used to show only this day's markers on map */}
         <Button
           variant="contained"
           sx={{ display: { xs: "none", md: "flex" }, my: 1, pl: 1 }}
@@ -68,6 +69,7 @@ export default function DayCard({
         </Button>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6">Activities</Typography>
+          {/* button used to expand day card to show activities */}
           <IconButton
             onClick={toggleActivities}
             sx={{
@@ -101,6 +103,7 @@ export default function DayCard({
               color="error"
               sx={{ mr: 1, pl: 1 }}
               onClick={() => {
+                // collapse activities on
                 setShowActivities(false);
                 dispatch(
                   removeDay({ itineraryId: day.parentItineraryId, id: day.id })
@@ -108,6 +111,7 @@ export default function DayCard({
                   .unwrap()
                   .then(() => {
                     if (status === "succeeded")
+                      // if delete is successful, decrement the end date of the itinerary
                       dispatch(
                         decrementItineraryEndDate({
                           itineraryId: day.parentItineraryId,

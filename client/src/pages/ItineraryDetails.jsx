@@ -68,6 +68,7 @@ const ItineraryDetails = () => {
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
+        {/* map */}
         <Grid
           item
           xs={12}
@@ -119,6 +120,7 @@ const ItineraryDetails = () => {
             },
           }}
         >
+          {/* itinerary info */}
           <Grid item xs={12}>
             <Card variant="outlined" sx={{ p: 3, mb: 2 }}>
               {itinerary && (
@@ -133,6 +135,8 @@ const ItineraryDetails = () => {
                   </Typography>
                 </>
               )}
+
+              {/* itinerary utility buttons (only loaded if not homepage itinerary) */}
               <Box sx={{ mt: 1.5 }}>
                 {!isExplore && (
                   <>
@@ -178,6 +182,7 @@ const ItineraryDetails = () => {
             </Card>
           </Grid>
 
+          {/* day list */}
           <Grid item xs={12}>
             {days && (
               <DayList
@@ -191,10 +196,12 @@ const ItineraryDetails = () => {
         </Grid>
       </Grid>
 
+      {/* loading dialog for generating new day */}
       <LoadingDialog isOpen={dayStatus === "generating"}>
         Generating new day...
       </LoadingDialog>
 
+      {/* loading dialog for downloading pdf/calendar invites */}
       <LoadingDialog isOpen={itineraryStatus === "downloading"}>
         Downloading...
       </LoadingDialog>

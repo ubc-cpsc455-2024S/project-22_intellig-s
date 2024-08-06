@@ -39,6 +39,8 @@ function ItineraryCard({ itinerary, isExplore }) {
           {/* exclude country from location to maintain clean look */}
           {`${itinerary.location.split(",").slice(0, -1).join(",")}`}
         </Typography>
+
+        {/* show month and year of itinerary (or range if the itinerary spans multiple months) */}
         <Typography noWrap={true} fontSize="0.9em">
           {new Date(itinerary.startDate).getMonth() ===
           new Date(itinerary.endDate).getMonth()
@@ -56,6 +58,7 @@ function ItineraryCard({ itinerary, isExplore }) {
         </Typography>
       </CardContent>
       <CardActions>
+        {/* show delete button if not a homepage itinerary */}
         {!isExplore && (
           <Button
             size="small"

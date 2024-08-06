@@ -25,10 +25,12 @@ export default function ControlledMap({
       onCameraChanged={handleCameraChange}
       clickableIcons={false}
     >
+      {/* button to reset the active day, and render all markers on map */}
       <MapControl position={ControlPosition.TOP_RIGHT}>
         {resetButton}
       </MapControl>
       {markers.map((marker, index) => {
+        // if there is no active day, return all markers
         if (activeDay === null)
           return (
             <MarkerWithInfoWindow
@@ -38,6 +40,7 @@ export default function ControlledMap({
             ></MarkerWithInfoWindow>
           );
 
+        // if there is an activeDay, return markers from that day only
         return activeDay === marker.dayNumber ? (
           <MarkerWithInfoWindow
             key={marker.latitude}

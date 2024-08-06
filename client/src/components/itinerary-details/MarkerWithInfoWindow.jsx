@@ -26,6 +26,7 @@ export function MarkerWithInfoWindow({
         position={position}
         title={"AdvancedMarker that opens an Infowindow when clicked."}
       >
+        {/* only specify pin children if prop is assigned by parent */}
         {pinContent && (
           <Pin>
             <Typography sx={{ color: "white" }}>{pinContent}</Typography>
@@ -42,6 +43,7 @@ export function MarkerWithInfoWindow({
             <Grid item xs={11}>
               <Typography>{infoWindowContent}</Typography>
             </Grid>
+            {/* close button */}
             <Grid item xs={1} sx={{ alignContent: "center" }}>
               <IconButton
                 sx={{ width: 22, height: 22 }}
