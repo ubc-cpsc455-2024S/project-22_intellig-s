@@ -31,7 +31,7 @@ function loadScript(src, position, id) {
 
 const autocompleteService = { current: null };
 
-function SearchBar({ handleChange }) {
+function SearchBar({ handleChange, formError }) {
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
@@ -137,6 +137,8 @@ function SearchBar({ handleChange }) {
             endAdornment: <Search />,
           }}
           placeholder="Search cities..."
+          error={formError ? true : false}
+          helperText={formError}
         />
       )}
       renderOption={(props, option) => {

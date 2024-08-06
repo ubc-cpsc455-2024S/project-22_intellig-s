@@ -114,7 +114,7 @@ const NavBar = () => {
                 >
                   Home
                 </MenuItem>
-                {isSignedIn ? (
+                {isSignedIn && (
                   <MenuItem
                     onClick={() => {
                       navigate("/my-itineraries");
@@ -123,25 +123,6 @@ const NavBar = () => {
                   >
                     My Itineraries
                   </MenuItem>
-                ) : (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        navigate("/login");
-                        handleNavMenuClose();
-                      }}
-                    >
-                      Log in
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        navigate("/signup");
-                        handleNavMenuClose();
-                      }}
-                    >
-                      Sign up
-                    </MenuItem>
-                  </>
                 )}
               </Box>
             </Menu>
@@ -185,39 +166,54 @@ const NavBar = () => {
               </Avatar>
             </IconButton>
           ) : (
-            <Box display={{ xs: "none", md: "block" }}>
-              <Button
-                variant="contained"
-                sx={{
-                  mr: 1,
-                  backgroundColor: "white",
-                  border: "1px solid white",
-                  color: "primary.main",
-                  ":hover": {
-                    backgroundColor: "primary.main",
-                    color: "white",
-                  },
-                }}
-                onClick={() => navigate("/login")}
-              >
-                Log In
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  border: "1px solid white",
-                  color: "white",
-                  ":hover": {
+            <>
+              <Box display={{ xs: "none", md: "block" }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    mr: 1,
                     backgroundColor: "white",
-                    color: "primary.main",
                     border: "1px solid white",
-                  },
-                }}
-                onClick={() => navigate("/signup")}
+                    color: "primary.main",
+                    ":hover": {
+                      backgroundColor: "primary.main",
+                      color: "white",
+                    },
+                  }}
+                  onClick={() => navigate("/login")}
+                >
+                  Log In
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    border: "1px solid white",
+                    color: "white",
+                    ":hover": {
+                      backgroundColor: "white",
+                      color: "primary.main",
+                      border: "1px solid white",
+                    },
+                  }}
+                  onClick={() => navigate("/signup")}
+                >
+                  Sign Up
+                </Button>
+              </Box>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls="profile-menu"
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+                sx={{ flex: "1 1 0px", display: { xs: "flex", md: "none" } }}
               >
-                Sign Up
-              </Button>
-            </Box>
+                <Avatar sx={{ bgcolor: "white", height: 30, width: 30 }}>
+                  <Person sx={{ color: "#3D52A0" }} fontSize="medium" />
+                </Avatar>
+              </IconButton>
+            </>
           )}
         </Box>
 
@@ -252,14 +248,24 @@ const NavBar = () => {
               </MenuItem>
             </Box>
           ) : (
-            <MenuItem
-              onClick={() => {
-                navigate("/login");
-                handleProfileMenuClose();
-              }}
-            >
-              Login
-            </MenuItem>
+            <Box>
+              <MenuItem
+                onClick={() => {
+                  navigate("/login");
+                  handleProfileMenuClose();
+                }}
+              >
+                Login
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  navigate("/signup");
+                  handleProfileMenuClose();
+                }}
+              >
+                Signup
+              </MenuItem>
+            </Box>
           )}
         </Menu>
       </Toolbar>

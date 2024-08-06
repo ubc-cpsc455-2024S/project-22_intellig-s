@@ -27,8 +27,14 @@ function UserDetails({
   setPersonalizeFormOpen,
 }) {
   return (
-    <Grid item container xs={12} spacing={4}>
-      <Grid item xs={2} display={{ sm: "none" }} />
+    <Grid
+      item
+      container
+      xs={12}
+      spacing={4}
+      alignItems="center"
+      justifyContent="center"
+    >
       <Grid item xs={8} sm={3}>
         <Box
           sx={{
@@ -76,7 +82,6 @@ function UserDetails({
           </Badge>
         </Box>
       </Grid>
-      <Grid item xs={2} display={{ sm: "none" }} />
 
       <Grid item xs={12} sm={9} sx={{ alignContent: "center" }}>
         <Typography
@@ -240,9 +245,8 @@ function EditUserForm({ user }) {
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={0} md={3} />
-      <Grid item xs={12} md={6}>
+    <Grid container spacing={2} alignItems="center" justifyContent="center">
+      <Grid item xs={12}>
         <Typography
           sx={{
             typography: {
@@ -255,31 +259,27 @@ function EditUserForm({ user }) {
           User Information
         </Typography>
       </Grid>
-      <Grid item container spacing={1} xs={12} md={3} textAlign={"right"}>
+      <Grid item container spacing={1} xs={12} textAlign={"right"}>
         {editMode ? (
-          <>
-            <Grid item xs={12} md={6}>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  setFormValues(user);
-                  setEditMode(false);
-                }}
-                sx={{ width: { xs: "100%", md: "auto" } }}
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Button
-                variant="contained"
-                onClick={() => onSubmit()}
-                sx={{ width: { xs: "100%", md: "auto" } }}
-              >
-                Confirm
-              </Button>
-            </Grid>
-          </>
+          <Grid item xs={12}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setFormValues(user);
+                setEditMode(false);
+              }}
+              sx={{ width: { xs: "100%", md: "auto" }, mr: 1, mb: 1 }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => onSubmit()}
+              sx={{ width: { xs: "100%", md: "auto" }, mb: 1 }}
+            >
+              Confirm
+            </Button>
+          </Grid>
         ) : (
           <Grid item xs={12}>
             <Button
@@ -357,7 +357,6 @@ function EditUserForm({ user }) {
           }
         />
       </Grid>
-      <Grid item xs={12}></Grid>
     </Grid>
   );
 }

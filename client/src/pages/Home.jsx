@@ -47,13 +47,13 @@ const Home = () => {
                   <Grid item xs={12} md={7} sx={{ justifyContent: "center" }}>
                     <Box
                       component="img"
-                      src="src/assets/home_page.png"
+                      src="assets/home_page.png"
                       sx={{ width: "100%", justifyContent: "center" }}
                     />
                   </Grid>
                 </Grid>
 
-                <Grid item xs={12} alignItems="center">
+                <Grid item xs={12} alignItems="center" sx={{ mb: 2 }}>
                   <Card variant="outlined" sx={{ py: 4, px: 2 }}>
                     <Grid container spacing={4}>
                       <Grid item xs={12}>
