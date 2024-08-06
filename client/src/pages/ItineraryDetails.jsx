@@ -57,11 +57,12 @@ const ItineraryDetails = () => {
 
   const [activeDay, setActiveDay] = useState(null);
   const [mapMode, setMapMode] = useState(false);
-  const [showAlert, setShowAlert] = useState(!user);
+  const [showAlert, setShowAlert] = useState(true);
 
   useEffect(() => {
     isExplore ? dispatch(fetchExploreDays(id)) : dispatch(fetchDays(id));
-  }, [dispatch, id, isExplore]);
+    if (user) setShowAlert(false);
+  }, [dispatch, id, isExplore, user]);
 
   const markers = days
     ? days
