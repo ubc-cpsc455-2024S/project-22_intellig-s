@@ -72,6 +72,7 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
     handleClose();
   };
 
+  // used for changing format on mobiles
   const xs = useMediaQuery("(min-width:600px)");
 
   const renderButtonGroup = (field, options) => {
@@ -123,6 +124,8 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
       <DialogTitle textAlign={"center"}>
         Personalize Your Experience
       </DialogTitle>
+
+      {/* form questions */}
       <DialogContent>
         <Grid container spacing={2} sx={{ textAlign: "center" }}>
           <FormQuestion question={`Are you traveling with any kids?`}>
@@ -233,6 +236,8 @@ const PersonalizationForm = ({ open, handleClose, initialFormValues }) => {
           </FormQuestion>
         </Grid>
       </DialogContent>
+
+      {/* action buttons */}
       <DialogActions sx={{ pt: 1, boxShadow: "0px -1px 5px lightgrey" }}>
         <Grid container spacing={2}>
           <Grid item xs={6}>

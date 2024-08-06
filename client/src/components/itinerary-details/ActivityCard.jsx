@@ -10,6 +10,7 @@ export default function ActivityCard({ activity, dragHandleProps, isExplore }) {
           {isExplore ? (
             <Box sx={{ height: 30 }}></Box>
           ) : (
+            // drag handle used for drag and drop functionality
             <IconButton
               variant="outlined"
               disableRipple

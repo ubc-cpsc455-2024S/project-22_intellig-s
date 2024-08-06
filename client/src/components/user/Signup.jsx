@@ -178,11 +178,15 @@ const Signup = () => {
                 FormHelperTextProps={{ component: "span" }}
               />
             </Grid>
+
+            {/* show error message if one is returned from server */}
             {error && (
               <Grid item xs={12}>
                 <Typography color={"error"}>{error.message}</Typography>
               </Grid>
             )}
+
+            {/* sign up button */}
             <Grid item xs={12}>
               <Button
                 variant={"contained"}
@@ -193,6 +197,8 @@ const Signup = () => {
                 Sign Up
               </Button>
             </Grid>
+
+            {/* redirect to log in button */}
             <Grid item xs={12}>
               <Button
                 variant={"outlined"}

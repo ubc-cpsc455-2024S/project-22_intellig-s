@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Button, Card, Fab, Grid, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  Fab,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import {
   AutoAwesome,
   CalendarMonth,
+  Close,
   PictureAsPdf,
   Place,
   RestartAlt,
@@ -29,6 +39,9 @@ const ItineraryDetails = () => {
   const isExplore = explore === "explore";
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
 
   const days = useSelector((state) => state.days.dayLists[id]);
   const dayStatus = useSelector((state) => state.days.status);
@@ -44,6 +57,7 @@ const ItineraryDetails = () => {
 
   const [activeDay, setActiveDay] = useState(null);
   const [mapMode, setMapMode] = useState(false);
+  const [showAlert, setShowAlert] = useState(!user);
 
   useEffect(() => {
     isExplore ? dispatch(fetchExploreDays(id)) : dispatch(fetchDays(id));
@@ -68,6 +82,7 @@ const ItineraryDetails = () => {
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
       <Grid container sx={{ height: "100vh", pt: "64px" }}>
+        {/* map */}
         <Grid
           item
           xs={12}
@@ -119,6 +134,7 @@ const ItineraryDetails = () => {
             },
           }}
         >
+          {/* itinerary info */}
           <Grid item xs={12}>
             <Card variant="outlined" sx={{ p: 3, mb: 2 }}>
               {itinerary && (
@@ -133,6 +149,8 @@ const ItineraryDetails = () => {
                   </Typography>
                 </>
               )}
+
+              {/* itinerary utility buttons (only loaded if not homepage itinerary) */}
               <Box sx={{ mt: 1.5 }}>
                 {!isExplore && (
                   <>
@@ -178,6 +196,7 @@ const ItineraryDetails = () => {
             </Card>
           </Grid>
 
+          {/* day list */}
           <Grid item xs={12}>
             {days && (
               <DayList
@@ -191,13 +210,56 @@ const ItineraryDetails = () => {
         </Grid>
       </Grid>
 
+      {/* loading dialog for generating new day */}
       <LoadingDialog isOpen={dayStatus === "generating"}>
         Generating new day...
       </LoadingDialog>
 
+      {/* loading dialog for downloading pdf/calendar invites */}
       <LoadingDialog isOpen={itineraryStatus === "downloading"}>
         Downloading...
       </LoadingDialog>
+
+      {/* alert to create account if exploring */}
+      {showAlert && (
+        <Alert
+          variant="filled"
+          icon={false}
+          color="primary"
+          sx={{
+            position: "absolute",
+            bottom: 10,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "90%",
+            zIndex: 1070,
+            boxShadow: "0 2px 10px black",
+          }}
+          action={
+            <>
+              <Button
+                size="small"
+                sx={{ color: "white" }}
+                onClick={() => navigate("/signup")}
+              >
+                I&#39;m convinced, sign me up!
+              </Button>
+              <IconButton
+                size="small"
+                onClick={() => setShowAlert(false)}
+                sx={{ color: "white", position: "relative", top: 0 }}
+              >
+                <Close />
+              </IconButton>
+            </>
+          }
+        >
+          <Box sx={{ height: "100%", alignItems: "center", p: 0 }}>
+            Looking to create your own personalized itineraries? Create an
+            account now!
+          </Box>
+        </Alert>
+      )}
 
       {/* Mobile buttons */}
       <Fab

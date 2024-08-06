@@ -394,8 +394,10 @@ function UserProfile() {
                     Settings
                   </Typography>
                 </Grid>
+
                 {user && (
                   <>
+                    {/* user details component */}
                     <Grid item xs={12}>
                       <Card variant="outlined" sx={{ p: 2 }}>
                         <UserDetails
@@ -409,6 +411,8 @@ function UserProfile() {
                         />
                       </Card>
                     </Grid>
+
+                    {/* edit user component */}
                     <Grid item xs={12}>
                       <Card variant="outlined" sx={{ p: 2 }}>
                         <EditUserForm user={user}></EditUserForm>
@@ -420,6 +424,7 @@ function UserProfile() {
             </Card>
           </Container>
 
+          {/* dialogs */}
           {user && (
             <>
               <PersonalizationForm
@@ -427,6 +432,7 @@ function UserProfile() {
                 initialFormValues={user.preferences}
                 handleClose={() => setPersonalizeFormOpen(false)}
               ></PersonalizationForm>
+              {/* dialog to handle profile picture changes */}
               <UploadImageDialog
                 open={uploadImageDialogOpen}
                 handleClose={() => setUploadImageDialogOpen(false)}

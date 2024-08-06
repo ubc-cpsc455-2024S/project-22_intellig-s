@@ -83,6 +83,7 @@ const Login = () => {
             Login
           </Typography>
           <Grid container spacing={1}>
+            {/* login fields */}
             <Grid item xs={12}>
               <TextField
                 type="text"
@@ -107,11 +108,15 @@ const Login = () => {
                 helperText={formErrors.password}
               />
             </Grid>
+
+            {/* show error message if server returns error */}
             {error && (
               <Grid item xs={12}>
                 <Typography color={"error"}>{error.message}</Typography>
               </Grid>
             )}
+
+            {/* log in button */}
             <Grid item xs={12}>
               <Button
                 variant={"contained"}
@@ -122,6 +127,8 @@ const Login = () => {
                 Login
               </Button>
             </Grid>
+
+            {/* redirect to sign up button */}
             <Grid item xs={12}>
               <Button
                 variant={"outlined"}

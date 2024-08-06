@@ -1,18 +1,11 @@
 /* eslint-disable react/prop-types */
-import {
-  Autocomplete,
-  Paper,
-  TextField,
-  Box,
-  Grid,
-  Typography,
-  Chip,
-} from "@mui/material";
-import parse from "autosuggest-highlight/parse";
-import { debounce } from "@mui/material/utils";
-
-import { Search, Public } from "@mui/icons-material";
 import { useEffect, useMemo, useState, useRef } from "react";
+import { Autocomplete, Paper, TextField, Box, Typography } from "@mui/material";
+import { debounce } from "@mui/material/utils";
+import { Search, Public } from "@mui/icons-material";
+
+import parse from "autosuggest-highlight/parse";
+import PropTypes from "prop-types";
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -102,15 +95,12 @@ function MapsAutocomplete({ handleChange, formError }) {
 
   return (
     <Autocomplete
-      disablePortal
-      autoComplete
       PaperComponent={CustomPaper}
       getOptionLabel={(option) =>
         typeof option === "string" ? option : option.description
       }
       filterOptions={(x) => x}
       options={options}
-      includeInputInList
       filterSelectedOptions
       value={value}
       noOptionsText="No locations"
@@ -130,7 +120,6 @@ function MapsAutocomplete({ handleChange, formError }) {
           InputProps={{
             ...params.InputProps,
             style: {
-              backgroundColor: "#FFF",
               paddingRight: "6px",
             },
             startAdornment: <Public />,
@@ -156,29 +145,22 @@ function MapsAutocomplete({ handleChange, formError }) {
             key={props.key}
             sx={{ borderBottom: "1px solid lightgrey", py: 1.5, m: 0 }}
           >
-            <Grid container alignItems="center">
-              <Grid item sx={{ width: "100%", wordWrap: "break-word" }}>
-                {parts.map((part, index) => (
-                  <Box
-                    key={index}
-                    component="span"
-                    sx={{ fontWeight: part.highlight ? "bold" : "regular" }}
-                  >
-                    {part.text}
-                  </Box>
-                ))}
-                <Typography variant="body2" color="text.secondary">
-                  {option.structured_formatting.secondary_text}
-                </Typography>
-              </Grid>
-            </Grid>
+            <Box sx={{ width: "100%", wordWrap: "break-word" }}>
+              {parts.map((part, index) => (
+                <Box
+                  key={index}
+                  component="span"
+                  sx={{ fontWeight: part.highlight ? "bold" : "regular" }}
+                >
+                  {part.text}
+                </Box>
+              ))}
+              <Typography variant="body2" color="text.secondary">
+                {option.structured_formatting.secondary_text}
+              </Typography>
+            </Box>
           </Box>
         );
-      }}
-      renderTags={(tagValue, getTagProps) => {
-        return tagValue.map((option, index) => (
-          <Chip {...getTagProps({ index })} key={option} label={option} />
-        ));
       }}
     />
   );
@@ -205,5 +187,12 @@ function CustomPaper({ children }) {
     </Paper>
   );
 }
+
+MapsAutocomplete.propTypes = {
+  handleChange: PropTypes.func,
+  formError: PropTypes.string,
+};
+
+CustomPaper.propTypes = { children: PropTypes.node };
 
 export default MapsAutocomplete;

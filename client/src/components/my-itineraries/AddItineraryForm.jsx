@@ -92,6 +92,7 @@ const AddItineraryForm = ({ open, handleClose }) => {
           Add Itinerary
         </DialogTitle>
         <DialogContent>
+          {/* step 1: choose city */}
           {step === 1 && (
             <Grid
               container
@@ -109,6 +110,8 @@ const AddItineraryForm = ({ open, handleClose }) => {
                   Where are you traveling?
                 </Typography>
               </Grid>
+
+              {/* google maps search bar */}
               <Grid item xs={12} sx={{ mb: 25 }}>
                 <MapsAutocomplete
                   handleChange={(newLocation) =>
@@ -120,6 +123,8 @@ const AddItineraryForm = ({ open, handleClose }) => {
                   formError={formErrors.location}
                 />
               </Grid>
+
+              {/* next button */}
               <Grid item xs={12}>
                 <Button
                   fullWidth
@@ -132,6 +137,7 @@ const AddItineraryForm = ({ open, handleClose }) => {
               </Grid>
             </Grid>
           )}
+          {/* step 2: choose dates */}
           {step === 2 && (
             <Grid
               container
@@ -149,6 +155,8 @@ const AddItineraryForm = ({ open, handleClose }) => {
                   When are you planning to travel?
                 </Typography>
               </Grid>
+
+              {/* date pickers */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Grid item xs={12} sm={6}>
                   <DatePicker
@@ -209,6 +217,8 @@ const AddItineraryForm = ({ open, handleClose }) => {
                   />
                 </Grid>
               </LocalizationProvider>
+
+              {/* submit and back buttons */}
               <Grid item xs={12} sm={6}>
                 <Button
                   onClick={handleBack}
