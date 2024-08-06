@@ -173,7 +173,7 @@ const NavBar = () => {
           ) : (
             <>
               {/* buttons used for desktop site */}
-              <Box display={{ xs: "none", md: "none" }}>
+              <Box display={{ xs: "none", md: "block" }}>
                 <Button
                   variant="contained"
                   sx={{
@@ -208,19 +208,20 @@ const NavBar = () => {
               </Box>
 
               {/* icon button used for mobile site */}
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls="profile-menu"
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-                sx={{ float: "right", display: { xs: "flex", md: "none" } }}
-              >
-                <Avatar sx={{ bgcolor: "white", height: 30, width: 30 }}>
-                  <Person sx={{ color: "#3D52A0" }} fontSize="medium" />
-                </Avatar>
-              </IconButton>
+              <Box display={{ xs: "block", md: "none" }}>
+                <IconButton
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls="profile-menu"
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <Avatar sx={{ bgcolor: "white", height: 30, width: 30 }}>
+                    <Person sx={{ color: "#3D52A0" }} fontSize="medium" />
+                  </Avatar>
+                </IconButton>
+              </Box>
             </>
           )}
         </Box>

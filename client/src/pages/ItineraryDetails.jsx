@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Box, Button, Card, Fab, Grid, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  Fab,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import {
   AutoAwesome,
   CalendarMonth,
+  Close,
   PictureAsPdf,
   Place,
   RestartAlt,
@@ -29,6 +39,9 @@ const ItineraryDetails = () => {
   const isExplore = explore === "explore";
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
 
   const days = useSelector((state) => state.days.dayLists[id]);
   const dayStatus = useSelector((state) => state.days.status);
@@ -44,6 +57,7 @@ const ItineraryDetails = () => {
 
   const [activeDay, setActiveDay] = useState(null);
   const [mapMode, setMapMode] = useState(false);
+  const [showAlert, setShowAlert] = useState(!user);
 
   useEffect(() => {
     isExplore ? dispatch(fetchExploreDays(id)) : dispatch(fetchDays(id));
@@ -205,6 +219,50 @@ const ItineraryDetails = () => {
       <LoadingDialog isOpen={itineraryStatus === "downloading"}>
         Downloading...
       </LoadingDialog>
+
+      {/* alert to create account if exploring */}
+      {showAlert && (
+        <Alert
+          variant="filled"
+          icon={false}
+          color="primary"
+          sx={{
+            position: "absolute",
+            bottom: 10,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "90%",
+            zIndex: 1070,
+          }}
+          action={
+            <Grid container alignItems="center" sx={{ height: "100%", mr: 3 }}>
+              <Grid item xs={11}>
+                <Button
+                  size="small"
+                  sx={{ color: "white" }}
+                  onClick={() => navigate("/signup")}
+                >
+                  I&#39;m convinced, sign me up!
+                </Button>
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton
+                  size="small"
+                  onClick={() => setShowAlert(false)}
+                  sx={{ color: "white" }}
+                >
+                  <Close />
+                </IconButton>
+              </Grid>
+            </Grid>
+          }
+        >
+          <Box sx={{ height: "100%", alignItems: "center", p: 0 }}>
+            Looking to create your own personalized itineraries? Create an
+            account now!
+          </Box>
+        </Alert>
+      )}
 
       {/* Mobile buttons */}
       <Fab
