@@ -93,6 +93,13 @@ The next steps for our application involve the social, sharing, and collaboratio
    - Lastly, I worked on securing our API endpoints, by utilizing the token generated for the user to validate their session and expecting that authorization token on the backend. This will prevent bad actors from freely accessing our backend while allowing authenticated users access to essential application processes.
  
 - Jiayin Kralik: I am a fourth year computer science student who is interested in systems! I'm building my own operating system this summer :)
+   - Activity Model Creation:Developed an initial version of the Activity model, nearly complete with only a few bugs left to fix. After discussion, the team decided to simplify by storing activities as an array inside the Day model.
+   - Survey Component (addItinerary): Designed and implemented the survey component for our project using Redux for state management.Focused on enhancing the visual presentation to ensure the survey component is user-friendly and visually appealing.
+   - Frontend: Tasked with and successfully created the itinerary card component, ensuring it integrates well with the rest of the application. Assisted in the initial stages of creating the day card component, laying the groundwork for its completion. Contributed to the initial development of the itinerary details page, ensuring it displays detailed information about each itinerary.
+   - Created detailed mockups of a user’s itinerary and the itinerary browsing page, providing a visual guide for further development.
+   - Home Page Enhancement: Worked on enhancing the home page to display itineraries, ensuring users can browse itineraries before signing up.
+   - User-Specific Itineraries: Initiated the process of making itineraries user-specific, collaborating with Matthew who completed this task.
+
 - Matthew Smith: I'm a BCS student, I have a background in Physics, and I'm passionate about SWE!
     - Frontend/UI:
          - I did significant work in prototyping and developing a proof-of-concept for our frontend UI in the early stages of the project
