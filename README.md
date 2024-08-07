@@ -94,6 +94,21 @@ The next steps for our application involve the social, sharing, and collaboratio
  
 - Jiayin Kralik: I am a fourth year computer science student who is interested in systems! I'm building my own operating system this summer :)
 - Matthew Smith: I'm a BCS student, I have a background in Physics, and I'm passionate about SWE!
+    - Frontend/UI:
+         - I did significant work in prototyping and developing a proof-of-concept for our frontend UI in the early stages of the project
+         - I created several key components including the navbar, the login form, and the signup form.
+         - I created the theme and helped decide on the UI framework we used for the project.
+         - I managed session state to persist authentication status on refresh (via JWT)
+         - Ensured only a specific user's itineraries were shown upon sign-in.
+    - Backend API:
+        - I created any endpoints related to the authentication workflow. This includes sign up, login, and logout.
+        - Developed utility functions needed for authenticating users and persisting that status.
+        - I modified existing APIs to ensure itinieraries were unique to a specifix user
+    - Data Model:
+        - I created the User model which encapsulates all user data outside of itineraries
+        - Integrated this model with relevant endpoints via Mongoose
+    - Extras:
+        - Developed extra functionality that allowed users to download their itinerary to a PDF. This included various UI changes, and additional API endpoint, and an elegant, custom-designed HTML template to create the PDF from. 
 - Chris Tjondro: I like tennis. I like food. Lesson learned: Food after tennis -> Good, Food before tennis -> Bad.
 
 ## Extended Project Description
