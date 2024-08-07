@@ -132,7 +132,7 @@ The next steps for our application involve the social, sharing, and collaboratio
 
 - Chris Tjondro: I'm Chris! I love writing code, playing tennis, and eating food, not necessarily in that order. :)
    - Planning:
-      - Originated the AI itinerary app concept and contributed significantly to selecting the tech stack.
+      - Originated the AI itinerary app concept and contributed to selecting the tech stack.
       - Created an initial mockup for the calendar view.
    - Frontend/UI:
       - Developed and styled React DayCards components for seamless integration within itineraries, using react hooks to dynamically fetch updated itineraries from JSON.
