@@ -84,7 +84,14 @@ The next steps for our application involve the social, sharing, and collaboratio
 ## Team Members/Contributions
 
 - Nand Patel: Hello, I am a fourth-year computer science and mathematics student and I love taking photos with my film camera :-D
-   - I worked on several parts of the project. Near the beginning
+   - I worked on several parts of the project. Near the beginning of our project, I worked on setting up critical parts of our workflow such as the React and Express boilerplate, the MongoDB server, and the Render infrastructure.
+   - I worked on integrating our application with the Google API, which enabled me to create the Google Maps Autocomplete Bar, the integration with our Map component, and several other features such as image retrieval with the Search API and coordinate retrieval using the Places API.
+   - I also worked on setting up the data model for itineraries, which enabled us to create the itinerary creation user flow.
+   - Regarding frontend development, I worked on maintaining styling consistency across our several pages, with consistent colours, borders, and sizes. I also worked on making the entire site responsive, which included adding new components and user flows for mobile site users.
+   - Along with this, I worked on setting up form validation for all the forms on our website, ensuring that users are not able to perform any actions without entering the correct values for required fields.
+   - Furthermore, I worked on integrating the AI into our project by setting up the Replicate API and creating our first API call, which returned several details of essential itinerary information.
+   - Lastly, I worked on securing our API endpoints, by utilizing the token generated for the user to validate their session and expecting that authorization token on the backend. This will prevent bad actors from freely accessing our backend while allowing authenticated users access to essential application processes.
+ 
 - Jiayin Kralik: I am a fourth year computer science student who is interested in systems! I'm building my own operating system this summer :)
 - Matthew Smith: I'm a BCS student, I have a background in Physics, and I'm passionate about SWE!
 - Chris Tjondro: I like tennis. I like food. Lesson learned: Food after tennis -> Good, Food before tennis -> Bad.
