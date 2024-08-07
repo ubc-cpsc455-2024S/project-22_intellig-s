@@ -131,26 +131,25 @@ The next steps for our application involve the social, sharing, and collaboratio
         - Developed extra functionality that allowed users to download their itinerary to a PDF. This included various UI changes, and additional API endpoint, and an elegant, custom-designed HTML template to create the PDF from.
 
 - Chris Tjondro: I'm Chris! I love writing code, playing tennis, and eating food, not necessarily in that order. :)
-- Planning:
-   - Originated the AI itinerary app concept and contributed significantly to selecting the tech stack.
-   - Created an initial mockup for the calendar view.
+   - Planning:
+      - Originated the AI itinerary app concept and contributed significantly to selecting the tech stack.
+      - Created an initial mockup for the calendar view.
+   - Frontend/UI:
+      - Developed and styled React DayCards components for seamless integration within itineraries, using react hooks to dynamically fetch updated itineraries from JSON.
+      - Established the redux boilerplate, enabling teammates to efficiently create and manage redux slices.
+      - Built key UI components, a redux store, and an associated daySlice, allowing users to add, edit, and remove days and their activities.
 
-- Frontend/UI:
-   - Developed and styled React DayCards components for seamless integration within itineraries, using react hooks to dynamically fetch updated itineraries from JSON.
-   - Established the redux boilerplate, enabling teammates to efficiently create and manage redux slices.
-   - Built key UI components, a redux store, and an associated daySlice, allowing users to add, edit, and remove days and their activities.
+   - Backend API:
+      - Implemented functionality to retrieve itineraries from JSON files, aligning with our AI output strategy.
+      - Designed and developed a robust API for managing activities and days in MongoDB, including endpoints, redux thunks, error handling, and state management. Created extensive Postman tests for validation.
+      - Enhanced the jwtUtils library by refining error and state handling, streamlining the token verification process via authHeader.
 
-- Backend API:
-   - Implemented functionality to retrieve itineraries from JSON files, aligning with our AI output strategy.
-   - Designed and developed a robust API for managing activities and days in MongoDB, including endpoints, redux thunks, error handling, and state management. Created extensive Postman tests for validation.
-   - Enhanced the jwtUtils library by refining error and state handling, streamlining the token verification process via authHeader.
+   - Data Model:
+      - Designed the Mongoose daySchema, standardizing entries (days and their activities) in the collection for consistent data handling across associated endpoints.
 
-- Data Model:
-   - Designed the Mongoose daySchema, standardizing entries (days and their activities) in the collection for consistent data handling across associated endpoints.
-
-- Extra:
-   - Proposed and implemented a user preferences survey to tailor AI-generated itineraries. Developed a form prompting user preferences upon signup, carefully selecting key questions to create personalized vacations.
-   - Integrated these preferences into the MongoDB user collection and applied prompt engineering to generate unique itineraries and days based on user inputs.
+   - Extra:
+      - Proposed and implemented a user preferences survey to tailor AI-generated itineraries. Developed a form prompting user preferences upon signup, carefully selecting key questions to create personalized vacations.
+      - Integrated these preferences into the MongoDB user collection and applied prompt engineering to generate unique itineraries and days based on user inputs.
 
 
 ## Extended Project Description
