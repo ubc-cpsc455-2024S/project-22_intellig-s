@@ -2,6 +2,11 @@
 
 ### Deploy Status: ![deploy workflow](https://github.com/ubc-cpsc455-2024S/project-22_intellig-s/actions/workflows/deploy.yaml/badge.svg)
 
+## Instructor test credentials:
+### User: 
+testUser123
+### Password:
+cpsc455Password
 
 ## Elevator Pitch
 
