@@ -85,7 +85,6 @@ The next steps for our application involve the social, sharing, and collaboratio
 
 - Nand Patel: Hello, I am a fourth-year computer science and mathematics student and I love taking photos with my film camera :-D
    - Infrastructure development
-     - I worked on setting up our MongoDB atlas instance, allowing everyone to have access to read and write to the cluster.
      - I set up our Render deployments for both the front and back end, enabling continuous deployment using Github Actions.
    - Back-end development
      - I initially worked on setting up the Express boilerplate for our application, ensuring that everybody has a clean environment to begin implementing our server code.
